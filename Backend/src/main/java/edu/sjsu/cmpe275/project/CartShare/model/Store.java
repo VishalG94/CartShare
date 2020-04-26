@@ -24,6 +24,9 @@ public class Store implements Serializable{
 	 @OneToMany(fetch = FetchType.EAGER, mappedBy = "store")
 	 private List<Product> products;
 	 
+	 @OneToMany(fetch = FetchType.EAGER, mappedBy = "store")
+	 private List<Order> orders;
+	 
 	public long getId() {
 		return id;
 	}

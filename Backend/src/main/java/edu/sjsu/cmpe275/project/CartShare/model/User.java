@@ -40,6 +40,10 @@ public class User {
 	    @JoinColumn(name="reference",referencedColumnName = "screen_name")
 	    private User reference;
 	    
+//	    @OneToMany
+//	    @JoinColumn()
+//	    private List<Order> pickup_orders;
+	    
 	    public User()
 	    {	    	
 	    }

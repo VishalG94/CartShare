@@ -15,6 +15,10 @@ public class Order_Items {
 	@Column(name = "id", nullable = false, unique = true)    
 	private long id;	
 	
+	@ManyToOne
+	@JoinColumn(name="order_id",nullable=false)
+	private Order order;
+	
 	@OneToOne
 	@JoinColumn(name="product_id",referencedColumnName = "id")
 	private Product productId;
