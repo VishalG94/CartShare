@@ -9,7 +9,7 @@ import java.util.List;
 @Table (name = "users")
 @EntityListeners(AuditingEntityListener.class)
 public class User {
-	
+	// Id 
      	@Id	    
 	    @Column(name = "screen_name", nullable = false, unique = true)
 	    private String screenName;
