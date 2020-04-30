@@ -6,12 +6,22 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
+@Entity
 @Table (name = "product")
 @EntityListeners(AuditingEntityListener.class)
 public class Product implements Serializable{
 
-	@EmbeddedId
-	private ProductId id;
+//	@EmbeddedId
+//	private ProductId id;
+//	
+	
+	@Id
+	@Column(name = "storeid", nullable = false)
+    private long storeId;
+	
+	@Id
+	@Column(name = "sku", nullable = false)
+    private long sku; 
 	
 	@Column(name = "name", nullable = false)
 	 private String name;
@@ -39,11 +49,11 @@ public class Product implements Serializable{
 	public Product()
 	{		
 	}
-
-	public Product(ProductId id, String name, String description, String imageurl, String brand, long unit,
-			double price, Store store)
-	{		
-		this.id = id;
+	
+	public Product(long storeId, long sku, String name, String description, String imageurl, String brand, long unit,
+			double price, Store store) {
+		this.storeId = storeId;
+		this.sku = sku;
 		this.name = name;
 		this.description = description;
 		this.imageurl = imageurl;
@@ -53,12 +63,20 @@ public class Product implements Serializable{
 		this.store = store;
 	}
 
-	public ProductId getId() {
-		return id;
+	public long getStoreId() {
+		return storeId;
 	}
 
-	public void setId(ProductId id) {
-		this.id = id;
+	public void setStoreId(long storeId) {
+		this.storeId = storeId;
+	}
+
+	public long getSku() {
+		return sku;
+	}
+
+	public void setSku(long sku) {
+		this.sku = sku;
 	}
 
 	public String getName() {

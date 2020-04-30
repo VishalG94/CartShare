@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
+@Entity
 @Table (name = "pickup")
 @EntityListeners(AuditingEntityListener.class)
 public class Pickup {
