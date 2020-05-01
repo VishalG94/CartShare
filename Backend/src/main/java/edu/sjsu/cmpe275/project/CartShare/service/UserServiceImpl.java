@@ -17,6 +17,13 @@ public class UserServiceImpl {
     UserRepository userRepository;
 
     @Override
+    public User findByEmail(String email) {
+        User user = null;
+        user = userRepository.findByEmail(email);
+        return user;
+    }
+
+    @Override
     public void register(User user) {
         user.setPassword(HashingUtility.createHashedCode(user.getPassword()));
         System.out.println("Password: " + user.getPassword());
