@@ -31,12 +31,12 @@ export function loginuser(values, callback) {
 }
 
 export function signupPooler(values, callback) {
-    // console.log(values);
+    console.log("inside redux action " + values);
 
     axios.defaults.withCredentials = true;
 
     const request = axios
-        .post(`${ROOT_URL}/signup`, values);
+        .post(`${ROOT_URL}/api/signup`, values);
 
     return (dispatch) => {
         request.then((res) => {
@@ -47,9 +47,10 @@ export function signupPooler(values, callback) {
                 payload: res.data
             });
             callback(res);
+        }).catch(e => {
+            console.log("Exception occured in signup call " + e)
         })
     }
-
 }
 
 export function getProfile(values, callback) {
