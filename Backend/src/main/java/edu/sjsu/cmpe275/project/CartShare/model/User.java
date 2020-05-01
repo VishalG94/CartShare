@@ -6,11 +6,15 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
+@Entity
 @Table (name = "users")
 @EntityListeners(AuditingEntityListener.class)
-public class User {
-	// Id 
-     	@Id	    
+public class User {	    
+
+     	@Id
+    	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    	private long id;
+     	
 	    @Column(name = "screen_name", nullable = false, unique = true)
 	    private String screenName;
 
@@ -35,6 +39,12 @@ public class User {
 	    @ManyToOne(fetch = FetchType.EAGER)
 	    @JoinColumn(name = "pool_id",nullable = false)
 	    private Pool pool;
+	    
+	    @Column
+		private Boolean oauthFlag;
+
+		@Column
+		private boolean verified;
 	    
 	    @OneToOne
 	    @JoinColumn(name="reference",referencedColumnName = "screen_name")

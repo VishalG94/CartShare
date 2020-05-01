@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+@Entity
 @Table (name = "order_items")
 @EntityListeners(AuditingEntityListener.class)
 public class Order_Items {
@@ -16,11 +17,14 @@ public class Order_Items {
 	private long id;	
 	
 	@ManyToOne
-	@JoinColumn(name="order_id",nullable=false)
+	@JoinColumn(name="orderid",nullable=false)
 	private Order order;
 	
 	@OneToOne
-	@JoinColumn(name="product_id",referencedColumnName = "id")
+	@JoinColumns({
+		@JoinColumn(name="product_id",referencedColumnName = "storeid"),
+		@JoinColumn(name="product_sku",referencedColumnName = "sku")		
+	})
 	private Product productId;
 	
 	@Column(name = "quantity", nullable = false)

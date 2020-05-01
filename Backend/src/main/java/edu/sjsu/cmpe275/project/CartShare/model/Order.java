@@ -6,14 +6,16 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
+@Entity
 @Table (name = "orders")
 @EntityListeners(AuditingEntityListener.class)
 public class Order {
 	
 	@Id
-	@Column(name = "order_id", nullable = false, unique = true)    
-	private long order_id;	 		
+	@Column(name = "orderid", nullable = false, unique = true)    
+	private long orderid;	 		
 	
 	@ManyToOne
 	@JoinColumn(name="buyer_id",nullable = false)
@@ -25,12 +27,17 @@ public class Order {
 	@Column(name = "status", nullable = false)
     private String status;
 	
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
-	private List<Order_Items> order_items;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
+	private Set<Order_Items> order_items;
 	
 	@ManyToOne
 	@JoinColumn(name="store_id",nullable = false)
 	private Store store;
+	
+	@ManyToOne
+	@JoinColumn(name="pool_id",nullable = false)
+	private Pool pool;
+	
 	
 	@Column(name = "delivery_address", nullable = false)
     private String deliveryAddress;
@@ -45,30 +52,50 @@ public class Order {
 	
 	public Order()
 	{		
-	}		
-
-	public Order(long order_id, User buyerId, float price, String status, List<Order_Items> order_items, Store store,
-			String deliveryAddress, Date orderTime) {
+	}	
+	
+	public Order(long orderid, User buyerId, float price, String status, Set<Order_Items> order_items, Store store,
+			Pool pool, String deliveryAddress, Date orderTime) {
 		super();
-		this.order_id = order_id;
+		this.orderid = orderid;
 		this.buyerId = buyerId;
 		this.price = price;
 		this.status = status;
 		this.order_items = order_items;
 		this.store = store;
+		this.pool = pool;
 		this.deliveryAddress = deliveryAddress;
 		this.orderTime = orderTime;
 	}
+	
+	public Pool getPool() {
+		return pool;
+	}
 
-	public List<Order_Items> getOrder_items() {
-		return order_items;
+	public void setPool(Pool pool) {
+		this.pool = pool;
 	}
 
 
-	public void setOrder_items(List<Order_Items> order_items) {
+
+
+	public Set<Order_Items> getOrder_items() {
+		return order_items;
+	}
+	
+	public void setOrder_items(Set<Order_Items> order_items) {
 		this.order_items = order_items;
 	}
 
+	public long getOrderid() {
+		return orderid;
+	}
+	
+	public void setOrderid(long orderid) {
+		this.orderid = orderid;
+	}
+
+	
 
 	public Store getStore() {
 		return store;
@@ -78,16 +105,7 @@ public class Order {
 	public void setStore(Store store) {
 		this.store = store;
 	}
-
-
-	public long getOrder_id() {
-		return order_id;
-	}
-
-	public void setOrder_id(long order_id) {
-		this.order_id = order_id;
-	}
-
+	
 	public User getBuyerId() {
 		return buyerId;
 	}

@@ -5,7 +5,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
+@Entity
 @Table (name = "stores")
 @EntityListeners(AuditingEntityListener.class)
 public class Store implements Serializable{
@@ -22,7 +24,7 @@ public class Store implements Serializable{
 	 private Address address;
 	 
 	 @OneToMany(fetch = FetchType.EAGER, mappedBy = "store")
-	 private List<Product> products;
+	 private Set<Product> products;
 	 
 	 @OneToMany(fetch = FetchType.EAGER, mappedBy = "store")
 	 private List<Order> orders;
@@ -51,12 +53,21 @@ public class Store implements Serializable{
 		this.address = address;
 	}
 
-	public List<Product> getProducts() {
+	public Set<Product> getProducts() {
 		return products;
 	}
 
-	public void setProducts(List<Product> products) {
+	public void setProducts(Set<Product> products) {
 		this.products = products;
-	}	
-	
+	}
+
+	public List<Order> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<Order> orders) {
+		this.orders = orders;
+	}
+
+		
 }

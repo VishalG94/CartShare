@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
+@Entity
 @Table (name = "pool")
 @EntityListeners(AuditingEntityListener.class)
 public class Pool implements Serializable{
@@ -27,12 +28,16 @@ public class Pool implements Serializable{
 	 private int zipcode;			
 	
 	@OneToOne
-	@JoinColumn(name="pool_leader",referencedColumnName = "screen_name")
+	@JoinColumn(name="pool_leader",referencedColumnName = "id")
 	private User poolLeader;
 	
-	@OneToMany
-	@JoinColumn(name="order",referencedColumnName = "order_id")
-	private List<Order> orders;	
+//	@OneToMany(cascade = CascadeType.ALL)
+//	@JoinColumn(name="order")
+//	private List<Order> orders;	
+//	
+	
+	@OneToMany(fetch = FetchType.LAZY,mappedBy = "pool")	
+	private List<Order> orders;		
 	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "pool")
 	private List<User> poolers;
@@ -41,10 +46,10 @@ public class Pool implements Serializable{
 	{
 		
 	}
-
-	public Pool(String poolId, String name, String neighbourhood, String description, 
-			int zipcode, User poolLeader, List<Order> orders, List<User> poolers) 
-	{		
+	
+	public Pool(String poolId, String name, String neighbourhood, String description, int zipcode, User poolLeader,
+			List<Order> orders, List<User> poolers) {
+		super();
 		this.poolId = poolId;
 		this.name = name;
 		this.neighbourhood = neighbourhood;
@@ -52,9 +57,10 @@ public class Pool implements Serializable{
 		this.zipcode = zipcode;
 		this.poolLeader = poolLeader;
 		this.orders = orders;
-		this.poolers = poolers;	
+		this.poolers = poolers;
 	}
-	
+
+
 	public String getPoolId() {
 		return poolId;
 	}
@@ -101,8 +107,8 @@ public class Pool implements Serializable{
 
 	public void setPoolLeader(User poolLeader) {
 		this.poolLeader = poolLeader;
-	}
-
+	}	
+	
 	public List<Order> getOrders() {
 		return orders;
 	}
