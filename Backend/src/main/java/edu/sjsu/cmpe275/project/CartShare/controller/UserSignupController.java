@@ -35,6 +35,11 @@ public class UserSignupController {
     @Autowired
     EmailService emailService;
 
+    @Autowired
+    UserRepository userRepository;
+
+    private static final String USER_VERIFICATION_EXCEPTION_MESSAGE = "User account verification failed";
+
     @PostMapping("/signup")
     @ResponseBody
     public ResponseEntity<String> registration(@Valid @RequestBody User user) throws URISyntaxException {
@@ -49,5 +54,26 @@ public class UserSignupController {
         String message = EmailUtility.createVerificationMsg(user.getID());
         emailService.sendEmail(user.getEmail(), message, " User Profile Verification");
         return new ResponseEntity<>("{\"status\" : \"User Registered Successfully.!!\"}", HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/verifyaccount", method = RequestMethod.GET)
+    public ResponseEntity<?> verifyUserAccount(@RequestParam Long ID) {
+        System.out.println("Verification link clicked" + ID);
+        try {
+            boolean verificationStatus = userService.verifyUserRegistration(ID);
+            System.out.println("verificationStatus: " + verificationStatus);
+            if (verificationStatus) {
+                return new ResponseEntity<>("{\"status\" : \"User is verified successfully!!\"}", HttpStatus.OK);
+            } else if (!verificationStatus) {
+                return new ResponseEntity<>(
+                        "{\"status\" : \"User could not be verified because of bad request from user!!\"}",
+                        HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception exp) {
+            System.out.println("Verification Exception:" + exp.getMessage());
+            throw new CustomException(USER_VERIFICATION_EXCEPTION_MESSAGE);
+        }
+        return new ResponseEntity<>("{\"status\" : \"User could not be verified because of server error!!\"}",
+                HttpStatus.SERVICE_UNAVAILABLE);
     }
 }

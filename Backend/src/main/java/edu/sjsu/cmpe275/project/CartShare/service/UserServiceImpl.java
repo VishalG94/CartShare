@@ -17,6 +17,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    EmailService emailService;
+
     @Override
     public User findByEmail(String email) {
         User user = null;
@@ -45,7 +48,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean verifyUserRegistration(Long ID) {
-        // TODO Auto-generated method stub
+        System.out.println("ID sent from body : " + ID);
+        Optional<User> user = userRepository.findById(ID);
+        try {
+            if (user != null && !user.get().isVerified()) {
+                System.out.println("User found with id : " + user.get().getEmail());
+                user.get().setVerified(true);
+                userRepository.save(user.get());
+                emailService.sendEmail(user.get().getEmail(), EmailUtility.VERIFICATION_SUCCESS_MESSAGE,
+                        "Successful Account Verification");
+                return true;
+            } else if (user.get().isVerified()) {
+                return false;
+            }
+        } catch (Exception e) {
+            throw e;
+        }
         return false;
     }
 
