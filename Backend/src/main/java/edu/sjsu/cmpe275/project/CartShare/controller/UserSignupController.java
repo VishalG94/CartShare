@@ -76,4 +76,45 @@ public class UserSignupController {
         return new ResponseEntity<>("{\"status\" : \"User could not be verified because of server error!!\"}",
                 HttpStatus.SERVICE_UNAVAILABLE);
     }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/oauthverified/{email}")
+    public ResponseEntity<?> verifyUserOauthAccount(@PathVariable String email) {
+        System.out.println("User ID sent as a parmeter : " + email);
+        if (userRepository.findByEmail(email) == null) {
+            System.out.println("User is not present");
+            return new ResponseEntity<>("{\"status\" : \"User is not registered with any oauth login!!\"}",
+                    HttpStatus.NOT_FOUND);
+        }
+        User verifiedUser = userService.checkUserVerified(email);
+        System.out.println("verifiedUser : " + verifiedUser);
+        if (verifiedUser == null) {
+            new ResponseEntity<>("{\"status\" : \"User could not be verified because of bad request from user!!\"}",
+                    HttpStatus.BAD_REQUEST);
+        } else
+            return ResponseEntity.ok(verifiedUser);
+        return new ResponseEntity<>(
+                "{\"status\" : \"User could not be verified because of bad request from user..!!\"}",
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/login")
+    @ResponseBody
+    public ResponseEntity<?> login(@Valid @RequestBody User user) throws URISyntaxException {
+        System.out.println("Body sent : " + user.getEmail());
+        User existingUser = userService.findByEmail(user.getEmail());
+        if (existingUser == null) {
+            System.out.println("User does not exist");
+            return new ResponseEntity<>("{\"status\" : \"Cannot login. User is not registered, first sign up..!!\"}",
+                    HttpStatus.NOT_FOUND);
+        }
+        boolean authorizedUser = userService.loginUser(user);
+        if (!authorizedUser) {
+            System.out.println("User entered wrong email or password");
+            return new ResponseEntity<>("{\"status\" : \"User entered wrong email or password..!!\"}",
+                    HttpStatus.BAD_REQUEST);
+        }
+        System.out.println("User logged in successfully");
+        return ResponseEntity.ok(existingUser);
+    }
 }
