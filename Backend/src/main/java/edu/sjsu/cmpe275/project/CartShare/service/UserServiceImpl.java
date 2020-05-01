@@ -11,6 +11,7 @@ import edu.sjsu.cmpe275.project.CartShare.repository.UserRepository;
 import edu.sjsu.cmpe275.project.CartShare.utils.EmailUtility;
 import edu.sjsu.cmpe275.project.CartShare.utils.HashingUtility;
 
+@Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -28,6 +29,24 @@ public class UserServiceImpl implements UserService {
         user.setPassword(HashingUtility.createHashedCode(user.getPassword()));
         System.out.println("Password: " + user.getPassword());
         userRepository.save(user);
+    }
+
+    @Override
+    public User checkUserVerified(String email) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean loginUser(User user) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean verifyUserRegistration(Long ID) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

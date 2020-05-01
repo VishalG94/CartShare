@@ -7,141 +7,163 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table (name = "users")
+@Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
-public class User {	    
+public class User {
 
-     	@Id
-    	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    	private long id;
-     	
-	    @Column(name = "screen_name", nullable = false, unique = true)
-	    private String screenName;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
 
-	    @Column(name = "nick_name", nullable = false, unique = true)
-	    private String nickName;
-	   
-	    @Column(name = "email", nullable = false, unique = true)
-	    private String email;
-	    
-	    @Column(name = "password", nullable = false)
-	    private String password;
+	@Column(name = "screen_name", nullable = false, unique = true)
+	private String screenName;
 
-	    @Column(name = "role")
-	    private String role;
+	@Column(name = "nick_name", nullable = false, unique = true)
+	private String nickName;
 
-	    @Column(name = "request_status")
-	    private String requestStatus;
-	    
-	    @Column(name = "contribution_credit")
-	    private int contributionCredit;
-	    
-	    @ManyToOne(fetch = FetchType.EAGER)
-	    @JoinColumn(name = "pool_id",nullable = false)
-	    private Pool pool;
-	    
-	    @Column
-		private Boolean oauthFlag;
+	@Column(name = "email", nullable = false, unique = true)
+	private String email;
 
-		@Column
-		private boolean verified;
-	    
-	    @OneToOne
-	    @JoinColumn(name="reference",referencedColumnName = "screen_name")
-	    private User reference;
-	    
-//	    @OneToMany
-//	    @JoinColumn()
-//	    private List<Order> pickup_orders;
-	    
-	    public User()
-	    {	    	
-	    }
+	@Column(name = "password", nullable = false)
+	private String password;
 
-		public User(String screenName, String nickName, String email, String password, String role,
-				String requestStatus, int contributionCredit, Pool pool, User reference)
-		{			
-			this.screenName = screenName;
-			this.nickName = nickName;
-			this.email = email;
-			this.password = password;
-			this.role = role;
-			this.requestStatus = requestStatus;
-			this.contributionCredit = contributionCredit;
-			this.pool = pool;
-			this.reference = reference;
-		}
+	@Column(name = "role")
+	private String role;
 
-		public String getScreenName() {
-			return screenName;
-		}
+	@Column(name = "request_status")
+	private String requestStatus;
 
-		public void setScreenName(String screenName) {
-			this.screenName = screenName;
-		}
+	@Column(name = "contribution_credit")
+	private int contributionCredit;
 
-		public String getNickName() {
-			return nickName;
-		}
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "pool_id")
+	private Pool pool;
 
-		public void setNickName(String nickName) {
-			this.nickName = nickName;
-		}
+	@Column
+	private Boolean oauthFlag;
 
-		public String getEmail() {
-			return email;
-		}
+	@Column
+	private boolean verified;
 
-		public void setEmail(String email) {
-			this.email = email;
-		}
+	@OneToOne
+	@JoinColumn(name = "reference", referencedColumnName = "screen_name")
+	private User reference;
 
-		public String getPassword() {
-			return password;
-		}
+	// @OneToMany
+	// @JoinColumn()
+	// private List<Order> pickup_orders;
 
-		public void setPassword(String password) {
-			this.password = password;
-		}
+	public User() {
+	}
 
-		public String getRole() {
-			return role;
-		}
+	public User(String screenName, String nickName, String email, String password, String role, String requestStatus,
+			int contributionCredit, Pool pool, User reference) {
+		this.screenName = screenName;
+		this.nickName = nickName;
+		this.email = email;
+		this.password = password;
+		this.role = role;
+		this.requestStatus = requestStatus;
+		this.contributionCredit = contributionCredit;
+		this.pool = pool;
+		this.reference = reference;
+	}
 
-		public void setRole(String role) {
-			this.role = role;
-		}
+	public String getScreenName() {
+		return screenName;
+	}
 
-		public String getRequestStatus() {
-			return requestStatus;
-		}
+	public void setScreenName(String screenName) {
+		this.screenName = screenName;
+	}
 
-		public void setRequestStatus(String requestStatus) {
-			this.requestStatus = requestStatus;
-		}
+	public String getNickName() {
+		return nickName;
+	}
 
-		public int getContributionCredit() {
-			return contributionCredit;
-		}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
 
-		public void setContributionCredit(int contributionCredit) {
-			this.contributionCredit = contributionCredit;
-		}
+	public String getEmail() {
+		return email;
+	}
 
-		public Pool getPool() {
-			return pool;
-		}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-		public void setPool(Pool pool) {
-			this.pool = pool;
-		}
+	public String getPassword() {
+		return password;
+	}
 
-		public User getReference() {
-			return reference;
-		}
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-		public void setReference(User reference) {
-			this.reference = reference;
-		}    
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public String getRequestStatus() {
+		return requestStatus;
+	}
+
+	public void setRequestStatus(String requestStatus) {
+		this.requestStatus = requestStatus;
+	}
+
+	public int getContributionCredit() {
+		return contributionCredit;
+	}
+
+	public void setContributionCredit(int contributionCredit) {
+		this.contributionCredit = contributionCredit;
+	}
+
+	public Pool getPool() {
+		return pool;
+	}
+
+	public void setPool(Pool pool) {
+		this.pool = pool;
+	}
+
+	public User getReference() {
+		return reference;
+	}
+
+	public void setReference(User reference) {
+		this.reference = reference;
+	}
+
+	public long getID() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public Boolean getOauthFlag() {
+		return oauthFlag;
+	}
+
+	public void setOauthFlag(Boolean oauthFlag) {
+		this.oauthFlag = oauthFlag;
+	}
+
+	public boolean isVerified() {
+		return verified;
+	}
+
+	public void setVerified(boolean verified) {
+		this.verified = verified;
+	}
 
 }
