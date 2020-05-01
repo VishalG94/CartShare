@@ -36,14 +36,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User checkUserVerified(String email) {
-        // TODO Auto-generated method stub
-        return null;
+        System.out.println("ID sent from body : " + email);
+        User user = null;
+        user = userRepository.findByEmail(email);
+        // System.out.println("user data " + user + user.isVerified() +
+        // user.getOauth_flag());
+        try {
+            if (user == null || !user.isVerified() || !user.getOauthFlag()) {
+                return null;
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+        return user;
     }
 
     @Override
     public boolean loginUser(User user) {
-        // TODO Auto-generated method stub
-        return false;
+        User activeUser = findByEmail(user.getEmail());
+        return activeUser.getPassword().equals(HashingUtility.createHashedCode(user.getPassword()));
     }
 
     @Override
