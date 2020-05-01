@@ -32,6 +32,9 @@ public class UserSignupController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    EmailService emailService;
+
     @PostMapping("/signup")
     @ResponseBody
     public ResponseEntity<String> registration(@Valid @RequestBody User user) throws URISyntaxException {

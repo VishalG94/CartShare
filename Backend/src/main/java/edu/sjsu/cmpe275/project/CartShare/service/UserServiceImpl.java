@@ -11,7 +11,7 @@ import edu.sjsu.cmpe275.project.CartShare.repository.UserRepository;
 import edu.sjsu.cmpe275.project.CartShare.utils.EmailUtility;
 import edu.sjsu.cmpe275.project.CartShare.utils.HashingUtility;
 
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
