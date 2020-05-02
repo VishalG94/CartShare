@@ -221,7 +221,7 @@ class Login extends Component {
                   </div>
                   <GoogleLogin
                     clientId={GOOGLE_CLIENT_ID}
-                    buttonText="SIGNUP WITH GOOGLE"
+                    buttonText="SIGN IN WITH GOOGLE"
                     onSuccess={responseGoogle}
                     onFailure={responseGoogle}
                     cookiePolicy={'single_host_origin'}

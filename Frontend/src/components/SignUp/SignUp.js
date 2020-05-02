@@ -99,12 +99,12 @@ class SignUp extends Component {
       password: ""
     });
     if (this.state.email.includes("sjsu")) {
-      this.state.user_role = "Admin";
+      this.state.role = "Admin";
     }
     else {
-      this.state.user_role = "User";
+      this.state.role = "User";
     }
-    this.state.oauth_flag = true;
+    this.state.oauthFlag = true;
     console.log("val" + this.state.email)
     this.signupHandler(this.state);
   }
