@@ -104,6 +104,13 @@ class Login extends Component {
           authFlag: false
         })
       }
+      else if (response.status == 406) {
+        alert("Please verify the account first");
+        window.location.reload();
+        this.setState({
+          authFlag: false
+        })
+      }
     }).then(result => {
       console.log("Login details Results:", result);
       UTIL.saveUserDetails(result);
@@ -138,10 +145,10 @@ class Login extends Component {
           // window.location.reload();
         }
         else if (response.status == 400) {
-          alert("First verify the account used to login to facebook or google");
+          alert("First verify the account used to login with google");
         }
         else if (response.status == 404) {
-          alert("First register with facebook or google to login into it");
+          alert("First register with google to login into it");
         }
       }).then(result => {
         console.log("Login response " + result)

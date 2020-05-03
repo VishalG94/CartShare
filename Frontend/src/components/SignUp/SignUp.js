@@ -133,7 +133,14 @@ class SignUp extends Component {
 
     const responseGoogle = (response) => {
       console.log("Response received from google: " + JSON.stringify(response));
-      this.oauthLogin(response.profileObj);
+      window.location.replace(`/signupdetails/${response.profileObj.email}`)
+      // this.oauthLogin(response.profileObj);
+    }
+
+    const onFailure = () => {
+      console.log("inside failure");
+      window.location.reload()
+      // this.oauthLogin(response.profileObj);
     }
 
     let redirectVar = null
@@ -218,7 +225,7 @@ class SignUp extends Component {
                     clientId={GOOGLE_CLIENT_ID}
                     buttonText="SIGNUP WITH GOOGLE"
                     onSuccess={responseGoogle}
-                    onFailure={responseGoogle}
+                    onFailure={onFailure}
                     cookiePolicy={'single_host_origin'}
                     className="google-button-signup"
                   />

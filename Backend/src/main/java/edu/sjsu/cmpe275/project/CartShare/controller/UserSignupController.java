@@ -108,6 +108,11 @@ public class UserSignupController {
             return new ResponseEntity<>("{\"status\" : \"Cannot login. User is not registered, first sign up..!!\"}",
                     HttpStatus.NOT_FOUND);
         }
+        if (!existingUser.isVerified()) {
+            System.out.println("User is not verified");
+            return new ResponseEntity<>("{\"status\" : \"Cannot login. user is not verified yet..!!\"}",
+                    HttpStatus.NOT_ACCEPTABLE);
+        }
         boolean authorizedUser = userService.loginUser(user);
         if (!authorizedUser) {
             System.out.println("User entered wrong email or password");

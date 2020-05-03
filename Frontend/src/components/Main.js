@@ -25,6 +25,7 @@ import PrivateRoute from '../lib/PrivateRoute'
 // import UserSubscribedLists from './UserLists/UserSubscribedLists'
 // import UserLists from './UserLists/UserLists'
 import VerifyAccount from './SignUp/VerifyAccount';
+import SignupDetails from './SignUp/SignupDetails'
 
 // import Following from './Dashboard/Following'
 // import UserRetweets from './UserTweets/UserRetweets'
@@ -64,6 +65,7 @@ class Main extends Component {
         <PrivateRoute static path='/viewtweet/:id' component={ViewTweet} />
         <PrivateRoute path='/userretweets' component={UserRetweets} /> */}
         <Route path="/verifyaccount/:ID" render={(match) => (<VerifyAccount {...match} />)} />
+        <Route path='/signupdetails/:email' component={SignupDetails} />
       </div>
     )
   }
