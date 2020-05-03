@@ -22,10 +22,15 @@ public class Order_Items {
 	
 	@OneToOne
 	@JoinColumns({
-		@JoinColumn(name="product_id",referencedColumnName = "storeid"),
-		@JoinColumn(name="product_sku",referencedColumnName = "sku")		
-	})
-	private Product productId;
+			@JoinColumn(name="store_composit_id",  referencedColumnName="store_composit_id"),
+			@JoinColumn(name="sku",  referencedColumnName="sku")
+	})private Product product;
+
+//	@JoinColumns({
+//		@JoinColumn(name="product_id",referencedColumnName = "store_id"),
+//		@JoinColumn(name="product_sku",referencedColumnName = "sku")
+//	})
+
 	
 	@Column(name = "quantity", nullable = false)
     private int quantity;

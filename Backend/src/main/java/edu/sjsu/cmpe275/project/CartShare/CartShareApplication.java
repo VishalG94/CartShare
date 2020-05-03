@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CartShareApplication {
 
-	public static void main(String[] arg) {
-		SpringApplication.run(CartShareApplication.class, arg);
+	public static void main(String[] args) {
+		SpringApplication.run(CartShareApplication.class, args);
 	}
 }

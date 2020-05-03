@@ -22,11 +22,11 @@ public class Store implements Serializable{
 
 	 @Embedded
 	 private Address address;
-	 
+
 	 @OneToMany(fetch = FetchType.EAGER, mappedBy = "store")
-	 private Set<Product> products;
-	 
-	 @OneToMany(fetch = FetchType.EAGER, mappedBy = "store")
+	 private List<Product> products;
+
+	 @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
 	 private List<Order> orders;
 	 
 	public long getId() {
@@ -53,11 +53,11 @@ public class Store implements Serializable{
 		this.address = address;
 	}
 
-	public Set<Product> getProducts() {
+	public List<Product> getProducts() {
 		return products;
 	}
 
-	public void setProducts(Set<Product> products) {
+	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
 
@@ -69,5 +69,5 @@ public class Store implements Serializable{
 		this.orders = orders;
 	}
 
-		
+
 }
