@@ -1,28 +1,36 @@
 package edu.sjsu.cmpe275.project.CartShare.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table (name = "product")
 @EntityListeners(AuditingEntityListener.class)
 public class Product implements Serializable{
 
-//	@EmbeddedId
-//	private ProductId id;
-//	
-	
-	@Id
-	@Column(name = "storeid", nullable = false)
-    private long storeId;
-	
-	@Id
-	@Column(name = "sku", nullable = false)
-    private long sku; 
-	
+	@EmbeddedId
+	private ProductId id;
+	public Product()
+	{
+	}
+
+	public Product(ProductId id, String name, String description, String imageurl, String brand, String unit,
+				   double price, Store store) {
+//		this.storeId = storeId;
+//		this.sku = sku;
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.imageurl = imageurl;
+		this.brand = brand;
+		this.unit = unit;
+		this.price = price;
+		this.setStore(store);
+	}
 	@Column(name = "name", nullable = false)
 	 private String name;
 	
@@ -36,47 +44,63 @@ public class Product implements Serializable{
 	 private String brand;
 	
 	@Column(name = "unit", nullable = false)
-	 private long unit;
+	 private String unit;
 	
 	@Column(name = "price", nullable = false)
 	 private double price;
 	
 	//Seperate field needed or can we reuse the storeId present in this model
-	@ManyToOne
-	@JoinColumn(name="store_id",nullable=false)
+	@ManyToOne(fetch = FetchType.EAGER, optional=true)
+	@JoinColumn(name="store_id")
 	private Store store;
-	
-	public Product()
-	{		
-	}
-	
-	public Product(long storeId, long sku, String name, String description, String imageurl, String brand, long unit,
-			double price, Store store) {
-		this.storeId = storeId;
-		this.sku = sku;
-		this.name = name;
-		this.description = description;
-		this.imageurl = imageurl;
-		this.brand = brand;
-		this.unit = unit;
-		this.price = price;
-		this.store = store;
-	}
 
-	public long getStoreId() {
-		return storeId;
-	}
 
-	public void setStoreId(long storeId) {
-		this.storeId = storeId;
-	}
+//	public long getStoreId() {
+//		return storeId;
+//	}
+//
+//	public void setStoreId(long storeId) {
+//		this.storeId = storeId;
+//	}
+//
+//	public long getSku() {
+//		return sku;
+//	}
+//
+//	public void setSku(long sku) {
+//		this.sku = sku;
+//	}
 
-	public long getSku() {
-		return sku;
-	}
+	public String toString(){
+		try{
 
-	public void setSku(long sku) {
-		this.sku = sku;
+			String info = "";
+			JSONObject jsonInfo = new JSONObject();
+			jsonInfo.put("StoreId",this.id.getStoreId());
+			jsonInfo.put("sku", this.id.getSku());
+			jsonInfo.put("name", this.name);
+			jsonInfo.put("description", this.description);
+			jsonInfo.put("price", this.price);
+			jsonInfo.put("brand", this.brand);
+			jsonInfo.put("img", this.imageurl);
+			jsonInfo.put("store", this.getStore());
+			jsonInfo.put("unit", this.unit);
+			JSONArray orders = new JSONArray();
+//		if(this.orderDetails != null){
+//			this.orderDetails.forEach(order->{
+//				JSONObject orderInfo = new JSONObject();
+//				orderInfo.put("orderId-" + order.getOrderId() , order);
+//				orders.put(orderInfo);
+//			});
+//		}
+
+			info = jsonInfo.toString();
+			return info;
+
+		}catch(Exception e){
+			System.out.println(e.toString());
+			return e.toString();
+		}
 	}
 
 	public String getName() {
@@ -111,11 +135,11 @@ public class Product implements Serializable{
 		this.brand = brand;
 	}	
 	
-	public long getUnit() {
+	public String getUnit() {
 		return unit;
 	}
 
-	public void setUnit(long unit) {
+	public void setUnit(String unit) {
 		this.unit = unit;
 	}
 
@@ -127,6 +151,22 @@ public class Product implements Serializable{
 		this.price = price;
 	}	
 	
+//	public Store getStore() {
+//		return store;
+//	}
+//
+//	public void setStore(Store store) {
+//		this.store = store;
+//	}
+
+	public ProductId getId() {
+		return id;
+	}
+
+	public void setId(ProductId id) {
+		this.id = id;
+	}
+
 	public Store getStore() {
 		return store;
 	}
@@ -134,5 +174,4 @@ public class Product implements Serializable{
 	public void setStore(Store store) {
 		this.store = store;
 	}
-	
 }

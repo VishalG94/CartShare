@@ -65,8 +65,47 @@
 			<artifactId>json</artifactId>
 			<version>20080701</version>
 		</dependency>
+		<dependency>
+		<groupId>com.googlecode.json-simple</groupId>
+		<artifactId>json-simple</artifactId>
+		<version>1.1.1</version>
+	</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security -->
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-security</artifactId>-->
+<!--&lt;!&ndash;			<version>2.2.1.RELEASE</version>&ndash;&gt;-->
+<!--		</dependency>-->
+<!--		&lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test &ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-test</artifactId>-->
+<!--&lt;!&ndash;			<version>2.2.2.RELEASE</version>&ndash;&gt;-->
+<!--			<scope>test</scope>-->
+<!--		</dependency>-->
 
-    </dependencies>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.security</groupId>-->
+<!--			<artifactId>spring-security-web</artifactId>-->
+<!--			<version>5.2.3.RELEASE</version>-->
+<!--		</dependency>-->
+<!--		&lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.security/spring-security-config &ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.security</groupId>-->
+<!--			<artifactId>spring-security-config</artifactId>-->
+<!--			<version>5.2.3.RELEASE</version>-->
+<!--		</dependency>-->
+<!--		&lt;!&ndash; https://mvnrepository.com/artifact/commons-logging/commons-logging &ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>commons-logging</groupId>-->
+<!--			<artifactId>commons-logging</artifactId>-->
+<!--			<version>1.2</version>-->
+<!--		</dependency>-->
+
+
+	</dependencies>
 
 	<build>
 		<plugins>

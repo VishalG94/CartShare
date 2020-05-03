@@ -1,6 +1,8 @@
 package edu.sjsu.cmpe275.project.CartShare.model;
 
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import javax.persistence.*;
@@ -9,36 +11,39 @@ import javax.persistence.*;
 public class ProductId implements Serializable
 {
 	
-	@Column(name="store_id")
-	private int storeId;
+	@Column(name="store_composit_id")
+	private long storeId;
 	
 	@Column(name="sku")
-	private int sku;
+	private long sku;
 	
 	public ProductId()
 	{		
 	}
 
-	public ProductId(int storeId, int sku) 
+	public ProductId(long storeId, long sku)
 	{		
 		this.storeId = storeId;
 		this.sku = sku;
 	}
 
-	public int getStoreId() {
+	public long getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(int storeId) {
+	public void setStoreId(long storeId) {
 		this.storeId = storeId;
 	}
 
-	public int getSku() {
+	public long getSku() {
 		return sku;
 	}
 
-	public void setSku(int sku) {
+	public void setSku(long sku) {
 		this.sku = sku;
-	}	
-    
+	}
+
+
+
+
 }

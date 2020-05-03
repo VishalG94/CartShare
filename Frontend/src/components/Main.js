@@ -4,11 +4,13 @@ import Login from './Login/Login'
 import Home from './Home/Home'
 import SignUp from './SignUp/SignUp'
 import Navbar from './LandingPage/Navbar'
+import AddStore from './AddStore/AddStore'
 // import Messages from './Messages/Messages'
 // import Profile from './Profile/Profile'
 // import Search from './Search/Search'
 // import UserProfile from './Profile/UserProfile'
 import PrivateRoute from '../lib/PrivateRoute'
+import AddProduct from './AddProduct/AddProduct'
 // import Dashboard from './Dashboard/Dashboard'
 // import GraphLikes from './Dashboard/GraphLikes'
 // import GraphRe from './Dashboard/GraphRetweet'
@@ -39,6 +41,8 @@ class Main extends Component {
         {/* <Route path='/search' component={Search} /> */}
         <Route path='/signup' component={SignUp} />
         <Route path='/home' component={Home} />
+        <Route path='/addstore' component={AddStore} />
+        <Route path='/addproduct' component={AddProduct} />
         {/* <PrivateRoute path='/messages' component={Messages} />
         <PrivateRoute path='/profile' component={Profile} />
         <PrivateRoute path='/userprofile' component={UserProfile} />
