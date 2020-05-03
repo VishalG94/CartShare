@@ -4,6 +4,8 @@ import Login from './Login/Login'
 import Home from './Home/Home'
 import SignUp from './SignUp/SignUp'
 import Navbar from './LandingPage/Navbar'
+import Pool from './Pool/Pool'
+
 // import Messages from './Messages/Messages'
 // import Profile from './Profile/Profile'
 // import Search from './Search/Search'
@@ -39,6 +41,8 @@ class Main extends Component {
         {/* <Route path='/search' component={Search} /> */}
         <Route path='/signup' component={SignUp} />
         <Route path='/home' component={Home} />
+        <Route path='/pool' component={Pool} />
+        
         {/* <PrivateRoute path='/messages' component={Messages} />
         <PrivateRoute path='/profile' component={Profile} />
         <PrivateRoute path='/userprofile' component={UserProfile} />
