@@ -313,7 +313,7 @@ class AddProduct extends Component {
                 <div class='panel'>
                   <br></br>
                   <h2 style={{ marginLeft: '20px' }}>Add new Product</h2>
-                  <br></br>
+                  <hr></hr>
                 </div>
                 <div className='row'>
 
@@ -461,6 +461,9 @@ class AddProduct extends Component {
                           Create Product
                         </button>
 
+                        <br />
+                        <br />
+                        <br />
                         <br />
                       </div>
                     </form>

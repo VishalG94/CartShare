@@ -186,15 +186,18 @@ class AdminHome extends Component {
               <div class='login-form'>
                 <div class='panel'>
                   <br></br>
-                  <h2 style={{ marginLeft: '20px' }}>List of Stores</h2>
                   <Link to='/addstore'><button type="submit" className='btn btn-success' style={{ float: 'right', marginRight: "10px" }} >Add new Store</button></Link>
+                  <h2 style={{ marginLeft: '20px' }}>List of Stores</h2>
+                  <hr></hr>
+                  
                 </div>
-                <br></br>
-                <br />
+               
                 {bannerFinal}
                 <br />
-                {invalidtag}
                 <br />
+                <br />
+                {invalidtag}
+                
               </div>
             </div>
           </div>

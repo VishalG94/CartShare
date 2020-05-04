@@ -11,6 +11,7 @@ import { Redirect } from 'react-router'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Cart from '../Cart/Cart'
+import UserBanner from '../Banner/UserBanner'
 // import {
 //   Card, CardImg, CardText, CardBody,
 //   CardTitle, CardSubtitle, Button
@@ -152,7 +153,7 @@ class SearchProducts extends Component {
     let bannerDetails = this.state.productsDetails;
     let bannerNew = []
 
-
+    console.log(bannerDetails);
     var getNewproductsArray = (bannerDetails, countperrow) => {
       let count = bannerDetails.length
       let bannerNew = []
@@ -179,7 +180,7 @@ class SearchProducts extends Component {
     }
     bannerNew = getNewproductsArray(bannerDetails, 3);
     let bannerFinal = bannerNew.map((data) => {
-      return <Banner bannerDetails={data}></Banner>
+      return <UserBanner bannerDetails={data}></UserBanner>
     })
 
     return (
