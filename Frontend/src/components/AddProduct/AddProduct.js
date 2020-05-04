@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import '../../App.css'
-// import './AddStore.css'
+import './AddProduct.css'
 import axios from 'axios'
 import AdminNavbar from '../LeftNavbar/AdminNavbar'
 import { Field, reduxForm } from 'redux-form'
@@ -23,7 +23,7 @@ class AddProduct extends Component {
     this.state = {
       name: '',
       storeId: '',
-      sku: '',
+      sku: 0,
       name: '',
       description: '',
       imageurl: '',
@@ -34,28 +34,43 @@ class AddProduct extends Component {
       storeDetails: [],
       authFlag: false,
       failed: false,
-      success: false
+      success: false,
+      file: '',
+      data:''
     } // Bind the handlers to this class // this.usernameChangeHandler = this.usernameChangeHandler.bind(this) // this.passwordChangeHandler = this.passwordChangeHandler.bind(this) // this.submitLogin = this.submitLogin.bind(this)
   } // Call the Will Mount to set the auth Flag to false
 
-  componentWillMount() {
+  async componentWillMount() {
 
-    axios.defaults.withCredentials = true
     axios
-      .get(`${ROOT_URL}/getstores`, { params: '' })
+      .get(`${ROOT_URL}/getmaxsku`, { params: '' })
       .then(response => {
         // console.log(response)
         // console.log("Inside Product Creation" + JSON.stringify(response.data));
-        this.setState({ storeDetails: response.data });
-        console.log(response.data);
-        let data1 = (response.data).map(store => {
-          return store.name;
-        })
-        console.log(data1);
-        this.setState({
-          store: data1
-        })
+        let newSku = response.data;
+        // alert("Sku: "+newSku);
+        this.setState({ sku: newSku });
+      }).catch(error => {
+        console.log(error);
       })
+
+      axios.defaults.withCredentials = true
+      axios
+        .get(`${ROOT_URL}/getstores`, { params: '' })
+        .then(response => {
+          // console.log(response)
+          // console.log("Inside Product Creation" + JSON.stringify(response.data));
+          this.setState({ storeDetails: response.data });
+          console.log(response.data);
+          let data1 = (response.data).map(store => {
+            return store.name;
+          })
+          console.log(data1);
+          this.setState({
+            store: data1
+          })
+        })
+
   }
 
   inputChangeHandler = e => {
@@ -76,6 +91,14 @@ class AddProduct extends Component {
   // renderSelectList = ({ input, ...rest }) =>
   //   <SelectList {...input} onBlur={() => input.onBlur()} {...rest} />
 
+  async imageChangeHandler(e)  {
+    alert(JSON.stringify(e.target.file))
+    this.setState({
+      file: e.target.files[0]
+    },()=>alert(JSON.stringify(this.state.file)))
+    // alert(JSON.stringify(e.target.files[0]))
+  }
+
 
   onSubmit = formValues => {
 
@@ -95,39 +118,128 @@ class AddProduct extends Component {
     // bodyFormData.set('unit', formValues.unit);
     // bodyFormData.set('storeId', formValues.store);
     // bodyFormData.set('store', formValues.store);
-    let data = {
-      id: {
-        storeId: 1,
-        sku: 1
-      },
-      name: formValues.name,
-      description: formValues.description,
-      brand: formValues.brand,
-      imageurl: formValues.imageUrl,
-      price: formValues.price,
-      unit: formValues.unit,
-      // storeId: 1,
-      // store: 1
-      // storeId: formValues.store,
-      // store: formValues.store
+    // alert("Store length: "+store_id.length);
+    for(let i=0; i<store_id.length;i++){
+      let data = {
+        id: {
+          storeId: store_id[i],
+          sku: this.state.sku
+        },
+        name: formValues.name,
+        description: formValues.description,
+        brand: formValues.brand,
+        imageurl: formValues.imageUrl,
+        price: formValues.price,
+        unit: formValues.unit,
+        // storeId: 1,
+        // store: 1
+        // storeId: formValues.store,
+        // store: formValues.store
+      }
+      // console.log(data)
+      alert(JSON.stringify(data));
+      axios.defaults.withCredentials = true;
+      axios.post(`${ROOT_URL}/addproduct`, data).then(response => {
+
+        // update the state with the response data
+        this.setState({
+          failed: false,
+          success: true
+        })
+        console.log('Axios post:', response.data);
+        window.location.reload(true)
+      }).catch(error => {
+        console.log(error);
+        this.setState({
+          failed: true,
+          success: false
+        })
+      });
     }
-    // console.log(data)
-    axios.defaults.withCredentials = true;
-    axios.post(`${ROOT_URL}/addproduct`, data).then(response => {
-      // update the state with the response data
-      this.setState({
-        failed: false,
-        success: true
-      })
-      console.log('Axios post:', response.data);
-    }).catch(error => {
-      console.log(error);
-      this.setState({
-        failed: true,
-        success: false
-      })
-    });
+
   }
+
+  // async addFormData(formData,data ) {
+  //   // alert(JSON.stringify(this.state.storeDetails));
+  //   formData.append('data', data);
+  //   console.log(`Appended form data ${formData}`);
+  //   return formData;
+  // }
+
+  // async addFiles(formData,data) {
+  //   const data = Object.assign({}, JSON.stringify(data));
+  //   for (var key in data.files) {
+  //     console.log(`Appending photos to form data ${key}`);
+  //     formData.append('files', data.files[key]);
+  //   }
+  //   return formData;
+  // }
+
+  
+  //  async getstores(e){
+  //    storeDetails = await estoreDetails;
+  //  }
+      
+
+  // async submit(e) {
+  //   alert("inside: "+ this.state.file)
+  //   let formData = new FormData();
+  //   // console.log(this.state.storeDetails);
+  
+  //   console.log(this.state.storeDetails)
+  //   console.log("Inside Product Creation" + JSON.stringify(e));
+  //     let storeNameList = e.stores;
+  //     // alert(JSON.stringify(this.state.storeDetails))
+  //     // console.log("storeNameList: " + storeNameList);
+
+  //     let storedetails = sessionStorage.getItem("Allstores")
+      
+  //     // alert(resultnew);
+  //     let storesSelected = (storedetails).filter(storeName => {
+  //       return storeNameList.includes(storeName.name);
+  //     })
+  //     console.log("storesSelected: " + JSON.stringify(storesSelected));
+  //     let store_id = storesSelected.map((store) => { return store.id });
+  //     for(let i=0; i<store_id.length;i++){
+  //       let data = {
+  //         id: {
+  //           storeId: store_id[i],
+  //           sku: this.state.sku
+  //         },
+  //         name: e.name,
+  //         description: e.description,
+  //         brand: e.brand,
+  //         // imageurl: formData.imageUrl,
+  //         file:e.file,
+  //         price: e.price,
+  //         unit: e.unit,
+  //         // storeId: 1,
+  //         // store: 1
+  //         // storeId: formValues.store,
+  //         // store: formValues.store
+  //       }
+  //       console.log(JSON.stringify(data));
+  //       formData.append(data);
+  //       let test1 = await this.addFormData(formData,data);
+  //   console.log(test1)
+  //   let test2 = await this.addFiles(test1,data);
+
+  //   axios.post(`${ROOT_URL}/addproduct`, test2)
+  //     .then((result) => {
+  //       // alert("Sending property");
+  //       if (result.status === 200) {
+  //         alert('Product Uploaded Successfully');
+  //         // this.setState({uploaded : true});
+  //       }
+  //       else {
+  //         // alert('Error while uploading product');
+  //       }
+  //     });
+        
+  //     }
+      
+
+  // }
 
   renderError = ({ error, touched }) => {
     if (touched && error) {
@@ -154,14 +266,11 @@ class AddProduct extends Component {
       </div>
     )
   }
-
-
-
   render() {
     const { handleSubmit, pristine, submitting } = this.props
     let redirectVar = null
     let invalidtag = null
-
+    // console.log(this.state)
     if (this.state.failed) {
       invalidtag = (
         <label style={{ color: 'red' }}>*Product already exists!</label>
@@ -176,7 +285,22 @@ class AddProduct extends Component {
 
     const units = ['Piece', 'Pound', 'Oz']
 
+    let image_new = null;
+    if (this.state.profilepic) {
+      image_new = (
+        <img
+          class="plus-image img-circle "
+          style={{ backgroundColor: "black", border: "black" }}
+          src={this.state.profilepic}
+          width='200'
+          height='200'
+
+        />
+      )
+    }
+
     return (
+
       < div >
         {/* {redirectVar} */}
         <div>
@@ -192,24 +316,76 @@ class AddProduct extends Component {
                   <br></br>
                 </div>
                 <div className='row'>
+
+                  {/* <form onSubmit={this.uploadImage} enctype='multipart/form-data'>
+                        <div class='preview text-center' >
+                            <div>
+                                <img class="product-holder "
+                                    style={{ backgroundColo: "black" }}
+                                    src={this.state.profilepic}
+                                    width='100'
+                                    height='30'>
+
+                                </img>
+                                {image_new}
+                                
+                                <div style={{ marginLeft: "200px" }}>
+                                    <input
+                                       
+                                        type='file'
+                                        onChange={this.imageChangeHandler}
+                                        name='myImage'
+                                        id='myImage'
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                    </form> */}
+
                   <div className='col-sm-6'>
                     <form
                       className='ui form error'
                       onSubmit={this.props.handleSubmit(this.onSubmit)}
+                      onChange={this.inputChangeHandler}
                     >
-                      <div style={{ marginLeft: '10%' }}>
+                      {/* <div class='preview text-center' >
+                        <div>
+                          <img class="product-holder "
+                            style={{ backgroundColo: "black" }}
+                            src={this.state.profilepic}
+                            width='100'
+                            height='30'>
+
+                          </img>
+                          {image_new}
+
+                          <div style={{ marginLeft: "200px" }}>
+                            <input
+                              type='file'
+                              onChange={this.imageChangeHandler}
+                              name='myImage'
+                              id='myImage'
+                            />
+                          </div>
+                        </div>
+                      </div>*/}
+
+                      <div style={{ marginLeft: '10%' }}> 
                         {/* <br /> */}
                         <Field
                           name='name'
                           type='text'
                           component={this.renderInput}
+                          // onChange={this.inputChangeHandler}
                           label='Name'
                         />
-                        <br />
+                        
                         <Field
                           name='imageUrl'
                           type='text'
                           component={this.renderInput}
+                          // onChange={this.inputChangeHandler}
                           label='ImageUrl'
                         />
                         <br />
@@ -217,6 +393,7 @@ class AddProduct extends Component {
                           name='description'
                           type='text'
                           component={this.renderInput}
+                          // onChange={this.inputChangeHandler}
                           label='Description'
                         />
                         <br />
@@ -224,6 +401,7 @@ class AddProduct extends Component {
                           name='brand'
                           type='text'
                           component={this.renderInput}
+                          // onChange={this.inputChangeHandler}
                           label='Brand'
                         />
                         <br />
@@ -231,6 +409,7 @@ class AddProduct extends Component {
                           name='price'
                           type='number'
                           component={this.renderInput}
+                          // onChange={this.inputChangeHandler}
                           label='price'
                         />
                         <br />
@@ -241,6 +420,7 @@ class AddProduct extends Component {
                         <Field
                           name="unit"
                           component={this.renderDropdownList}
+                          // onChange={this.inputChangeHandler}
                           data={units}
                           style={{
                             width: "100%",
@@ -260,6 +440,7 @@ class AddProduct extends Component {
                         <Field
                           name="stores"
                           component={this.renderMultiselect}
+                          // onChange={this.inputChangeHandler}
                           defaultValue={[]}
                           // onBlur={() => this.props.onBlur()}
                           style={{
@@ -275,7 +456,8 @@ class AddProduct extends Component {
                         <br />
                         {invalidtag}
                         <br />
-                        <button type='submit' class='btn btn-info'>
+                        <button type='submit' class='btn btn-info'
+                        >
                           Create Product
                         </button>
 

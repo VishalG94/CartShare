@@ -1,5 +1,6 @@
 package edu.sjsu.cmpe275.project.CartShare.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -51,6 +52,7 @@ public class Product implements Serializable{
 	
 	//Seperate field needed or can we reuse the storeId present in this model
 	@ManyToOne(fetch = FetchType.EAGER, optional=true)
+	@JsonIgnoreProperties({"products", "orders"})
 	@JoinColumn(name="store_id")
 	private Store store;
 
@@ -82,7 +84,7 @@ public class Product implements Serializable{
 			jsonInfo.put("description", this.description);
 			jsonInfo.put("price", this.price);
 			jsonInfo.put("brand", this.brand);
-			jsonInfo.put("img", this.imageurl);
+			jsonInfo.put("imageurl", this.imageurl);
 			jsonInfo.put("store", this.getStore());
 			jsonInfo.put("unit", this.unit);
 			JSONArray orders = new JSONArray();

@@ -1,5 +1,7 @@
 package edu.sjsu.cmpe275.project.CartShare.service;
 
+import edu.sjsu.cmpe275.project.CartShare.model.Product;
+import edu.sjsu.cmpe275.project.CartShare.repository.ProductRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.StoreRepository;
 import edu.sjsu.cmpe275.project.CartShare.model.Address;
 import edu.sjsu.cmpe275.project.CartShare.model.Store;
@@ -8,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +20,9 @@ public class StoreService {
 
     @Autowired
     private StoreRepository storeRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     public ResponseEntity<?> addStoreService(Store store) {
         System.out.println("Inside add store service");
@@ -29,6 +35,21 @@ public class StoreService {
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(store);
     }
 
+    public ResponseEntity<?> deletStore(Long id) {
+        System.out.println("inside delete store service");
+        System.out.println("id"+id);
+        Optional<Store> newstore = storeRepository.findById(id);
+        if (!newstore.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error : Store Not Found");
+        }
 
+        Optional<List<Product>> productlist = Optional.ofNullable(newstore.get().getProducts());
+//        if(productlist.isPresent()){
+//            productRepository.
+//        }
 
+        storeRepository.delete(newstore.get());
+
+        return ResponseEntity.status(HttpStatus.OK).body(newstore.get());
+    }
 }
