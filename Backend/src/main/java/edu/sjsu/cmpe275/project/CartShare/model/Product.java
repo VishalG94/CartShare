@@ -14,23 +14,7 @@ public class Product implements Serializable{
 
 	@EmbeddedId
 	private ProductId id;
-	public Product()
-	{
-	}
-
-	public Product(ProductId id, String name, String description, String imageurl, String brand, String unit,
-				   double price, Store store) {
-//		this.storeId = storeId;
-//		this.sku = sku;
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.imageurl = imageurl;
-		this.brand = brand;
-		this.unit = unit;
-		this.price = price;
-		this.setStore(store);
-	}
+	
 	@Column(name = "name", nullable = false)
 	 private String name;
 	
@@ -70,7 +54,23 @@ public class Product implements Serializable{
 //	public void setSku(long sku) {
 //		this.sku = sku;
 //	}
+	
+	public Product()
+	{
+	}
 
+	public Product(ProductId id, String name, String description, String imageurl, String brand, String unit,
+				   double price, Store store) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.imageurl = imageurl;
+		this.brand = brand;
+		this.unit = unit;
+		this.price = price;
+		this.setStore(store);
+	}	
+	
 	public String toString(){
 		try{
 

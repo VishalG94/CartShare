@@ -14,32 +14,34 @@ import java.util.Set;
 public class Order {
 	
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "orderid", nullable = false, unique = true)    
 	private long orderid;	 		
 	
 	@ManyToOne
-	@JoinColumn(name="buyer_id",nullable = false)
+	@JoinColumn(name="buyer_id",nullable = true)
 	private User buyerId;	
 	
-	@Column(name = "price", nullable = false)
+	@Column(name = "price", nullable = true)
     private float price;
 
-	@Column(name = "status", nullable = false)
+	@Column(name = "status", nullable = true)
     private String status;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
-	private Set<Order_Items> order_items;
+	@OrderColumn(name="list_index")
+	private List<Order_Items> order_items;
 	
 	@ManyToOne
 	@JoinColumn(name="store_id",nullable = false)
 	private Store store;
 	
 	@ManyToOne
-	@JoinColumn(name="pool_id",nullable = false)
+	@JoinColumn(name="pool_id",nullable = true)
 	private Pool pool;
 	
 	
-	@Column(name = "delivery_address", nullable = false)
+	@Column(name = "delivery_address", nullable = true)
     private String deliveryAddress;
 	
 //	@ManyToOne(mappedBy = pickup_orders)
@@ -54,7 +56,7 @@ public class Order {
 	{		
 	}	
 	
-	public Order(long orderid, User buyerId, float price, String status, Set<Order_Items> order_items, Store store,
+	public Order(long orderid, User buyerId, float price, String status, List<Order_Items> order_items, Store store,
 			Pool pool, String deliveryAddress, Date orderTime) {
 		super();
 		this.orderid = orderid;
@@ -67,7 +69,15 @@ public class Order {
 		this.deliveryAddress = deliveryAddress;
 		this.orderTime = orderTime;
 	}
-	
+
+	public List<Order_Items> getOrder_items() {
+		return order_items;
+	}
+
+	public void setOrder_items(List<Order_Items> order_items) {
+		this.order_items = order_items;
+	}
+
 	public Pool getPool() {
 		return pool;
 	}
@@ -75,18 +85,8 @@ public class Order {
 	public void setPool(Pool pool) {
 		this.pool = pool;
 	}
-
-
-
-
-	public Set<Order_Items> getOrder_items() {
-		return order_items;
-	}
 	
-	public void setOrder_items(Set<Order_Items> order_items) {
-		this.order_items = order_items;
-	}
-
+	
 	public long getOrderid() {
 		return orderid;
 	}

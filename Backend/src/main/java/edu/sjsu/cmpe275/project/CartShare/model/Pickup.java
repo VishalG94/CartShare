@@ -20,7 +20,7 @@ public class Pickup {
 	private String pickupPerson;
 	
 	@OneToMany
-	@JoinColumn(name="order_id",nullable=false)
+	@JoinColumn(name="order_id",nullable=true)
 	private List<Order> orders;
 	
 	@Column(name = "status", nullable = false)
