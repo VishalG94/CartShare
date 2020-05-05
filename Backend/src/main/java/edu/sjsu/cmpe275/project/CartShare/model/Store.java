@@ -22,11 +22,11 @@ public class Store implements Serializable{
 
 	 @Embedded
 	 private Address address;
-
-	 @OneToMany(fetch = FetchType.EAGER, mappedBy = "store")
+	 @JsonIgnoreProperties({"store"})
+	 @OneToMany(fetch = FetchType.EAGER, mappedBy = "store", orphanRemoval = true, cascade = CascadeType.PERSIST)
 	 private List<Product> products;
 
-	 @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
+	 @OneToMany(fetch = FetchType.LAZY, mappedBy = "store",orphanRemoval = true, cascade = CascadeType.PERSIST)
 	 private List<Order> orders;
 	 
 	public long getId() {

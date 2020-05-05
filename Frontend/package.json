@@ -31,6 +31,7 @@
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.5",
     "react-widgets": "^4.5.0",
+    "reactstrap": "^8.4.1",
     "recharts": "^1.8.5",
     "redux": "^4.0.4",
     "redux-form": "^8.2.6",

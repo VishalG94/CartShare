@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 @CrossOrigin(origins = "*", allowCredentials = "true")
@@ -40,7 +41,14 @@ public class StoreController {
 
 
     @GetMapping("/getstores")
-    public List<Store> getAllPlayers() {
+    public List<Store> getAllStores() {
         return storeRepository.findAll();
+    }
+
+    @RequestMapping(value="/deletestore/{id}", method=RequestMethod.DELETE)
+    public ResponseEntity<?> deletStore(@PathVariable Long id){
+        System.out.println("Inside delete store controller");
+
+        return storeService.deletStore(id);
     }
 }
