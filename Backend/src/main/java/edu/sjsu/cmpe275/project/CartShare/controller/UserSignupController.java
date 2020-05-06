@@ -1,13 +1,16 @@
 package edu.sjsu.cmpe275.project.CartShare.controller;
 
 import java.net.URISyntaxException;
+import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyValueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +21,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.sjsu.cmpe275.project.CartShare.exception.CustomException;
+import edu.sjsu.cmpe275.project.CartShare.model.Request;
 import edu.sjsu.cmpe275.project.CartShare.model.User;
+import edu.sjsu.cmpe275.project.CartShare.repository.PoolRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.UserRepository;
 import edu.sjsu.cmpe275.project.CartShare.service.EmailService;
 import edu.sjsu.cmpe275.project.CartShare.service.UserService;
@@ -37,6 +42,9 @@ public class UserSignupController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    PoolRepository poolRepository;
 
     private static final String USER_VERIFICATION_EXCEPTION_MESSAGE = "User account verification failed";
 
@@ -121,5 +129,34 @@ public class UserSignupController {
         }
         System.out.println("User logged in successfully");
         return ResponseEntity.ok(existingUser);
+    }
+
+    // @ResponseBody
+    // @RequestMapping(method = RequestMethod.PUT, value = "/updateuser/{email}")
+    // public ResponseEntity<?> updateUser(@PathVariable String email) {
+    // Pool pool = poolRepository.findBypoolId("jhfj");
+
+    // User user = userRepository.findByEmail(email);
+    // user.setPool(pool);
+
+    // userRepository.save(user);
+    // return new ResponseEntity<>(
+    // "{\"status\" : \"User could not be verified because of bad request from
+    // user..!!\"}",
+    // HttpStatus.BAD_REQUEST);
+    // }
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> getPlayersById(@PathVariable(value = "id") String id)
+            throws InvalidConfigurationPropertyValueException {
+        User user = userRepository.findByEmail(id);
+        System.out.println("jijojoklonojnkmk");
+        List<Request> newList = user.getRequests();
+        System.out.println(newList);
+        // newList.stream().forEach(System.out::println);
+        for (Request leave : newList) {
+            System.out.println("In pool list " + leave.getId());
+        }
+        return ResponseEntity.ok().body(user);
     }
 }
