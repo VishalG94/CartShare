@@ -4,49 +4,49 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table (name = "pool")
+@Table(name = "pool")
 @EntityListeners(AuditingEntityListener.class)
-public class Pool implements Serializable{
-	
+public class Pool implements Serializable {
+
 	@Id
-	@Column(name = "poolid", nullable = false)    
-	private String poolId;	 	
-	
+	@Column(name = "poolid", nullable = false)
+	private String poolId;
+
 	@Column(name = "name", nullable = false)
-	 private String name;
-	
+	private String name;
+
 	@Column(name = "neighbourhood", nullable = false)
-	 private String neighbourhood;
-	
+	private String neighbourhood;
+
 	@Column(name = "description", nullable = false)
-	 private String description;
-	
+	private String description;
+
 	@Column(name = "zipcode", nullable = false)
-	 private int zipcode;			
-	
+	private int zipcode;
+
 	@OneToOne
-	@JoinColumn(name="pool_leader",referencedColumnName = "id")
+	@JoinColumn(name = "pool_leader", referencedColumnName = "id")
 	private User poolLeader;
-	
-//	@OneToMany(cascade = CascadeType.ALL)
-//	@JoinColumn(name="order")
-//	private List<Order> orders;	
-//	
-	
-	@OneToMany(fetch = FetchType.LAZY,mappedBy = "pool")	
-	private List<Order> orders;		
-	
+
+	// @OneToMany(cascade = CascadeType.ALL)
+	// @JoinColumn(name="order")
+	// private List<Order> orders;
+	//
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pool")
+	private List<Order> orders;
+
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "pool")
-	private List<User> poolers;
-	
-	public Pool()
-	{
-		
+	private List<User> poolers = new ArrayList<>();
+
+	public Pool() {
+
 	}
-	
+
 	public Pool(String poolId, String name, String neighbourhood, String description, int zipcode, User poolLeader,
 			List<Order> orders, List<User> poolers) {
 		super();
@@ -59,7 +59,6 @@ public class Pool implements Serializable{
 		this.orders = orders;
 		this.poolers = poolers;
 	}
-
 
 	public String getPoolId() {
 		return poolId;
@@ -107,8 +106,8 @@ public class Pool implements Serializable{
 
 	public void setPoolLeader(User poolLeader) {
 		this.poolLeader = poolLeader;
-	}	
-	
+	}
+
 	public List<Order> getOrders() {
 		return orders;
 	}
@@ -123,6 +122,6 @@ public class Pool implements Serializable{
 
 	public void setPoolers(List<User> poolers) {
 		this.poolers = poolers;
-	}	
-	
+	}
+
 }

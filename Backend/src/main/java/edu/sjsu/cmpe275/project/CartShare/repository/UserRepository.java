@@ -13,5 +13,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findById(Long id);
 
+    User findByscreenName(String screenname);
+
     void save(Optional<User> user);
 }

@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@JsonIgnoreProperties({ "pool" })
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
-public class User {
+public class User implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,6 +51,9 @@ public class User {
 	@OneToOne
 	@JoinColumn(name = "reference", referencedColumnName = "screen_name")
 	private User reference;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "approver")
+	private List<Request> requests = new ArrayList<>();
 
 	// @OneToMany
 	// @JoinColumn()
@@ -164,6 +169,14 @@ public class User {
 
 	public void setVerified(boolean verified) {
 		this.verified = verified;
+	}
+
+	public List<Request> getRequests() {
+		return requests;
+	}
+
+	public void setRequests(List<Request> requests) {
+		this.requests = requests;
 	}
 
 }
