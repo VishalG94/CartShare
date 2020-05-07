@@ -6,7 +6,7 @@ import axios from 'axios'
 import cookie from 'react-cookies'
 import { Redirect } from 'react-router'
 import { Link } from 'react-router-dom'
-import { userOrder } from '../../actions'
+// import { userOrder } from '../../actions'
 import { connect } from 'react-redux'
 import { Field, reduxForm } from 'redux-form'
 
@@ -66,15 +66,15 @@ class Cart extends React.Component {
       // alert(data.restaurant_name)
       axios.defaults.withCredentials = true
   
-      this.props.userOrder(data, res => {
-        if (res.status === 200) {
-          console.log('Order placed successfully',res.data);
-          // this.props.history.push("/");
-          // sessionStorage.setItem({'orderid':res.data[0].order_id})
-          this.props.history.push("/userorder");
-          // <Link />
-        } 
-      })
+      // this.props.userOrder(data, res => {
+      //   if (res.status === 200) {
+      //     console.log('Order placed successfully',res.data);
+      //     // this.props.history.push("/");
+      //     // sessionStorage.setItem({'orderid':res.data[0].order_id})
+      //     this.props.history.push("/userorder");
+      //     // <Link />
+      //   } 
+      // })
     }else{
       alert('Add atleast one dishes to the cart before checkouts!')
     }
@@ -149,4 +149,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect( mapStateToProps , {userOrder})(withRouter(Cart));
+export default connect( mapStateToProps)(withRouter(Cart));

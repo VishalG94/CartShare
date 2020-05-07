@@ -34,14 +34,19 @@ class Navbar extends Component {
       console.log('Not Able to read cookie')
       navLogin = (
         <ul class='nav navbar-nav navbar-right'>
-          <li>
-            <Link to='/signup'>
+          <li style={{float:"right"}}>
+            <Link to='/signup' >
               <span class='glyphicon glyphicon-log-in' style={{ color: "rgb(29, 161, 242)" }} />  &nbsp;<span style={{ color: 'rgb(29, 161, 242)' }}>Sign up</span>
             </Link>
           </li>
-          <li>
+          <li style={{float:"right"}}>
             <Link to='/login'>
-              <span class='glyphicon glyphicon-log-in' style={{ color: "rgb(29, 161, 242)" }} /> &nbsp; <span style={{ color: 'rgb(29, 161, 242)' }}>Login</span>
+            {/* <i class="fas fa-sign-in-alt">Login</i> */}
+            <i style={{ color: "rgb(29, 161, 242)"}} class='fas fa-sign-in-alt' />
+              &nbsp;&nbsp;
+              <span style={{ color: "rgb(29, 161, 242)"}} className='tab'>Login</span>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              {/* <span class='glyphicon glyphicon-log-in' style={{ color: "rgb(29, 161, 242)" }} /> &nbsp; <span style={{ color: 'rgb(29, 161, 242)' }}>Login</span> */}
             </Link>
           </li>
         </ul>
@@ -62,12 +67,8 @@ class Navbar extends Component {
         >
           <div class='container-fluid'>
             <div class='navbar-header'>
+            {navLogin}
               <a href='/home'>
-                {/* <i style={{
-                  marginLeft: '30px',
-                  color: 'rgb(29, 161, 242)',
-                  // alighText: 'right'
-                }} class="fab fa-twitter fa-3x"></i> */}
                 <img
                   src={require('../img/favicon.ico')}
                   style={{ marginLeft: "30px", marginBottom: "5px", marginTop: "5px" }}
@@ -76,12 +77,11 @@ class Navbar extends Component {
                   height='40'
                 />
               </a>
-
+              
             </div>
-            {navLogin}
           </div>
         </nav>
-      </div>
+              </div>
     )
   }
 }

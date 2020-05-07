@@ -50,7 +50,7 @@ public class PoolController {
 
     @PostMapping("/createpool/{id}")
     @ResponseBody
-    public ResponseEntity<String> createPool(@Valid @RequestBody Pool pool, @PathVariable(value = "id") String mail)
+    public ResponseEntity<?> createPool(@Valid @RequestBody Pool pool, @PathVariable(value = "id") String mail)
             throws URISyntaxException {
         System.out.println("Body sent : " + pool.getPoolId());
         System.out.println("Body sentdd : " + mail);
@@ -99,15 +99,15 @@ public class PoolController {
         System.out.println("Passed value " + type + val);
         List<Pool> poolList = new ArrayList<>();
         switch (type) {
-            case "name":
+            case "Name":
                 System.out.println("inside name");
                 Pool pool = poolRepository.findByName(val);
                 poolList.add(pool);
                 return poolList;
-            case "neighbourhood":
+            case "Neighbourhood":
                 System.out.println("inside nighbo");
                 return poolRepository.findByneighbourhood(val);
-            case "zipcode":
+            case "Zipcode":
                 System.out.println("inside zip");
                 return poolRepository.findByzipcode(Integer.parseInt(val));
             default:
