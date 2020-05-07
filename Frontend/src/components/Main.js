@@ -37,7 +37,7 @@ class Main extends Component {
         <Route path='/search/:id' component={SearchProducts} />
         <Route path='/poolhome' component={PoolHome} />
         <Route path='/createpool' component={CreatePool} />
-        <Route path='/joinpool' component={JoinPool} />
+        <Route path='/joinpool/:poolId' component={JoinPool} />
         <Route path='/searchpool' component={SearchPool} />
         <Route path='/searchpooldata/:unit/:value' component={SearchPoolData} />
       </div>

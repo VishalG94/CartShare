@@ -42,6 +42,7 @@ class JoinPool extends Component {
     onSubmit = formValues => {
         // var sname = localStorage.getItem("screenname")
         var sname = UTIL.getUserScreenName()
+        console.log(sname)
         // sname = sname.replace(/['"]+/g, '')
         const data = {
             poolId: this.props.match.params.poolId,
@@ -50,23 +51,23 @@ class JoinPool extends Component {
         }
         console.log(data)
 
-        // axios.defaults.withCredentials = true;
-        // axios.post(`${ROOT_URL}/api/searchpools/${unit}/${value}`, data).then(response => {
+        axios.defaults.withCredentials = true;
+        axios.post(`${ROOT_URL}/api/joinpool`, data).then(response => {
 
-        //     // update the state with the response data
-        //     this.setState({
-        //         failed: false,
-        //         success: true
-        //     })
-        //     console.log('Axios post:', this.state.items);
-        //     // window.location.reload(true)
-        // }).catch(error => {
-        //     console.log(error);
-        //     this.setState({
-        //         failed: true,
-        //         success: false
-        //     })
-        // });
+            // update the state with the response data
+            this.setState({
+                failed: false,
+                success: true
+            })
+            console.log('Axios post:', response.data);
+            // window.location.reload(true)
+        }).catch(error => {
+            console.log(error);
+            this.setState({
+                failed: true,
+                success: false
+            })
+        });
     }
 
 
