@@ -26,7 +26,7 @@ class RequestData extends Component {
             if (response.status === 200) {
                 console.log(response.data)
                 alert("Request has been rejected!")
-                // window.location.reload();
+                window.location.reload();
 
             } else {
                 console.log("error")
@@ -43,7 +43,7 @@ class RequestData extends Component {
             if (response.status === 200) {
                 console.log(response.data)
                 alert("Request has been approved!")
-                // window.location.reload();
+                window.location.reload();
 
             } else {
                 console.log("error")

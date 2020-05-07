@@ -29,7 +29,9 @@ import edu.sjsu.cmpe275.project.CartShare.model.User;
 import edu.sjsu.cmpe275.project.CartShare.repository.PoolRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.RequestRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.UserRepository;
+import edu.sjsu.cmpe275.project.CartShare.service.EmailService;
 import edu.sjsu.cmpe275.project.CartShare.service.PoolService;
+import edu.sjsu.cmpe275.project.CartShare.utils.EmailUtility;
 
 @RestController
 @RequestMapping("/api")
@@ -47,6 +49,9 @@ public class PoolController {
 
     @Autowired
     RequestRepository requestRepository;
+
+    @Autowired
+    EmailService emailService;
 
     @PostMapping("/createpool/{id}")
     @ResponseBody
@@ -185,7 +190,9 @@ public class PoolController {
         // String message = EmailUtility.createVerificationMsg(user.getID());
         // emailService.sendEmail(user.getEmail(), message, " User Profile
         // Verification");
-        return new ResponseEntity<>("{\"status\" : \"Pool has been created Successfully.!!\"}", HttpStatus.OK);
+        String message = EmailUtility.createPoolRequestReceived(initiater, approver);
+        emailService.sendEmail(requestApprover.getEmail(), message, "Pool Request");
+        return new ResponseEntity<>("{\"status\" : \"Pool request has been sent Successfully.!!\"}", HttpStatus.OK);
     }
 
 }

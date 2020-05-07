@@ -102,13 +102,13 @@ class JoinPool extends Component {
         let invalidtag = null
         if (this.state.failed) {
             invalidtag = (
-                <label style={{ color: 'red' }}>*Product already exists!</label>
+                <label style={{ color: 'red' }}>Error in sending the request</label>
             )
         }
 
         if (this.state.success) {
             invalidtag = (
-                <label style={{ color: 'green' }}>Successfully created new Product</label>
+                <label style={{ color: 'green' }}>Join request has been sent successfully</label>
             )
         }
 

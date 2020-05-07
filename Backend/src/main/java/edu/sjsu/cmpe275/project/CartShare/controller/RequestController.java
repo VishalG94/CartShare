@@ -108,7 +108,7 @@ public class RequestController {
             // approved.!!\"}", HttpStatus.OK);
 
             Pool pool = requestApprover.getPool();
-            initiater.setRole("Pooler");
+            initiater.setRole("POOLER");
             initiater.setRequestStatus("APPROVED");
             initiater.setPool(pool);
             userRepository.saveAndFlush(initiater);

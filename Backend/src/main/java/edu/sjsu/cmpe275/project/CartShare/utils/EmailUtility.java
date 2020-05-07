@@ -13,4 +13,11 @@ public class EmailUtility {
         System.out.println("verificationMessage : " + verificationMessage);
         return verificationMessage;
     }
+
+    public static String createPoolRequestReceived(String initiater, String approver) {
+        String notifyMessage = "Hi " + approver + ",\n\nYou have received a request from " + initiater
+                + " to join the pool!!!" + "\n\nRegards,\nTeam Cartshare";
+        System.out.println("notifyMessage : " + notifyMessage);
+        return notifyMessage;
+    }
 }

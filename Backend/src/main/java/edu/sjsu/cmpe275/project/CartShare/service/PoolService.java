@@ -36,8 +36,9 @@ public class PoolService {
         newPool.setPoolLeader(user);
 
         user.setPool(newPool);
-        poolRepository.save(newPool);
-
+        user.setRole("POOL_LEADER");
+        poolRepository.saveAndFlush(newPool);
+        userRepository.saveAndFlush(user);
         // List<User> poolersList = new ArrayList<>();
         // List<User> poolersList = pool.getPoolers();
         // System.out.println(poolersList);
