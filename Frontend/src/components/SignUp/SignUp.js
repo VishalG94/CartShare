@@ -222,12 +222,17 @@ class SignUp extends Component {
                 <div class='form-group'>
 
                   <GoogleLogin
+                    style={{ width: "max-content" }}
                     clientId={GOOGLE_CLIENT_ID}
-                    buttonText="SIGNUP WITH GOOGLE"
+                    // buttonText="SIGNUP WITH GOOGLE"
                     onSuccess={responseGoogle}
                     onFailure={onFailure}
                     cookiePolicy={'single_host_origin'}
                     className="google-button-signup"
+                    render={renderProps => (
+                      <button onClick={renderProps.onClick} class='btn btn-info'>Signup With Google</button>
+                    )}
+
                   />
                   {/* <button class='btn btn-info'>Continue with Google</button> */}
                 </div>
@@ -249,6 +254,7 @@ class SignUp extends Component {
           </div>
         </div>
       </form>
+
     )
   }
 }

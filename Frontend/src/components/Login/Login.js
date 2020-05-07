@@ -228,11 +228,14 @@ class Login extends Component {
                   </div>
                   <GoogleLogin
                     clientId={GOOGLE_CLIENT_ID}
-                    buttonText="SIGN IN WITH GOOGLE"
+                    // buttonText="SIGN IN WITH GOOGLE"
                     onSuccess={responseGoogle}
                     onFailure={responseGoogle}
                     cookiePolicy={'single_host_origin'}
                     className="google-button-signup"
+                    render={renderProps => (
+                      <button onClick={renderProps.onClick} class='btn btn-info'>SignIn With Google</button>
+                    )}
                   />
                   <br></br>
                 </div>
