@@ -135,7 +135,7 @@ public class RequestController {
     public ResponseEntity<?> rejectRequest(@PathVariable(value = "id") long requestId,
             @PathVariable(value = "rejecter") String rejecter) {
 
-        System.out.println(requestId + " " + rejecter);
+        System.out.println("inside reject request : " + requestId + " " + rejecter);
 
         Request request = requestRepository.findById(requestId).orElseThrow(
                 () -> new InvalidConfigurationPropertyValueException("", null, "User not found on :: " + requestId));
@@ -148,7 +148,7 @@ public class RequestController {
         userRepository.saveAndFlush(requestRejecter);
         requestRepository.delete(request);
 
-        return new ResponseEntity<>("{\"status\" : \"Request has been rejected..!!\"}", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("{\"status\" : \"Request has been rejected..!!\"}", HttpStatus.OK);
     }
 
 }
