@@ -13,6 +13,7 @@ export const saveUserDetails = (data, type) => {
     localStorage.setItem('ID', JSON.stringify(data.id));
     localStorage.setItem('role', JSON.stringify(data.role));
     localStorage.setItem('first_name', JSON.stringify(data.nickName));
+    localStorage.setItem('screenname', JSON.stringify(data.screenName));
 };
 
 export const getUserDetails = () => {
@@ -25,9 +26,9 @@ export const getUserDetails = () => {
         return null;
     }
 }
-export const getUserFirstName = () => {
-    if (localStorage.first_name) {
-        var userdetail = JSON.parse(localStorage.first_name);
+export const getUserScreenName = () => {
+    if (localStorage.screenname) {
+        var userdetail = JSON.parse(localStorage.screenname);
         return (userdetail ? userdetail : null);
     }
     else {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import '../../App.css'
-// import './AddStore.css'
+import '../AddProduct/AddProduct.css'
 import axios from 'axios'
 import LeftNavbar from '../LeftNavbar/LeftNavbar'
 import { Field, reduxForm } from 'redux-form'
@@ -10,6 +10,10 @@ import cookie from 'react-cookies'
 import { Redirect } from 'react-router'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import DropdownList from 'react-widgets/lib/DropdownList'
+import 'react-widgets/dist/css/react-widgets.css'
+import Multiselect from 'react-widgets/lib/Multiselect'
+import * as UTIL from '../utils/Utils'
 
 // Define a Login Component
 class JoinPool extends Component {
@@ -18,17 +22,10 @@ class JoinPool extends Component {
         // Call the constrictor of Super class i.e The Component
         super(props) // maintain the state required for this component
         this.state = {
-            name: '',
-            street: '',
-            city: '',
-            state: '',
-            zip: '',
-            authFlag: false,
-            failed: false,
-            success: false
-        } // Bind the handlers to this class // this.usernameChangeHandler = this.usernameChangeHandler.bind(this) // this.passwordChangeHandler = this.passwordChangeHandler.bind(this) // this.submitLogin = this.submitLogin.bind(this)
-    } // Call the Will Mount to set the auth Flag to false
-
+            units: ['Pool Leader', 'Pooler'],
+            value: ''
+        }
+    }
 
 
     inputChangeHandler = e => {
@@ -37,35 +34,41 @@ class JoinPool extends Component {
         })
     }
 
+    renderDropdownList = ({ input, ...rest }) =>
+        <DropdownList {...input} {...rest} />
+
+
 
     onSubmit = formValues => {
-        console.log("Inside Store Creation" + formValues);
-        let data = {
-            name: formValues.name,
-            address: {
-                street: formValues.street,
-                city: formValues.city,
-                state: formValues.state,
-                zip: formValues.zip
-            }
+        // var sname = localStorage.getItem("screenname")
+        var sname = UTIL.getUserScreenName()
+        // sname = sname.replace(/['"]+/g, '')
+        const data = {
+            poolId: this.props.match.params.poolId,
+            initiater: sname,
+            approver: formValues.screenname
         }
         console.log(data)
-        axios.defaults.withCredentials = true;
-        axios.post(`${ROOT_URL}/addstore`, data).then(response => {
-            // update the state with the response data
-            this.setState({
-                failed: false,
-                success: true
-            })
-            console.log('Axios post:', response.data);
-        }).catch(error => {
-            console.log(error);
-            this.setState({
-                failed: true,
-                success: false
-            })
-        });
+
+        // axios.defaults.withCredentials = true;
+        // axios.post(`${ROOT_URL}/api/searchpools/${unit}/${value}`, data).then(response => {
+
+        //     // update the state with the response data
+        //     this.setState({
+        //         failed: false,
+        //         success: true
+        //     })
+        //     console.log('Axios post:', this.state.items);
+        //     // window.location.reload(true)
+        // }).catch(error => {
+        //     console.log(error);
+        //     this.setState({
+        //         failed: true,
+        //         success: false
+        //     })
+        // });
     }
+
 
     renderError = ({ error, touched }) => {
         if (touched && error) {
@@ -92,26 +95,24 @@ class JoinPool extends Component {
             </div>
         )
     }
-
     render() {
-        // redirect based on successful login
+        const { handleSubmit, pristine, submitting } = this.props
         let redirectVar = null
         let invalidtag = null
-        // if (!cookie.load('cookie')) {
-        //   redirectVar = <Redirect to='/login' />
-        // }
-
         if (this.state.failed) {
             invalidtag = (
-                <label style={{ color: 'red' }}>*Store already exists!</label>
+                <label style={{ color: 'red' }}>*Product already exists!</label>
             )
         }
 
         if (this.state.success) {
             invalidtag = (
-                <label style={{ color: 'green' }}>Successfully created new Store</label>
+                <label style={{ color: 'green' }}>Successfully created new Product</label>
             )
         }
+
+        const units = ['Pool Leader', 'Pooler']
+
 
         return (
 
@@ -126,59 +127,61 @@ class JoinPool extends Component {
                             <div class='login-form'>
                                 <div class='panel'>
                                     <br></br>
-                                    <h2 style={{ marginLeft: '20px' }}>Join the pool</h2>
-                                    <br></br>
+                                    <h2 style={{ marginLeft: '20px' }}>Search Pool</h2>
+                                    <hr></hr>
                                 </div>
                                 <div className='row'>
                                     <div className='col-sm-6'>
                                         <form
                                             className='ui form error'
                                             onSubmit={this.props.handleSubmit(this.onSubmit)}
+                                            onChange={this.inputChangeHandler}
                                         >
+
                                             <div style={{ marginLeft: '10%' }}>
-                                                <br />
+                                                {/* <br /> */}
+
+                                                <label style={{ color: "rgb(107, 107, 131)" }}>Your Reference</label>
+
                                                 <Field
-                                                    name='name'
+                                                    name="reference"
+                                                    component={this.renderDropdownList}
+                                                    // onChange={this.inputChangeHandler}
+                                                    data={units}
+                                                    style={{
+                                                        width: "100%",
+                                                        border: "solid #ffffff",
+                                                        borderRadius: "4px",
+                                                        fontSize: "14px",
+                                                        // height: "80px",
+                                                        // lineHeight: "50px",
+                                                        fontFamily: "graphik"
+                                                    }}
+                                                    valueField="value"
+                                                    textField="reference"
+                                                />
+
+                                                <Field
+                                                    name='screenname'
                                                     type='text'
                                                     component={this.renderInput}
-                                                    label='Name'
+                                                    // onChange={this.inputChangeHandler}
+                                                    label='Screenname of Reference'
                                                 />
-                                                <br />
-                                                <Field
-                                                    name='street'
-                                                    type='text'
-                                                    component={this.renderInput}
-                                                    label='Street Number and Name'
-                                                />
-                                                <br />
-                                                <Field
-                                                    name='city'
-                                                    type='text'
-                                                    component={this.renderInput}
-                                                    label='City'
-                                                />
-                                                <br />
-                                                <Field
-                                                    name='state'
-                                                    type='text'
-                                                    component={this.renderInput}
-                                                    label='State'
-                                                />
-                                                <br />
-                                                <Field
-                                                    name='zip'
-                                                    type='text'
-                                                    component={this.renderInput}
-                                                    label='Zip code'
-                                                />
+
+
                                                 <br />
                                                 {invalidtag}
                                                 <br />
-                                                <button type='submit' class='btn btn-info'>
-                                                    Join Pool
+                                                <button type='submit' class='btn btn-info'
+                                                >
+                                                    Search Pool
                         </button>
-                                                <br />
 
+                                                <br />
+                                                <br />
+                                                <br />
+                                                <br />
                                             </div>
                                         </form>
                                     </div>
@@ -191,39 +194,20 @@ class JoinPool extends Component {
         )
     }
 }
-// export Login Component
-// export default BuyerProfile
 
 const validate = formValues => {
     const error = {}
-    if (!formValues.name) {
-        error.name = 'Enter a valid name'
-    }
-    if (!formValues.street) {
-        error.street = 'Enter a valid street'
-    }
-    if (!formValues.city) {
-        error.city = 'Enter a valid city'
-    }
-    if (!formValues.state) {
-        error.state = 'Enter a valid state'
-    }
-
-    if (!formValues.zip) {
-        error.zip = 'Enter a valid zip'
+    if (!formValues.screenname) {
+        error.value = 'Enter a valid screenname'
     }
     return error
 }
 
-const mapStateToProps = state => {
-    return { owner: state.owner }
-}
 
-export default connect(
-    mapStateToProps
-)(
-    reduxForm({
-        form: 'streamMenu',
-        validate: validate
+JoinPool
+    = reduxForm({
+        form: 'reactWidgets'  // a unique identifier for this form
     })(JoinPool)
-)
+
+export default JoinPool
+

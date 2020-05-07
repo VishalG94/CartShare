@@ -16,7 +16,7 @@ class SearchPoolDataDetails extends Component {
                 <td>{this.props.data.name}</td>
                 <td>{this.props.data.neighbourhood}</td>
                 <td>{this.props.data.zipcode}</td>
-                <td><Link to={`/joinpool/${this.props.data.id}`} ><button style={{ marginLeft: "2%" }} className="btn btn-info">Details</button></Link></td>
+                <td><Link to={`/joinpool/${this.props.data.poolId}`} ><button style={{ marginLeft: "2%" }} className="btn btn-info">Join Pool</button></Link></td>
             </Fragment>
         )
     }
