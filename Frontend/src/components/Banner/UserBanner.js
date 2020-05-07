@@ -10,7 +10,7 @@ const UserBanner = ({ bannerDetails }) => {
   // alert(count);
   bannerrow=<div className="UserBanner">
   {bannerDetails.map((details) => (
-    <UserCard {...details} />
+    <UserCard  /* item={...details} */  item={details}  />
   ))}
   </div>
       bannerLst = 

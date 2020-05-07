@@ -32,6 +32,7 @@ class SearchProducts extends Component {
       city: '',
       state: '',
       zip: '',
+      store:'',
       products: [],
       productsDetails: [],
       authFlag: false,
@@ -46,6 +47,7 @@ class SearchProducts extends Component {
     sessionStorage.setItem('items', []);
     sessionStorage.setItem('checkout', 'new');
     let { id } = this.props.match.params
+    sessionStorage.setItem('store',id)
     axios
       .get(`${ROOT_URL}/getproducts/` + id, { params: '' })
       .then(response => {
@@ -130,9 +132,15 @@ class SearchProducts extends Component {
     let invalidtag = null
     let displayCart = null
 
-    if (sessionStorage.getItem('checkout') !== 'new') {
+    if(localStorage.getItem("order_items"))
+    {
+      sessionStorage.setItem('checkout',"new")
+    }
+    
+
+    if (sessionStorage.getItem('checkout') === 'new') {
       displayCart = (
-        <Cart data={JSON.parse(sessionStorage.getItem('checkout'))} />
+        <Cart />
       )
     } else {
       displayCart = <div>Add items to your cart</div>
