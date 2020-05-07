@@ -25,6 +25,7 @@ let deleteStore = e => {
   
   
 }
+
 const StoreBannerCard = ( bannerDetails ) => {
   return (
     <div class="col-sm-3" >

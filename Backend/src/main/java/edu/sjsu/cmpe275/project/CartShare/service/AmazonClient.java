@@ -52,7 +52,7 @@ public class AmazonClient {
         try {
             File file = convertMultiPartToFile(multipartFile);
             String fileName = generateFileName(multipartFile);
-            fileUrl = "https://" + bucketName + ".s3.amazonaws.com/" + fileName + ";";
+            fileUrl = "https://" + bucketName + ".s3.amazonaws.com/" + fileName;
             uploadFileTos3bucket(fileName, file);
             file.delete();
         } catch (Exception e) {

@@ -1,5 +1,4 @@
 import React from "react";
-import "./BannerCard-styles.css";
 import image from "../../images/Avatar.png"
 import {
   Card, CardImg, CardText, CardBody,

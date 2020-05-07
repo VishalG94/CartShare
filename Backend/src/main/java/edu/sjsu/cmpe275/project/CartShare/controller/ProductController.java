@@ -48,43 +48,43 @@ public class ProductController {
         this.amazonClient = amazonClient;
     }
 
-    @PostMapping(value="/addproduct", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<?> addProduct(@RequestBody Product product,
-                                      HttpServletRequest request) throws JSONException {
-        System.out.println("inside create product controller: "+product.toString());
-
-        return productService.addProduct(product);
-    }
-
-//@PostMapping(value="/addproduct", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-//    public ResponseEntity<?> addProduct(@RequestPart(value = "data") String data,@RequestPart(value = "files") MultipartFile[] files) throws JsonMappingException, JsonProcessingException{
-//        String response = "";
-//        ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-//        Product prop;
+//    @PostMapping(value="/addproduct", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+//    public ResponseEntity<?> addProduct(@RequestBody Product product,
+//                                      HttpServletRequest request) throws JSONException {
+//        System.out.println("inside create product controller: "+product.toString());
 //
-//        try {
-//            prop = mapper.readValue(data, Product.class);
-//            for(MultipartFile file : files)
-//            {
-//                System.out.println("started upload");
-//                response += this.amazonClient.uploadFile(file);
-//                System.out.println("ended upload : " + response );
-//            }
-//
-//            prop.setImageurl(response);
-//
-//            System.out.println("Images sting: " + prop.getImageurl());
-//        }
-//        catch (JsonMappingException e){
-//            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-//        }
-//        catch (Exception e){
-//            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-//        }
-//
-//        productService.addProduct(prop);
-//        return ResponseEntity.ok(prop);
+//        return productService.addProduct(product);
 //    }
+
+@PostMapping(value="/addproduct", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<?> addProduct(@RequestPart(value = "data") String data,@RequestPart(value = "files") MultipartFile[] files) throws JsonMappingException, JsonProcessingException{
+        String response = "";
+        ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        Product prop;
+
+        try {
+            prop = mapper.readValue(data, Product.class);
+            for(MultipartFile file : files)
+            {
+                System.out.println("started upload");
+                response += this.amazonClient.uploadFile(file);
+                System.out.println("ended upload : " + response );
+            }
+
+            prop.setImageurl(response);
+
+            System.out.println("Images sting: " + prop.getImageurl());
+        }
+        catch (JsonMappingException e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        productService.addProduct(prop);
+        return ResponseEntity.ok(prop);
+    }
 
     @GetMapping("/getproducts/{id}")
         public ResponseEntity<?> getProducts(@PathVariable Long id) {

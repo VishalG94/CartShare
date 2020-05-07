@@ -5,7 +5,7 @@ import axios from 'axios'
 import AdminNavbar from '../LeftNavbar/AdminNavbar'
 import { Field, reduxForm } from 'redux-form'
 import ROOT_URL from '../../constants.js'
-
+import image from '../../images/product.png';
 import cookie from 'react-cookies'
 import { Redirect } from 'react-router'
 import { Link } from 'react-router-dom'
@@ -15,6 +15,7 @@ import 'react-widgets/dist/css/react-widgets.css'
 import Multiselect from 'react-widgets/lib/Multiselect'
 
 // Define a Login Component
+
 class AddProduct extends Component {
   // call the constructor method
   constructor(props) {
@@ -36,11 +37,15 @@ class AddProduct extends Component {
       failed: false,
       success: false,
       file: '',
-      data:''
+      data: '',
+      profilepic: ''
     } // Bind the handlers to this class // this.usernameChangeHandler = this.usernameChangeHandler.bind(this) // this.passwordChangeHandler = this.passwordChangeHandler.bind(this) // this.submitLogin = this.submitLogin.bind(this)
   } // Call the Will Mount to set the auth Flag to false
 
   async componentWillMount() {
+    if (this.state.profilepic == '') {
+      this.setState({ profilepic: image });
+    }
 
     axios
       .get(`${ROOT_URL}/getmaxsku`, { params: '' })
@@ -54,28 +59,28 @@ class AddProduct extends Component {
         console.log(error);
       })
 
-      axios.defaults.withCredentials = true
-      axios
-        .get(`${ROOT_URL}/getstores`, { params: '' })
-        .then(response => {
-          // console.log(response)
-          // console.log("Inside Product Creation" + JSON.stringify(response.data));
-          this.setState({ storeDetails: response.data });
-          console.log(response.data);
-          let data1 = (response.data).map(store => {
-            return store.name;
-          })
-          console.log(data1);
-          this.setState({
-            store: data1
-          })
+    axios.defaults.withCredentials = true
+    axios
+      .get(`${ROOT_URL}/getstores`, { params: '' })
+      .then(response => {
+        // console.log(response)
+        // console.log("Inside Product Creation" + JSON.stringify(response.data));
+        this.setState({ storeDetails: response.data });
+        console.log(response.data);
+        let data1 = (response.data).map(store => {
+          return store.name;
         })
+        console.log(data1);
+        this.setState({
+          store: data1
+        })
+      })
 
   }
 
   inputChangeHandler = e => {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     })
   }
 
@@ -91,155 +96,76 @@ class AddProduct extends Component {
   // renderSelectList = ({ input, ...rest }) =>
   //   <SelectList {...input} onBlur={() => input.onBlur()} {...rest} />
 
-  async imageChangeHandler(e)  {
-    alert(JSON.stringify(e.target.file))
+
+  imageChangeHandler = e => {
     this.setState({
-      file: e.target.files[0]
-    },()=>alert(JSON.stringify(this.state.file)))
-    // alert(JSON.stringify(e.target.files[0]))
+      file: e.target.files[0],
+      profilepic: URL.createObjectURL(e.target.files[0])
+    })
+    console.log(e.target.files[0])
   }
 
 
-  onSubmit = formValues => {
 
-    console.log("Inside Product Creation" + JSON.stringify(formValues));
-    let storeNameList = formValues.stores;
+  onSubmit = e => {
+    console.log(this.state.storeDetails)
+
+    // console.log("Inside Product Creation" + JSON.stringify(formData));
+    let storeNameList = e.stores;
     console.log("storeNameList: " + storeNameList);
     let storesSelected = (this.state.storeDetails).filter(storeName => {
       return storeNameList.includes(storeName.name);
     })
     console.log("storesSelected: " + JSON.stringify(storesSelected));
     let store_id = storesSelected.map((store) => { return store.id });
-    // var bodyFormData = new FormData();
-    // bodyFormData.set('name', formValues.name);
-    // bodyFormData.set('description', formValues.description);
-    // bodyFormData.set('brand', formValues.brand);
-    // bodyFormData.set('price', formValues.price);
-    // bodyFormData.set('unit', formValues.unit);
-    // bodyFormData.set('storeId', formValues.store);
-    // bodyFormData.set('store', formValues.store);
-    // alert("Store length: "+store_id.length);
-    for(let i=0; i<store_id.length;i++){
+    for (let i = 0; i < store_id.length; i++) {
+      let formData = new FormData();
+
+      formData.append('files', this.state.file)
+
+      for (var value of formData.values()) {
+        console.log(value);
+      }
+      const config = {
+        headers: { 'content-type': 'multipart/form-data' }
+      }
+
       let data = {
         id: {
           storeId: store_id[i],
           sku: this.state.sku
         },
-        name: formValues.name,
-        description: formValues.description,
-        brand: formValues.brand,
-        imageurl: formValues.imageUrl,
-        price: formValues.price,
-        unit: formValues.unit,
-        // storeId: 1,
-        // store: 1
-        // storeId: formValues.store,
-        // store: formValues.store
+        name: e.name,
+        description: e.description,
+        brand: e.brand,
+        file: e.file,
+        price: e.price,
+        unit: e.unit,
       }
-      // console.log(data)
-      alert(JSON.stringify(data));
+      console.log(JSON.stringify(data));
+      formData.append('data', JSON.stringify(data));
       axios.defaults.withCredentials = true;
-      axios.post(`${ROOT_URL}/addproduct`, data).then(response => {
-
-        // update the state with the response data
-        this.setState({
-          failed: false,
-          success: true
-        })
-        console.log('Axios post:', response.data);
-        window.location.reload(true)
-      }).catch(error => {
-        console.log(error);
-        this.setState({
-          failed: true,
-          success: false
-        })
-      });
+      axios.post(`${ROOT_URL}/addproduct`, formData, config)
+        .then(response => {
+          this.setState({
+            failed: false,
+            success: true,
+            profilepic: response.data.imageurl
+          })
+          console.log(response.data);
+          window.location.reload(true)
+        }).catch(error => {
+          console.log(error);
+          this.setState({
+            failed: true,
+            success: false
+          })
+        });
     }
-
   }
 
-  // async addFormData(formData,data ) {
-  //   // alert(JSON.stringify(this.state.storeDetails));
-  //   formData.append('data', data);
-  //   console.log(`Appended form data ${formData}`);
-  //   return formData;
-  // }
 
-  // async addFiles(formData,data) {
-  //   const data = Object.assign({}, JSON.stringify(data));
-  //   for (var key in data.files) {
-  //     console.log(`Appending photos to form data ${key}`);
-  //     formData.append('files', data.files[key]);
-  //   }
-  //   return formData;
-  // }
 
-  
-  //  async getstores(e){
-  //    storeDetails = await estoreDetails;
-  //  }
-      
-
-  // async submit(e) {
-  //   alert("inside: "+ this.state.file)
-  //   let formData = new FormData();
-  //   // console.log(this.state.storeDetails);
-  
-  //   console.log(this.state.storeDetails)
-  //   console.log("Inside Product Creation" + JSON.stringify(e));
-  //     let storeNameList = e.stores;
-  //     // alert(JSON.stringify(this.state.storeDetails))
-  //     // console.log("storeNameList: " + storeNameList);
-
-  //     let storedetails = sessionStorage.getItem("Allstores")
-      
-  //     // alert(resultnew);
-  //     let storesSelected = (storedetails).filter(storeName => {
-  //       return storeNameList.includes(storeName.name);
-  //     })
-  //     console.log("storesSelected: " + JSON.stringify(storesSelected));
-  //     let store_id = storesSelected.map((store) => { return store.id });
-  //     for(let i=0; i<store_id.length;i++){
-  //       let data = {
-  //         id: {
-  //           storeId: store_id[i],
-  //           sku: this.state.sku
-  //         },
-  //         name: e.name,
-  //         description: e.description,
-  //         brand: e.brand,
-  //         // imageurl: formData.imageUrl,
-  //         file:e.file,
-  //         price: e.price,
-  //         unit: e.unit,
-  //         // storeId: 1,
-  //         // store: 1
-  //         // storeId: formValues.store,
-  //         // store: formValues.store
-  //       }
-  //       console.log(JSON.stringify(data));
-  //       formData.append(data);
-  //       let test1 = await this.addFormData(formData,data);
-  //   console.log(test1)
-  //   let test2 = await this.addFiles(test1,data);
-
-  //   axios.post(`${ROOT_URL}/addproduct`, test2)
-  //     .then((result) => {
-  //       // alert("Sending property");
-  //       if (result.status === 200) {
-  //         alert('Product Uploaded Successfully');
-  //         // this.setState({uploaded : true});
-  //       }
-  //       else {
-  //         // alert('Error while uploading product');
-  //       }
-  //     });
-        
-  //     }
-      
-
-  // }
 
   renderError = ({ error, touched }) => {
     if (touched && error) {
@@ -266,7 +192,10 @@ class AddProduct extends Component {
       </div>
     )
   }
+
+
   render() {
+
     const { handleSubmit, pristine, submitting } = this.props
     let redirectVar = null
     let invalidtag = null
@@ -285,19 +214,7 @@ class AddProduct extends Component {
 
     const units = ['Piece', 'Pound', 'Oz']
 
-    let image_new = null;
-    if (this.state.profilepic) {
-      image_new = (
-        <img
-          class="plus-image img-circle "
-          style={{ backgroundColor: "black", border: "black" }}
-          src={this.state.profilepic}
-          width='200'
-          height='200'
 
-        />
-      )
-    }
 
     return (
 
@@ -316,62 +233,13 @@ class AddProduct extends Component {
                   <hr></hr>
                 </div>
                 <div className='row'>
-
-                  {/* <form onSubmit={this.uploadImage} enctype='multipart/form-data'>
-                        <div class='preview text-center' >
-                            <div>
-                                <img class="product-holder "
-                                    style={{ backgroundColo: "black" }}
-                                    src={this.state.profilepic}
-                                    width='100'
-                                    height='30'>
-
-                                </img>
-                                {image_new}
-                                
-                                <div style={{ marginLeft: "200px" }}>
-                                    <input
-                                       
-                                        type='file'
-                                        onChange={this.imageChangeHandler}
-                                        name='myImage'
-                                        id='myImage'
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                    </form> */}
-
                   <div className='col-sm-6'>
                     <form
                       className='ui form error'
                       onSubmit={this.props.handleSubmit(this.onSubmit)}
                       onChange={this.inputChangeHandler}
                     >
-                      {/* <div class='preview text-center' >
-                        <div>
-                          <img class="product-holder "
-                            style={{ backgroundColo: "black" }}
-                            src={this.state.profilepic}
-                            width='100'
-                            height='30'>
-
-                          </img>
-                          {image_new}
-
-                          <div style={{ marginLeft: "200px" }}>
-                            <input
-                              type='file'
-                              onChange={this.imageChangeHandler}
-                              name='myImage'
-                              id='myImage'
-                            />
-                          </div>
-                        </div>
-                      </div>*/}
-
-                      <div style={{ marginLeft: '10%' }}> 
+                      <div style={{ marginLeft: '10%' }}>
                         {/* <br /> */}
                         <Field
                           name='name'
@@ -379,14 +247,7 @@ class AddProduct extends Component {
                           component={this.renderInput}
                           // onChange={this.inputChangeHandler}
                           label='Name'
-                        />
-                        
-                        <Field
-                          name='imageUrl'
-                          type='text'
-                          component={this.renderInput}
-                          // onChange={this.inputChangeHandler}
-                          label='ImageUrl'
+                        // validate={required}
                         />
                         <br />
                         <Field
@@ -427,8 +288,6 @@ class AddProduct extends Component {
                             border: "solid #ffffff",
                             borderRadius: "4px",
                             fontSize: "14px",
-                            // height: "50px",
-                            // lineHeight: "50px",
                             fontFamily: "graphik"
                           }}
                           valueField="value"
@@ -468,6 +327,33 @@ class AddProduct extends Component {
                       </div>
                     </form>
                   </div>
+                  <div className="col-sm-6">
+                    <form onSubmit={this.onSubmit} onChange={this.imageChangeHandler} enctype='multipart/form-data'>
+                      {/* <div className="col-sm-6"> */}
+                      {/* <img style={{ marginLeft: "100px", marginTop: "100px" }}
+                        // src={this.state.profilepic}
+                        width='300'
+                        height='300'
+                      /> */}
+                      <img
+                        class='preview-img-box'
+                        // src='http://simpleicon.com/wp-content/uploads/account.png'
+                        src={this.state.profilepic}
+                        style={{ marginLeft: "30%", marginTop: "30%",backgroundColor:'white' }}
+                        alt='Preview Image'
+                        width='200'
+                        height='200'
+                      />
+                      <div style={{ marginLeft: "42%" }}>
+                      <br></br>
+                        <input
+                          type='file'
+                          name='myImage'
+                          id='myImage'
+                        />
+                      </div>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
@@ -477,8 +363,6 @@ class AddProduct extends Component {
     )
   }
 }
-// export Login Component
-// export default BuyerProfile
 
 const validate = formValues => {
   const error = {}
@@ -488,22 +372,45 @@ const validate = formValues => {
   if (!formValues.description) {
     error.description = 'Enter a valid description'
   }
+
+  if (!formValues.brand) {
+    error.brand = 'Enter a valid brand'
+  }
+
   if (!formValues.price) {
     error.price = 'Enter a valid price'
   }
   if (!formValues.unit) {
     error.unit = 'Enter a valid unit'
   }
-  if (!formValues.brand) {
-    error.drand = 'Enter a valid brand'
+  if (!formValues.file) {
+    error.unit = 'Upload a valid image'
   }
+
   return error
 }
 
 
 AddProduct = reduxForm({
-  form: 'reactWidgets'  // a unique identifier for this form
+  form: 'reactWidgets',  // a unique identifier for this form
 })(AddProduct)
 
 export default AddProduct
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
