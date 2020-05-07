@@ -176,7 +176,7 @@ class JoinPool extends Component {
                                                 <br />
                                                 <button type='submit' class='btn btn-info'
                                                 >
-                                                    Search Pool
+                                                    Send Request
                         </button>
 
                                                 <br />

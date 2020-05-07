@@ -35,9 +35,10 @@ public class RequestController {
     @Autowired
     PoolRepository poolRepository;
 
-    @GetMapping("/requests")
-    public List<Request> getAllPools() {
-        return requestRepository.findAll();
+    @GetMapping("/requests/{screenname}")
+    public List<Request> getRequestByScreenName(@PathVariable(value = "screenname") String requester) {
+        User user = userRepository.findByscreenName(requester);
+        return user.getRequests();
     }
 
     @ResponseBody

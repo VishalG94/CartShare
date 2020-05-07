@@ -17,6 +17,7 @@ import CreatePool from './Pool/CreatePool'
 import JoinPool from './Pool/JoinPool'
 import SearchPool from './Pool/SearchPool'
 import SearchPoolData from './Pool/SearchPoolData'
+import RequestHome from './Request/RequestHome'
 // Create a Main Component
 
 class Main extends Component {
@@ -40,6 +41,7 @@ class Main extends Component {
         <Route path='/joinpool/:poolId' component={JoinPool} />
         <Route path='/searchpool' component={SearchPool} />
         <Route path='/searchpooldata/:unit/:value' component={SearchPoolData} />
+        <Route path='/requesthome' component={RequestHome} />
       </div>
     )
   }
