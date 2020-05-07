@@ -106,6 +106,10 @@ class Cart extends React.Component {
           failed: false,
           success: true
         })
+        alert("Order succesfully placed")
+        localStorage.removeItem("order_items")
+        localStorage.removeItem("order")
+        window.location.reload()
         console.log('Axios post:', response.data);
       }).catch(error => {
         console.log(error);
@@ -125,7 +129,7 @@ class Cart extends React.Component {
   removeFromCart(e, obj) {
     console.log("Inside add to cart", obj);
     
-    var oldOrderItems = []    
+    var oldOrderItems = []   
 
     if (localStorage.getItem("order_items")) {
       oldOrderItems = JSON.parse(localStorage.getItem("order_items"))
@@ -144,10 +148,9 @@ class Cart extends React.Component {
     }
 
     localStorage.setItem("order_items", JSON.stringify(oldOrderItems))
+   
     window.location.reload()
   }
-
-
   
   render () {
     let itemslist = null
@@ -168,7 +171,7 @@ class Cart extends React.Component {
       // total = total.toFixed();
       return (
         <div>
-          <div className='col-sm-5'>
+          <div className='col-sm-6'>
             <div>{item.name}</div>
           </div>
           <div className='col-sm-3'>
@@ -177,15 +180,13 @@ class Cart extends React.Component {
           </div>
           <div className='col-sm-3'>
             {/* <div>{items[item][1] * items[item][0]}</div> */}
-            <div>
+            <div>              
               {item.price * item.quantity}                            
-            </div>              
-          </div>
-          <div className='col-sm-1'>
-          <button type="submit" class="btn btn-link" id={JSON.stringify(item)}   >
+              <button type="submit" class="btn btn-link" id={JSON.stringify(item)}   >
               <i onClick={(e) => { this.removeFromCart(e,item) }}  style={{ color: 'red' }} class="fas fa-minus-circle fa-lg"></i>           
-              </button>
-          </div>                    
+              </button>                            
+            </div>              
+          </div>                              
         </div>
       )
     })

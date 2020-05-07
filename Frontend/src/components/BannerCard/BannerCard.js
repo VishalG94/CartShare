@@ -1,5 +1,4 @@
 import React from "react";
-import "./BannerCard-styles.css";
 import image from "../../images/Avatar.png"
 import {
   Card, CardImg, CardText, CardBody,
@@ -28,18 +27,18 @@ const BannerCard = ( bannerDetails ) => {
   return (
     <div class="col-sm-3" >
       <div class="card" style={{width:"13rem",backgroundColor:"#F8F8F8"}}>
-        <img class="card-img-top" style={{width:"12rem", height:'9rem'}} src={image} alt="Card image cap"/>
-        <hr/>
+        <img class="card-img-top" style={{width:"13rem", height:'12rem'}} src={bannerDetails.imageurl} alt="Card image cap"/>
+        {/* <hr/> */}
+        <br></br>
+        <br/>
         <div class="card-body">
         <h5 class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;{bannerDetails.name}<span class="card-text" style={{fontSize:"15px", float:"right"}}>${bannerDetails.price}&nbsp;&nbsp;&nbsp;&nbsp;</span></h5>
-          <p class="card-text" style={{fontSize:"15px", margin:"20px"}}>
+          <p class="card-text" style={{fontSize:"15px", margin:"20px"}}>&nbsp;
           <button type="submit" class="btn btn-link" id={JSON.stringify(bannerDetails)} onClick={deleteProduct} style={{float:"right" }} >
               <i id={JSON.stringify(bannerDetails)} style={{ color: 'red' }} class="far fa-trash-alt"></i>
                  </button>
               {bannerDetails.description}
-              <br></br>
-              {/* <a href="#" class="btn btn-link" style={{color:"red"}}> &nbsp;Delete</a> */}
-              
+              <br></br>  
           </p>
         </div>
       </div>

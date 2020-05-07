@@ -95,6 +95,8 @@ class ProductsDisplay extends Component {
     // });
   }
 
+  
+
   renderError = ({ error, touched }) => {
     if (touched && error) {
       return (
@@ -141,7 +143,7 @@ class ProductsDisplay extends Component {
 
     let bannerDetails = this.state.productsDetails;
     let bannerNew = []
-    
+    console.log(bannerDetails[0]);
     
     var getNewproductsArray = (bannerDetails,countperrow) =>{
       let count =bannerDetails.length
@@ -185,8 +187,10 @@ class ProductsDisplay extends Component {
               <div class='login-form'>
                 <div class='panel'>
                   <br></br>
+                  <Link to='/addproduct'><button type="submit" className='btn btn-success' style={{ float: 'right', marginRight: "10px" }} >Add a new Product</button></Link>
                   <h2 style={{ marginLeft: '20px' }}>List of products</h2>
-                  <br></br>
+                  <hr></hr>
+                  {/* <br></br> */}
                 </div>
                 
                 {/* <div className='row'>
