@@ -10,7 +10,7 @@ import edu.sjsu.cmpe275.project.CartShare.model.ProductId;
 import edu.sjsu.cmpe275.project.CartShare.model.Store;
 import edu.sjsu.cmpe275.project.CartShare.repository.ProductRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.StoreRepository;
-import edu.sjsu.cmpe275.project.CartShare.service.AmazonClient;
+//import edu.sjsu.cmpe275.project.CartShare.service.AmazonClient;
 import edu.sjsu.cmpe275.project.CartShare.service.ProductService;
 import edu.sjsu.cmpe275.project.CartShare.service.StoreService;
 import org.json.JSONException;
@@ -39,14 +39,14 @@ public class ProductController {
     @Autowired
     ProductRepository productRepository;
 
-    private AmazonClient amazonClient;
+//    private AmazonClient amazonClient;
     @Autowired
     StoreRepository storeRepository;
-
-    @Autowired
-    ProductController(AmazonClient amazonClient) {
-        this.amazonClient = amazonClient;
-    }
+//
+//    @Autowired
+//    ProductController(AmazonClient amazonClient) {
+//        this.amazonClient = amazonClient;
+//    }
 
 //    @PostMapping(value="/addproduct", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 //    public ResponseEntity<?> addProduct(@RequestBody Product product,

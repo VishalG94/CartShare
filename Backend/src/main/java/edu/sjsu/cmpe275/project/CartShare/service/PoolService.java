@@ -21,11 +21,8 @@ public class PoolService {
     UserRepository userRepository;
 
     public void addPool(Pool pool, String mail) {
-    	System.out.println("Mail is "+mail);
         System.out.println("data sent is : " + pool.getPoolId());
-        System.out.println("mail sent "+mail);
-        User user = userRepository.findByEmail(mail);	
-        System.out.println("Insdie service"+user.getNickName());
+        User user = userRepository.findByEmail(mail);
         String pid = pool.getPoolId();
 
         poolRepository.saveAndFlush(pool);

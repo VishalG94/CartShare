@@ -6,7 +6,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.metrics.export.newrelic.NewRelicProperties;
 import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyValueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.sjsu.cmpe275.project.CartShare.model.Pool;
 import edu.sjsu.cmpe275.project.CartShare.model.Request;
@@ -57,7 +59,6 @@ public class PoolController {
             throws URISyntaxException {
         System.out.println("Body sent : " + pool.getPoolId());
         System.out.println("Body sentdd : " + mail);
-        String email = mail;
         Pool IDPool = poolRepository.findBypoolId(pool.getPoolId());
         if (IDPool != null) {
             System.out.println("User exists");
@@ -70,8 +71,7 @@ public class PoolController {
             return new ResponseEntity<>("{\"status\" : \"Pool with same name is already present .!!\"}",
                     HttpStatus.FOUND);
         }
-        System.out.println("Critical point"+mail);
-        poolService.addPool(pool, email);
+        poolService.addPool(pool, mail);
         // String message = EmailUtility.createVerificationMsg(user.getID());
         // emailService.sendEmail(user.getEmail(), message, " User Profile
         // Verification");
