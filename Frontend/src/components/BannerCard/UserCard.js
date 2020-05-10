@@ -44,8 +44,8 @@ class UserCard extends Component {
     
     var oldOrderItems = []    
 
-    if (localStorage.getItem("order_items")) {
-      oldOrderItems = JSON.parse(localStorage.getItem("order_items"))
+    if (sessionStorage.getItem("order_items")) {
+      oldOrderItems = JSON.parse(sessionStorage.getItem("order_items"))
     }    
     
     if(oldOrderItems.length>0)
@@ -63,7 +63,7 @@ class UserCard extends Component {
     obj.quantity = this.state.value
     oldOrderItems.push(obj)
     console.log(oldOrderItems)
-    localStorage.setItem("order_items", JSON.stringify(oldOrderItems))
+    sessionStorage.setItem("order_items", JSON.stringify(oldOrderItems))
     window.location.reload()
   }
 
@@ -84,7 +84,7 @@ class UserCard extends Component {
     return (
       <div class="col-sm-4" >
         <div class="card" style={{ width: "13rem", backgroundColor: "#F8F8F8" }}>
-          <img class="card-img-top" style={{ width: "12rem", height: '9rem' }} src={image} alt="Card image cap" />
+          <img class="card-img-top" style={{ width: "12rem", height: '9rem' }} src={bannerDetails.imageurl} alt="Card image cap" />
           <hr />
           <div class="card-body">
             <h5 class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;{bannerDetails.name}<span class="card-text" style={{ fontSize: "15px", float: "right" }}>${bannerDetails.price}&nbsp;&nbsp;&nbsp;&nbsp;</span></h5>

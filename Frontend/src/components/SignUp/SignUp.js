@@ -7,6 +7,9 @@ import { Link } from 'react-router-dom'
 import { signupPooler } from '../../actions'
 import { Field, reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
+import GoogleLogin from 'react-google-login'
+import { GOOGLE_CLIENT_ID } from '../../config/config'
+
 
 // Define a SignUp Component
 class SignUp extends Component {
@@ -21,14 +24,16 @@ class SignUp extends Component {
       email: '',
       password: '',
       authFlag: false,
-      authFailed: false
+      authFailed: false,
+      user_role: '',
+      oauth_flag: false
     }
   }
 
   componentWillMount() {
     this.setState({
       authFlag: false,
-      authFailed: false
+      // authFailed: false
     })
   }
 
@@ -59,28 +64,85 @@ class SignUp extends Component {
       </div>
     )
   }
-  onSubmit = formValues => {
-    console.log('OnSubmit' + formValues)
 
-    let data = {
-      screenname: formValues.screenname,
-      nickname: formValues.nickname,
-      email: formValues.email,
-      password: formValues.password
-    }
+  signupHandler(data) {
     axios.defaults.withCredentials = true
     this.props.signupPooler(data, res => {
       if (res.status === 200) {
         console.log('Response signup pooler: ', res.data)
-        this.props.history.push('/login')
+        this.setState({
+          authFlag: true
+        })
+        alert("Verification mail has been sent. Please verify before login.!!")
+        window.location.replace('/login')
+      } else if (res.status == 302) {
+        alert("User is already registered with same email id");
+        window.location.reload();
+        this.setState({
+          authFlag: false
+        })
       } else {
         console.log('Failed')
         this.setState({ authFailed: true })
+        alert("User registeration failed because of sever error")
       }
     })
   }
 
+  oauthLogin(response) {
+    this.setState({
+      // first_name: response.name.split(" ")[0],
+      // last_name: response.name.split(" ")[1],
+      nickName: response.name.split(" ")[0],
+      screenName: response.name.split(" ")[1],
+      email: response.email,
+      password: ""
+    });
+    if (this.state.email.includes("sjsu")) {
+      this.state.role = "Admin";
+    }
+    else {
+      this.state.role = "User";
+    }
+    this.state.oauthFlag = true;
+    console.log("val" + this.state.email)
+    this.signupHandler(this.state);
+  }
+
+
+  onSubmit = formValues => {
+    console.log('OnSubmit' + formValues.email)
+
+    let data = {
+      screenName: formValues.screenname,
+      nickName: formValues.nickname,
+      email: formValues.email,
+      password: formValues.password,
+      varified: false
+    }
+    if (formValues.email.includes("sjsu")) {
+      data.role = "Admin";
+    }
+    else {
+      data.role = "User";
+    }
+    this.signupHandler(data);
+  }
+
   render() {
+
+    const responseGoogle = (response) => {
+      console.log("Response received from google: " + JSON.stringify(response));
+      window.location.replace(`/signupdetails/${response.profileObj.email}`)
+      // this.oauthLogin(response.profileObj);
+    }
+
+    const onFailure = () => {
+      console.log("inside failure");
+      window.location.reload()
+      // this.oauthLogin(response.profileObj);
+    }
+
     let redirectVar = null
     let invalidtag = null
     if (cookie.load('cookie')) {
@@ -96,6 +158,7 @@ class SignUp extends Component {
     }
 
     return (
+
       <form
         className='ui form error'
         onSubmit={this.props.handleSubmit(this.onSubmit)}
@@ -157,7 +220,21 @@ class SignUp extends Component {
                 </div>
 
                 <div class='form-group'>
-                  <button class='btn btn-info'>Continue with Google</button>
+
+                  <GoogleLogin
+                    style={{ width: "max-content" }}
+                    clientId={GOOGLE_CLIENT_ID}
+                    // buttonText="SIGNUP WITH GOOGLE"
+                    onSuccess={responseGoogle}
+                    onFailure={onFailure}
+                    cookiePolicy={'single_host_origin'}
+                    className="google-button-signup"
+                    render={renderProps => (
+                      <button onClick={renderProps.onClick} class='btn btn-info'>Signup With Google</button>
+                    )}
+
+                  />
+                  {/* <button class='btn btn-info'>Continue with Google</button> */}
                 </div>
 
                 <div style={{ textAlign: 'center' }} class='form-group'>
@@ -177,6 +254,7 @@ class SignUp extends Component {
           </div>
         </div>
       </form>
+
     )
   }
 }
