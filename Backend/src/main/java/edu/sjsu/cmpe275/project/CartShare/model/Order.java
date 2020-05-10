@@ -41,6 +41,7 @@ public class Order {
 	private Store store;
 	
 	@ManyToOne
+	@JsonIgnoreProperties({"orders"})
 	@JoinColumn(name="pool_id",nullable = true)
 	private Pool pool;
 	
