@@ -126,6 +126,24 @@ public class Order_Items {
 				+ ", price=" + price + ", status=" + status + ", orderTime=" + orderTime + "]";
 	}	
 	
+	 @Override
+	    public boolean equals(Object o) {
+	        if (this == o)
+	            return true;
+	             
+	        if (!(o instanceof Order))
+	            return false;
+	             
+	        return
+	        		
+	            (id != 0L) && id == (((Order_Items) o).getId());
+	    }
+	 
+	    @Override
+	    public int hashCode() {
+	        return 31;
+	    }
+	
 	
 	
 

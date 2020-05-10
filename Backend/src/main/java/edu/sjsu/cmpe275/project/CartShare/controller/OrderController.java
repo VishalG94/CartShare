@@ -29,43 +29,22 @@ public class OrderController {
     @Autowired
     OrderService orderService;
     
-//    @PostMapping(value="/addorder", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-//    public ResponseEntity<?> addProduct(   
-//  //  									@RequestParam(name = "buyer_id") long buyerId,
-//    									@RequestParam(name = "store_id") long storeId,
-//    									@RequestParam(name = "delivery_address") String deliveryAddress,
-//                                        @RequestBody OrderItemsList order_items,
-//                                      HttpServletRequest request) throws JSONException {
-//    	List<Order_Items> list = order_items.getOrder_items();
-//    	
-//    	for(Order_Items item : list)
-//    	{
-//    		System.out.println(item);
-//    	}
-//    	
-//        System.out.println("inside add order controller "+order_items.toString());
-//        
-//       return orderService.addOrder(storeId,deliveryAddress,order_items);
-//        
-//    }
-//    
     @PostMapping(value="/addorder", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<?> addProduct(   
-    								   
+    public ResponseEntity<?> addOrder(    								   
     									@RequestBody Order order,
+    									@RequestParam Long userId,
                                       HttpServletRequest request) throws JSONException {
-//    	List<Order_Items> list = order_items.getOrder_items();
-//    	
-//    	for(Order_Items item : list)
-//    	{
-//    		System.out.println(item);
-//    	}
-//    	
-//        System.out.println("inside add order controller "+order_items.toString());
-//        
-       return orderService.addOrder(order);
+    	
+    	System.out.println("Buyer ID is "+userId);
+    	return orderService.addOrder(order,userId);
         
     }
+    
+    @GetMapping("/getorders")
+    public ResponseEntity<?> getOrders(@RequestParam Long id) {
+    	System.out.println("Inside GetOrders "+id);
+    return orderService.getorders(id);
+}
 
 
 }

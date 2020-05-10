@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -37,7 +38,7 @@ public class User {
 	    private int contributionCredit;
 	    
 	    @ManyToOne(fetch = FetchType.EAGER)
-	    @JoinColumn(name = "pool_id",nullable = false)
+	    @JoinColumn(name = "pool_id",nullable = true)
 	    private Pool pool;
 	    
 	    @Column
@@ -49,6 +50,10 @@ public class User {
 	    @OneToOne
 	    @JoinColumn(name="reference",referencedColumnName = "screen_name")
 	    private User reference;
+	    
+	    @OneToMany(fetch = FetchType.LAZY, mappedBy = "approver")
+		private List<Request> requests = new ArrayList<>();
+
 	    
 //	    @OneToMany
 //	    @JoinColumn()
@@ -122,6 +127,38 @@ public class User {
 
 		public int getContributionCredit() {
 			return contributionCredit;
+		}	
+		
+		public long getId() {
+			return id;
+		}
+
+		public void setId(long id) {
+			this.id = id;
+		}
+
+		public Boolean getOauthFlag() {
+			return oauthFlag;
+		}
+
+		public void setOauthFlag(Boolean oauthFlag) {
+			this.oauthFlag = oauthFlag;
+		}
+
+		public boolean isVerified() {
+			return verified;
+		}
+
+		public void setVerified(boolean verified) {
+			this.verified = verified;
+		}
+
+		public List<Request> getRequests() {
+			return requests;
+		}
+
+		public void setRequests(List<Request> requests) {
+			this.requests = requests;
 		}
 
 		public void setContributionCredit(int contributionCredit) {
