@@ -24,7 +24,9 @@ export default class Pool extends Component {
   }
 
   componentWillMount() {
-  
+    
+
+
   }
 
   componentDidMount() {

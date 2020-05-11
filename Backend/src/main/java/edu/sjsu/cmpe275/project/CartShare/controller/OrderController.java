@@ -29,6 +29,7 @@ public class OrderController {
     @Autowired
     OrderService orderService;
     
+<<<<<<< HEAD
 //    @PostMapping(value="/addorder", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 //    public ResponseEntity<?> addProduct(   
 //  //  									@RequestParam(name = "buyer_id") long buyerId,
@@ -66,6 +67,24 @@ public class OrderController {
        return orderService.addOrder(order);
         
     }
+=======
+    @PostMapping(value="/addorder", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<?> addOrder(    								   
+    									@RequestBody Order order,
+    									@RequestParam Long userId,
+                                      HttpServletRequest request) throws JSONException {
+    	
+    	System.out.println("Buyer ID is "+userId);
+    	return orderService.addOrder(order,userId);
+        
+    }
+    
+    @GetMapping("/getorders")
+    public ResponseEntity<?> getOrders(@RequestParam Long id) {
+    	System.out.println("Inside GetOrders "+id);
+    return orderService.getorders(id);
+}
+>>>>>>> origin/Harsh
 
 
 }

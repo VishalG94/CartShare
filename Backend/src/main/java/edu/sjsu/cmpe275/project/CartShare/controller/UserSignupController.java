@@ -59,7 +59,7 @@ public class UserSignupController {
                     HttpStatus.FOUND);
         }
         userService.register(user);
-        String message = EmailUtility.createVerificationMsg(user.getId());
+        String message = EmailUtility.createVerificationMsg(user.getID());
         emailService.sendEmail(user.getEmail(), message, " User Profile Verification");
         return new ResponseEntity<>("{\"status\" : \"User Registered Successfully.!!\"}", HttpStatus.OK);
     }
@@ -89,7 +89,6 @@ public class UserSignupController {
     @RequestMapping(method = RequestMethod.GET, value = "/oauthverified/{email}")
     public ResponseEntity<?> verifyUserOauthAccount(@PathVariable String email) {
         System.out.println("User ID sent as a parmeter : " + email);
-        System.out.println(userRepository.findByEmail(email));
         if (userRepository.findByEmail(email) == null) {
             System.out.println("User is not present");
             return new ResponseEntity<>("{\"status\" : \"User is not registered with any oauth login!!\"}",

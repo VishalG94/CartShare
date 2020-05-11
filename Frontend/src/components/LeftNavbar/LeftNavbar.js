@@ -18,14 +18,14 @@ class LeftNavbar extends React.Component {
         </h2>
         <ul style={{ listStyleType: 'none', marginLeft: "-2px" }}>
           <li className='li-profile'>
-            <a href='/poolhome' className='navLink active'>
+            <a href='/home' className='navLink active'>
               <i class='fas fa-home' />
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <span className='tab'>Home</span>
             </a>
           </li>
           <li className='li-profile'>
-            <a style={{textDecoration:"none"}} href='/searchstores' className='navLink'>
+            <a href='/search' className='navLink'>
               <i class='fas fa-hashtag' />
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <span className='tab'>Search</span>

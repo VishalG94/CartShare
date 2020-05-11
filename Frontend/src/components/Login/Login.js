@@ -84,8 +84,8 @@ class Login extends Component {
         this.setState({
           authFlag: true
         })
-        // alert("User logged in successfully");
-        history.push('/poolhome');
+        alert("User logged in successfully");
+        history.push('/home');
         window.location.reload();
         return response.json();
       }
@@ -125,7 +125,7 @@ class Login extends Component {
 
   checkVerification(data) {
     var email = data.email;
-    console.log("checkVerification email : " + email);  
+    console.log("checkVerification email : " + email);
     // axios.get(ROOT_URL + '/api/oauthverified/' + email)
     fetch(`${ROOT_URL}/api/oauthverified/` + email, {
       method: 'GET',
@@ -135,16 +135,10 @@ class Login extends Component {
     })
       .then((response) => {
         console.log("response", response)
-        
         if (response.status == 200) {
-          alert(" User logged in successfully");
+          alert("user logged in successfully");
           console.log("Response from server : " + response);
-          if(localStorage.getItem('role')=='User'){
-          history.push('/poolhome');
-          }
-          else{
-            history.push('/stores');
-          }
+          history.push('/home');
           window.location.reload();
           return response.json()
           // history.push('/home');

@@ -132,9 +132,13 @@ class SearchProducts extends Component {
     let invalidtag = null
     let displayCart = null
 
-    if(localStorage.getItem("order_items"))
+    if(sessionStorage.getItem("order_items"))
     {
-      sessionStorage.setItem('checkout',"new")
+      if(sessionStorage.getItem("order_items"))
+      {
+        sessionStorage.setItem('checkout',"new")
+      }
+      
     }
     
 
@@ -238,13 +242,13 @@ class SearchProducts extends Component {
             <div class='cart'>
               <div class='panel-cart'>
                 <div className='row'>
-                  <div className='col-sm-3'>
+                  <div style={{textAlign:"center"}} className='col-sm-4'>
                     <h2>Item</h2>
                   </div>
-                  <div className='col-sm-3'>
+                  <div style={{textAlign:"center"}} className='col-sm-4'>
                     <h2>Quantity</h2>
                   </div>
-                  <div className='col-sm-3'>
+                  <div style={{textAlign:"center"}} className='col-sm-4'>
                     <h2>Price</h2>
                   </div>
                 </div>

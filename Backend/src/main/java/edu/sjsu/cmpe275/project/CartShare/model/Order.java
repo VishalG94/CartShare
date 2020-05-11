@@ -24,19 +24,24 @@ public class Order {
 	
 	@Column(name = "price", nullable = true)
     private float price;
+	
+	@Column(name = "pickup_option", nullable = true)
+    private String pickupOption;	
 
 	@Column(name = "status", nullable = true)
     private String status;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
-	@OrderColumn(name="list_index")
+	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY, mappedBy = "order")	
+	@JsonIgnoreProperties({"order"})
 	private List<Order_Items> order_items;
 	
 	@ManyToOne
-	@JoinColumn(name="store_id",nullable = false)
+	@JsonIgnoreProperties({"orders"})
+	@JoinColumn(name="store_id",nullable = true)
 	private Store store;
 	
 	@ManyToOne
+	@JsonIgnoreProperties({"orders"})
 	@JoinColumn(name="pool_id",nullable = true)
 	private Pool pool;
 	
@@ -54,20 +59,29 @@ public class Order {
 	
 	public Order()
 	{		
-	}	
-	
-	public Order(long orderid, User buyerId, float price, String status, List<Order_Items> order_items, Store store,
-			Pool pool, String deliveryAddress, Date orderTime) {
+	}		
+
+	public Order(long orderid, User buyerId, float price, String pickupOption, String status,
+			List<Order_Items> order_items, Store store, Pool pool, String deliveryAddress, Date orderTime) {
 		super();
 		this.orderid = orderid;
 		this.buyerId = buyerId;
 		this.price = price;
+		this.pickupOption = pickupOption;
 		this.status = status;
 		this.order_items = order_items;
 		this.store = store;
 		this.pool = pool;
 		this.deliveryAddress = deliveryAddress;
 		this.orderTime = orderTime;
+	}
+
+	public String getPickupOption() {
+		return pickupOption;
+	}
+
+	public void setPickupOption(String pickupOption) {
+		this.pickupOption = pickupOption;
 	}
 
 	public List<Order_Items> getOrder_items() {
@@ -93,9 +107,7 @@ public class Order {
 	
 	public void setOrderid(long orderid) {
 		this.orderid = orderid;
-	}
-
-	
+	}	
 
 	public Store getStore() {
 		return store;
@@ -145,5 +157,18 @@ public class Order {
 	public void setOrderTime(java.util.Date orderTime) {
 		this.orderTime = orderTime;
 	}	
+	
+//	public void addOrderItem(Order_Items item)
+//	{
+//		order_items.add(item);
+//		item.setOrder(this);
+//	}
+//	
+//	public void removeOrderItem(Order_Items item)
+//	{
+//		order_items.remove(item);
+//		item.setOrder(null);
+//	}
+//	
 	
 }

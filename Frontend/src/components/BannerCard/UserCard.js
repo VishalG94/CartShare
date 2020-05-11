@@ -32,7 +32,7 @@ class UserCard extends Component {
 
     this.state = {
       items: [],
-      value: ''
+      value: 1
     }
 
     this.addToCart = this.addToCart.bind(this);
@@ -44,8 +44,8 @@ class UserCard extends Component {
     
     var oldOrderItems = []    
 
-    if (localStorage.getItem("order_items")) {
-      oldOrderItems = JSON.parse(localStorage.getItem("order_items"))
+    if (sessionStorage.getItem("order_items")) {
+      oldOrderItems = JSON.parse(sessionStorage.getItem("order_items"))
     }    
     
     if(oldOrderItems.length>0)
@@ -63,7 +63,7 @@ class UserCard extends Component {
     obj.quantity = this.state.value
     oldOrderItems.push(obj)
     console.log(oldOrderItems)
-    localStorage.setItem("order_items", JSON.stringify(oldOrderItems))
+    sessionStorage.setItem("order_items", JSON.stringify(oldOrderItems))
     window.location.reload()
   }
 
@@ -83,18 +83,28 @@ class UserCard extends Component {
 
     return (
       <div class="col-sm-4" >
-        <div class="card" style={{ width: "13rem", backgroundColor: "#F8F8F8", borderRadius:'0px' }}>
-          <img class="card-img-top" style={{ width: "13rem", height: '9rem' }} src={bannerDetails.imageurl} alt="Card image cap" />
-          <br></br>
-          <br/>
+        <div class="card" style={{ width: "13rem", backgroundColor: "#F8F8F8" }}>
+          <img class="card-img-top" style={{ width: "12rem", height: '9rem' }} src={bannerDetails.imageurl} alt="Card image cap" />
+          <hr />
           <div class="card-body">
             <h5 class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;{bannerDetails.name}<span class="card-text" style={{ fontSize: "15px", float: "right" }}>${bannerDetails.price}&nbsp;&nbsp;&nbsp;&nbsp;</span></h5>
             <p class="card-text" style={{ fontSize: "15px", margin: "20px" }}>
-                <button id={JSON.stringify(bannerDetails)} onClick={(e) => { this.addToCart(e, bannerDetails) }} style={{ float:'right', borderRadius:'0px' }} class="btn btn-success">Add</button>
+             
               {bannerDetails.description}
+
               <div >
+                <br></br>
+                <label>Quantity</label>
+                <div style={{float:"right"}}>
+                  {/* <NumericInput min={0} size={1} id="quantity"  value={this.state.value} /> */}
+                  <input type="number" id="number" onChange={e=>this.inputHandler(e)} min="1" value={this.state.value} ></input>
+                </div>
               </div>
               <div style={{textAlign:"center"}}>
+              <button type="submit" class="btn btn-link" id={JSON.stringify(bannerDetails)} /*  onClick={AddtoCart} */ style={{  }} >
+                {/* <i id={JSON.stringify(bannerDetails)} style={{ color: 'red' }} class="far fa-trash-alt"></i> */}
+                <i id={JSON.stringify(bannerDetails)} onClick={(e) => { this.addToCart(e, bannerDetails) }} style={{ color: 'green' }} class="fas fa-plus-circle fa-lg"></i>
+              </button>
               </div>              
               {/* <form className="form-inline">
                                     <div className="form-group mx-sm-3 mb-2">

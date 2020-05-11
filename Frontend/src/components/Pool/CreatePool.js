@@ -169,7 +169,7 @@ class CreatePool extends Component {
                                                 <br />
                                                 <Field
                                                     name='zip'
-                                                    type='number'
+                                                    type='text'
                                                     component={this.renderInput}
                                                     label='Zip code'
                                                 />

@@ -22,10 +22,9 @@ public class PoolService {
 
     public void addPool(Pool pool, String mail) {
         System.out.println("data sent is : " + pool.getPoolId());
-        System.out.println(mail );
         User user = userRepository.findByEmail(mail);
         String pid = pool.getPoolId();
-        System.out.println(pid);
+
         poolRepository.saveAndFlush(pool);
 
         Pool newPool = poolRepository.findBypoolId(pid);
