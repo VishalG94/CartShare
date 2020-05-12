@@ -184,6 +184,7 @@ class SignUp extends Component {
                   <Field
                     name='nickname'
                     type='text'
+                    required pattern="[a-zA-Z0-9]"
                     component={this.renderInput}
                     label='Nick name'
                   />

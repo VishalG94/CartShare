@@ -12,10 +12,11 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import {
     Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Button, Col, Row
+    CardTitle, CardSubtitle, Button, Col, Row, Util
 } from 'reactstrap';
 import Banner from '../Banner/Banner'
 import StoreBanner from '../StoreBanner/StoreBanner'
+import * as UTIL from '../utils/Utils'
 // import { Button, Card, Image } from 'semantic-ui-react'
 
 // Define a Login Component
@@ -130,6 +131,45 @@ class PoolHome extends Component {
         let bannerDetails = this.state.storeDetails;
         let bannerNew = []
 
+        let noPoolMember = null;
+        var userRole = UTIL.getUserRole();
+        if (userRole === "User") {
+            noPoolMember = (
+                <div style={{ position: "relative", marginTop: "25%", marginLeft: "32%" }}>
+                    <h3 style={{ fontWeight: "bold", color: "A9A9A9" }}>
+                        Currently you are not in any pool!!
+                    </h3>
+
+                    <h4 style={{ color: "grey" }}>
+                        Options : <a href='/createpool'>Create Pool</a>     |     <a href='/searchpool'>Browse Pools</a>
+                    </h4>
+                </div>)
+        } else if (userRole === "POOL_LEADER") {
+            noPoolMember = (
+                <div style={{ position: "relative", marginTop: "25%", marginLeft: "23%" }}>
+                    <h3 style={{ fontWeight: "bold", color: "A9A9A9" }}>
+                        Currently you're a {userRole} in PoolX!!
+                    </h3>
+
+                    <h4 style={{ color: "grey" }}>
+                        Options : <a href='/deletepool'>Delete Pool</a>     |     <a href='/viewpool'>View Pool</a>
+
+                    </h4>
+                </div>)
+        } else {
+            noPoolMember = (
+                <div style={{ position: "relative", marginTop: "25%", marginLeft: "27%" }}>
+                    <h3 style={{ fontWeight: "bold", color: "A9A9A9" }}>
+                        Currently you're a {userRole} in PoolX!!
+                    </h3>
+
+                    <h4 style={{ color: "grey" }}>
+                        <a href='/viewpool'>Click here</a> to send a message to other pool members
+                    </h4>
+                </div>)
+        }
+
+
 
         var getNewproductsArray = (bannerDetails, countperrow) => {
             let count = bannerDetails.length
@@ -184,16 +224,17 @@ class PoolHome extends Component {
                         </div>
                         <div class='split-center_home'>
                             <div class='login-form'>
+
                                 <div class='panel'>
                                     <br></br>
-                                    <Link to='/addstore'><button type="submit" className='btn btn-success' style={{ float: 'right', marginRight: "10px" }} >Add new Store</button></Link>
                                     <h2 style={{ marginLeft: '20px' }}>Pool Options</h2>
                                     <hr></hr>
                                 </div>
 
                                 <div className="row">
                                     <div className='col-12'>
-                                        <div className="row">
+                                        {noPoolMember}
+                                        {/* <div className="row">
                                             <div className="col-sm-2"></div>
                                             <div className='col-sm-2'>
 
@@ -216,7 +257,7 @@ class PoolHome extends Component {
                                             <div className='col-sm-2'>
                                                 <button className='btn btn-info'>View Pool</button>
                                             </div>
-                                        </div>
+                                        </div> */}
 
                                     </div>
 

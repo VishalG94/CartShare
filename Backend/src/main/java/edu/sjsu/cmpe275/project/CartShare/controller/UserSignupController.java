@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.sjsu.cmpe275.project.CartShare.exception.CustomException;
+import edu.sjsu.cmpe275.project.CartShare.model.Pool;
 import edu.sjsu.cmpe275.project.CartShare.model.Request;
 import edu.sjsu.cmpe275.project.CartShare.model.User;
 import edu.sjsu.cmpe275.project.CartShare.repository.PoolRepository;
@@ -146,17 +147,27 @@ public class UserSignupController {
     // HttpStatus.BAD_REQUEST);
     // }
 
+    // @GetMapping("/users/{id}")
+    // public ResponseEntity<User> getPlayersById(@PathVariable(value = "id") String
+    // id)
+    // throws InvalidConfigurationPropertyValueException {
+    // User user = userRepository.findByEmail(id);
+    // System.out.println("jijojoklonojnkmk");
+    // List<Request> newList = user.getRequests();
+    // System.out.println(newList);
+    // // newList.stream().forEach(System.out::println);
+    // for (Request leave : newList) {
+    // System.out.println("In pool list " + leave.getId());
+    // }
+    // return ResponseEntity.ok().body(user);
+    // }
+
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getPlayersById(@PathVariable(value = "id") String id)
+    public ResponseEntity<Pool> getPlayersById(@PathVariable(value = "id") String id)
             throws InvalidConfigurationPropertyValueException {
         User user = userRepository.findByEmail(id);
         System.out.println("jijojoklonojnkmk");
-        List<Request> newList = user.getRequests();
-        System.out.println(newList);
-        // newList.stream().forEach(System.out::println);
-        for (Request leave : newList) {
-            System.out.println("In pool list " + leave.getId());
-        }
-        return ResponseEntity.ok().body(user);
+        Pool pol = user.getPool();
+        return ResponseEntity.ok().body(pol);
     }
 }
