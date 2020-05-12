@@ -7,7 +7,7 @@ import Navbar from './LandingPage/Navbar'
 import Pool from './Pool/Pool'
 
 import AddStore from './AddStore/AddStore'
-import PrivateRoute from '../lib/PrivateRoute'
+// import PrivateRoute from '../lib/PrivateRoute'
 import VerifyAccount from './SignUp/VerifyAccount';
 import SignupDetails from './SignUp/SignupDetails'
 import AddProduct from './AddProduct/AddProduct'
