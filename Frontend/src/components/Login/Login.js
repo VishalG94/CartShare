@@ -85,8 +85,8 @@ class Login extends Component {
           authFlag: true
         })
         alert("User logged in successfully");
-        history.push('/home');
-        window.location.reload();
+        // history.push('/home');
+        // window.location.reload();
         return response.json();
       }
       else if (response.status == 404) {
@@ -138,8 +138,8 @@ class Login extends Component {
         if (response.status == 200) {
           alert("user logged in successfully");
           console.log("Response from server : " + response);
-          history.push('/home');
-          window.location.reload();
+          // history.push('/home');
+          // window.location.reload();
           return response.json()
           // history.push('/home');
           // window.location.reload();
@@ -151,7 +151,13 @@ class Login extends Component {
           alert("First register with google to login into it");
         }
       }).then(result => {
-        console.log("Login response " + result)
+        console.log("Login response " + result.email)
+        if (result.email.includes("sjsu.edu")) {
+          history.push('/stores')
+        } else {
+          history.push('/home')
+        }
+        window.location.reload();
         UTIL.saveUserDetails(result);
       }).catch(e => {
         console.log(e)

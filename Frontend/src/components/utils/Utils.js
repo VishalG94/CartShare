@@ -14,6 +14,7 @@ export const saveUserDetails = (data, type) => {
     localStorage.setItem('role', JSON.stringify(data.role));
     localStorage.setItem('first_name', JSON.stringify(data.nickName));
     localStorage.setItem('screenname', JSON.stringify(data.screenName));
+    sessionStorage.setItem('email', JSON.stringify(data.email));
 };
 
 export const getUserDetails = () => {
