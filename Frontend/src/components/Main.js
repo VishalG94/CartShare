@@ -21,6 +21,7 @@ import SearchPool from './Pool/SearchPool'
 import SearchPoolData from './Pool/SearchPoolData'
 import RequestHome from './Request/RequestHome'
 import Orders from './Orders/Orders'
+import UserProfile from './Profile/UserProfile'
 // Create a Main Component
 
 class Main extends Component {
@@ -46,6 +47,7 @@ class Main extends Component {
         <Route path='/searchpooldata/:unit/:value' component={SearchPoolData} />
         <Route path='/requesthome' component={RequestHome} />
         <Route path='/orders' component={Orders} />
+        <Route path='/profile' component={UserProfile} />
 
       </div>
     )

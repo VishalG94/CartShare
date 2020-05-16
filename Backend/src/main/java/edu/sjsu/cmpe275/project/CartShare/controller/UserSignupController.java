@@ -132,20 +132,21 @@ public class UserSignupController {
         return ResponseEntity.ok(existingUser);
     }
 
-    // @ResponseBody
-    // @RequestMapping(method = RequestMethod.PUT, value = "/updateuser/{email}")
-    // public ResponseEntity<?> updateUser(@PathVariable String email) {
-    // Pool pool = poolRepository.findBypoolId("jhfj");
-
-    // User user = userRepository.findByEmail(email);
-    // user.setPool(pool);
-
-    // userRepository.save(user);
-    // return new ResponseEntity<>(
-    // "{\"status\" : \"User could not be verified because of bad request from
-    // user..!!\"}",
-    // HttpStatus.BAD_REQUEST);
-    // }
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.PUT, value = "/updateuser")
+    public ResponseEntity<?> updateUser(@Valid @RequestBody User user) throws URISyntaxException {
+        System.out.println("inside update user api");
+        User userNick = userRepository.findBynickName(user.getNickName());
+        if (userNick != null) {
+            return new ResponseEntity<>(
+                    "{\"status\" : \"User could not be verified because of nickname already exists..!!\"}",
+                    HttpStatus.METHOD_NOT_ALLOWED);
+        }
+        User us = userRepository.findByEmail(user.getEmail());
+        us.setNickName(user.getNickName());
+        userRepository.save(us);
+        return ResponseEntity.ok(us);
+    }
 
     // @GetMapping("/users/{id}")
     // public ResponseEntity<User> getPlayersById(@PathVariable(value = "id") String
@@ -170,4 +171,5 @@ public class UserSignupController {
         Pool pol = user.getPool();
         return ResponseEntity.ok().body(pol);
     }
+
 }

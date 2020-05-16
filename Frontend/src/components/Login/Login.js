@@ -163,7 +163,7 @@ class Login extends Component {
         } else {
           history.push('/home')
         }
-        // window.location.reload();
+        window.location.reload();
         UTIL.saveUserDetails(result);
       }).catch(e => {
         console.log(e)

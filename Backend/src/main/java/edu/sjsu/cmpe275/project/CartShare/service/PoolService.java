@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import edu.sjsu.cmpe275.project.CartShare.model.Pool;
@@ -53,4 +55,20 @@ public class PoolService {
         // pool.setPoolLeader(user);
         // poolRepository.save(pool);
     }
+
+    public ResponseEntity<?> deletePool(String id, String screenname) {
+        System.out.println("inside delete pool service");
+        Pool pool = poolRepository.findBypoolId(id);
+        if (pool.getPoolers().size() > 1) {
+            return new ResponseEntity<>("{\"status\" : \" There are poolers in this pool!!\"}",
+                    HttpStatus.METHOD_NOT_ALLOWED);
+        }
+        // User user = userRepository.findByscreenName(screenname);
+        // pool.getPoolers().remove(user);
+        // user.setPool(null);
+        // userRepository.save(user);
+        poolRepository.delete(pool);
+        return ResponseEntity.status(HttpStatus.OK).body(pool);
+    }
+
 }

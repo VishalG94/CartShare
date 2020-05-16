@@ -15,11 +15,13 @@ import org.springframework.boot.context.properties.source.InvalidConfigurationPr
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -193,6 +195,13 @@ public class PoolController {
         String message = EmailUtility.createPoolRequestReceived(initiater, approver);
         emailService.sendEmail(requestApprover.getEmail(), message, "Pool Request");
         return new ResponseEntity<>("{\"status\" : \"Pool request has been sent Successfully.!!\"}", HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/pool/{id}/{user}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deletePool(@PathVariable String id, @PathVariable String user) {
+        System.out.println("Inside delete pool controller");
+
+        return poolService.deletePool(id, user);
     }
 
 }
