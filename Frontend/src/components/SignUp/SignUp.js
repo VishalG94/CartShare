@@ -271,6 +271,9 @@ const validate = formValues => {
   if (!formValues.screenname) {
     error.screenname = 'Enter a valid Screen name'
   }
+  if (!(/^([a-zA-Z]+[0-9]+)$/.test(formValues.screenname))) {
+    error.screenname = "Enter Alphanumeric value"
+  }
   if (!formValues.nickname) {
     error.nickname = 'Enter a valid Nick name'
   }

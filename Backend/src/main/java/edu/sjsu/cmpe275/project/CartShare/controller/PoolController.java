@@ -204,4 +204,32 @@ public class PoolController {
         return poolService.deletePool(id, user);
     }
 
+    @GetMapping("/poolerslist/{currentUser}")
+    public List<String> listOfPoolers(@PathVariable(value = "currentUser") String currentUser) {
+        System.out.println("Insise listOfPoolers " + currentUser);
+        User user = userRepository.findByscreenName(currentUser);
+        Pool pool = user.getPool();
+        List<User> poolersList = pool.getPoolers();
+        poolersList.remove(user);
+        List<String> userList = new ArrayList<>();
+        for (User u : poolersList) {
+            userList.add(u.getScreenName());
+        }
+        return userList;
+    }
+
+    @PostMapping("/sendmessage")
+    @ResponseBody
+    public ResponseEntity<String> sendMessage(@Valid @RequestBody ObjectNode objectNode) {
+        String sender = objectNode.get("sender").asText();
+        String receiver = objectNode.get("receiver").asText();
+        String msg = objectNode.get("msg").asText();
+
+        User messageReceiver = userRepository.findByscreenName(receiver);
+
+        String message = EmailUtility.messageNotification(sender, receiver, msg);
+        emailService.sendEmail(messageReceiver.getEmail(), message, "Message from fellow Pooler");
+        return new ResponseEntity<>("{\"status\" : \"Message has been sent Successfully.!!\"}", HttpStatus.OK);
+    }
+
 }

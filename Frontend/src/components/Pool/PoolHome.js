@@ -152,7 +152,7 @@ class PoolHome extends Component {
                     </h3>
 
                     <h4 style={{ color: "grey" }}>
-                        Options : <a href='/deletepool'>Delete Pool</a>     |     <a href='/viewpool'>View Pool</a>
+                        Options : <a href='/deletepool'>Delete Pool</a> | <a href='/viewpool'>Edit Pool</a> | <a href='/viewpool'>Message Poolers</a>
 
                     </h4>
                 </div>)
