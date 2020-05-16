@@ -19,12 +19,9 @@ import StoreBanner from '../StoreBanner/StoreBanner'
 import * as UTIL from '../utils/Utils'
 // import { Button, Card, Image } from 'semantic-ui-react'
 
-// Define a Login Component
 class PoolHome extends Component {
-    // call the constructor method
     constructor(props) {
-        // Call the constrictor of Super class i.e The Component
-        super(props) // maintain the state required for this component
+        super(props)
         this.state = {
             name: '',
             street: '',
@@ -36,8 +33,8 @@ class PoolHome extends Component {
             authFlag: false,
             failed: false,
             success: false
-        } // Bind the handlers to this class // this.usernameChangeHandler = this.usernameChangeHandler.bind(this) // this.passwordChangeHandler = this.passwordChangeHandler.bind(this) // this.submitLogin = this.submitLogin.bind(this)
-    } // Call the Will Mount to set the auth Flag to false
+        }
+    }
 
     // componentWillMount() {
 
@@ -152,7 +149,7 @@ class PoolHome extends Component {
                     </h3>
 
                     <h4 style={{ color: "grey" }}>
-                        Options : <a href='/deletepool'>Delete Pool</a> | <a href='/viewpool'>Edit Pool</a> | <a href='/viewpool'>Message Poolers</a>
+                        Options : <a href='/deletepool'>Delete Pool</a> | <a href='/editpool'>Edit Pool</a> | <a href='/messagepooler'>Message Poolers</a>
 
                     </h4>
                 </div>)
@@ -164,12 +161,10 @@ class PoolHome extends Component {
                     </h3>
 
                     <h4 style={{ color: "grey" }}>
-                        <a href='/viewpool'>Click here</a> to send a message to other pool members
+                        <a href='/messagepooler'>Click here</a> to send a message to other pool members
                     </h4>
                 </div>)
         }
-
-
 
         var getNewproductsArray = (bannerDetails, countperrow) => {
             let count = bannerDetails.length
