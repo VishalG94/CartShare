@@ -1,6 +1,7 @@
 package edu.sjsu.cmpe275.project.CartShare.controller;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.sjsu.cmpe275.project.CartShare.exception.CustomException;
+import edu.sjsu.cmpe275.project.CartShare.model.Pool;
 import edu.sjsu.cmpe275.project.CartShare.model.Request;
 import edu.sjsu.cmpe275.project.CartShare.model.User;
 import edu.sjsu.cmpe275.project.CartShare.repository.PoolRepository;
@@ -57,6 +59,18 @@ public class UserSignupController {
             System.out.println("User exists");
             return new ResponseEntity<>("{\"status\" : \"User with same email is already registered .!!\"}",
                     HttpStatus.FOUND);
+        }
+        User existingScreenName = userRepository.findByscreenName(user.getScreenName());
+        if (existingScreenName != null) {
+            System.out.println("Screenname exists");
+            return new ResponseEntity<>("{\"status\" : \"User with same screenname is already registered .!!\"}",
+                    HttpStatus.METHOD_NOT_ALLOWED);
+        }
+        User existingNickName = userRepository.findBynickName(user.getNickName());
+        if (existingNickName != null) {
+            System.out.println("NickName exists");
+            return new ResponseEntity<>("{\"status\" : \"User with same NickName is already registered .!!\"}",
+                    HttpStatus.NOT_ACCEPTABLE);
         }
         userService.register(user);
         String message = EmailUtility.createVerificationMsg(user.getID());
@@ -131,32 +145,56 @@ public class UserSignupController {
         return ResponseEntity.ok(existingUser);
     }
 
-    // @ResponseBody
-    // @RequestMapping(method = RequestMethod.PUT, value = "/updateuser/{email}")
-    // public ResponseEntity<?> updateUser(@PathVariable String email) {
-    // Pool pool = poolRepository.findBypoolId("jhfj");
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.PUT, value = "/updateuser")
+    public ResponseEntity<?> updateUser(@Valid @RequestBody User user) throws URISyntaxException {
+        System.out.println("inside update user api");
+        User userNick = userRepository.findBynickName(user.getNickName());
+        if (userNick != null) {
+            return new ResponseEntity<>(
+                    "{\"status\" : \"User could not be verified because of nickname already exists..!!\"}",
+                    HttpStatus.METHOD_NOT_ALLOWED);
+        }
+        User us = userRepository.findByEmail(user.getEmail());
+        us.setNickName(user.getNickName());
+        userRepository.save(us);
+        return ResponseEntity.ok(us);
+    }
 
-    // User user = userRepository.findByEmail(email);
-    // user.setPool(pool);
-
-    // userRepository.save(user);
-    // return new ResponseEntity<>(
-    // "{\"status\" : \"User could not be verified because of bad request from
-    // user..!!\"}",
-    // HttpStatus.BAD_REQUEST);
+    // @GetMapping("/users/{id}")
+    // public ResponseEntity<User> getPlayersById(@PathVariable(value = "id") String
+    // id)
+    // throws InvalidConfigurationPropertyValueException {
+    // User user = userRepository.findByEmail(id);
+    // System.out.println("jijojoklonojnkmk");
+    // List<Request> newList = user.getRequests();
+    // System.out.println(newList);
+    // // newList.stream().forEach(System.out::println);
+    // for (Request leave : newList) {
+    // System.out.println("In pool list " + leave.getId());
+    // }
+    // return ResponseEntity.ok().body(user);
     // }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getPlayersById(@PathVariable(value = "id") String id)
+    public ResponseEntity<?> getPlayersById(@PathVariable(value = "id") String id)
             throws InvalidConfigurationPropertyValueException {
         User user = userRepository.findByEmail(id);
-        System.out.println("jijojoklonojnkmk");
-        List<Request> newList = user.getRequests();
-        System.out.println(newList);
-        // newList.stream().forEach(System.out::println);
-        for (Request leave : newList) {
-            System.out.println("In pool list " + leave.getId());
-        }
+        // Pool pol = user.getPool();
         return ResponseEntity.ok().body(user);
     }
+
+    @GetMapping("/getpool/{id}")
+    public List<String> getPoolOfUser(@PathVariable(value = "id") String id)
+            throws InvalidConfigurationPropertyValueException {
+        User user = userRepository.findByEmail(id);
+        String userRole = user.getRole();
+        Pool pool = user.getPool();
+        String poolName = pool.getName();
+        List<String> ret = new ArrayList<>();
+        ret.add(userRole);
+        ret.add(poolName);
+        return ret;
+    }
+
 }

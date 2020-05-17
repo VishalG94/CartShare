@@ -12,14 +12,15 @@ import edu.sjsu.cmpe275.project.CartShare.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
-	
-//	@Query(value = "SELECT u FROM User u WHERE u.email = :email")
-//	public User findByEmail(@Param("email") String email);
 
-	
+    // @Query(value = "SELECT u FROM User u WHERE u.email = :email")
+    // public User findByEmail(@Param("email") String email);
+
     Optional<User> findById(Long id);
 
     User findByscreenName(String screenname);
+
+    User findBynickName(String nickname);
 
     void save(Optional<User> user);
 }
