@@ -7,7 +7,7 @@ import Navbar from './LandingPage/Navbar'
 import Pool from './Pool/Pool'
 
 import AddStore from './AddStore/AddStore'
-import PrivateRoute from '../lib/PrivateRoute'
+// import PrivateRoute from '../lib/PrivateRoute'
 import VerifyAccount from './SignUp/VerifyAccount';
 import SignupDetails from './SignUp/SignupDetails'
 import AddProduct from './AddProduct/AddProduct'
@@ -21,6 +21,8 @@ import SearchPool from './Pool/SearchPool'
 import SearchPoolData from './Pool/SearchPoolData'
 import RequestHome from './Request/RequestHome'
 import Orders from './Orders/Orders'
+import Search from './Search/Search'
+import EditProduct from './AddProduct/EditProduct'
 // Create a Main Component
 
 class Main extends Component {
@@ -38,7 +40,7 @@ class Main extends Component {
         <Route path='/addproduct' component={AddProduct} />
         <Route path='/stores' component={AdminHome} />
         <Route path='/products/:id' component={ProductsDisplay} />
-        <Route path='/search/:id' component={SearchProducts} />
+        <Route path='/searchproducts/:id' component={SearchProducts} />
         <Route path='/poolhome' component={PoolHome} />
         <Route path='/createpool' component={CreatePool} />
         <Route path='/joinpool/:poolId' component={JoinPool} />
@@ -46,7 +48,8 @@ class Main extends Component {
         <Route path='/searchpooldata/:unit/:value' component={SearchPoolData} />
         <Route path='/requesthome' component={RequestHome} />
         <Route path='/orders' component={Orders} />
-        
+        <Route path='/search' component={Search} />
+        <Route path='/editproduct' component={EditProduct} />
       </div>
     )
   }

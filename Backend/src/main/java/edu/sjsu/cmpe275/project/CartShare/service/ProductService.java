@@ -2,10 +2,9 @@ package edu.sjsu.cmpe275.project.CartShare.service;
 
 import edu.sjsu.cmpe275.project.CartShare.model.Product;
 import edu.sjsu.cmpe275.project.CartShare.model.ProductId;
+import edu.sjsu.cmpe275.project.CartShare.model.Store;
 import edu.sjsu.cmpe275.project.CartShare.repository.ProductRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.StoreRepository;
-import edu.sjsu.cmpe275.project.CartShare.model.Address;
-import edu.sjsu.cmpe275.project.CartShare.model.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,8 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -99,4 +99,44 @@ public class ProductService {
         }
     }
 
+    public ResponseEntity<?> editProduct(Product product) {
+        System.out.println("inside delete Product service");
+
+//        Optional<Product> existingProduct = productRepository.findById(product);
+//        System.out.println(existingProduct.get().toString());
+//        System.out.println(product.getSku()+"sku, storeId"+product.getStoreId());
+//        Optional<Store> store = storeRepository.findById(product.getStoreId());
+
+//        if(store.isPresent()&&existingProduct.isPresent()){
+//            System.out.println("store.get().toString()"+store.get().getName());
+//            store.get().getProducts().;
+//            storeRepository.saveAndFlush(store.get());
+//            return ResponseEntity.status(HttpStatus.OK).body("Successfully Deleted");
+//        }else{
+//            return ResponseEntity.status(HttpStatus.OK).body("Not Deleted");
+//        }
+//        ObjectMapper mapper = new ObjectMapper();
+//        Product updatedproduct = mapper.readerForUpdating(existingProduct).readValue(request.getReader());
+        productRepository.saveAndFlush(product);
+        return new ResponseEntity<>(product, HttpStatus.ACCEPTED);
+
+    }
+
+    public ResponseEntity<?> searchproduct(String text) {
+//        System.out.println(text.substring(1,text.length()-1));
+        Optional<List<Product>> products = Optional.ofNullable(productRepository.findByName(text));
+        System.out.println(products.toString());
+        List<Store> store = new ArrayList<>();
+        if (products.get().size() == 0) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).contentType(MediaType.APPLICATION_JSON).body("Product Not Found");
+            }
+            for (Product p : products.get()) {
+
+                store.add(p.getStore());
+            }
+            System.out.println(store.toString());
+
+            return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(store);
+
+    }
 }

@@ -142,8 +142,9 @@ class ProductsDisplay extends Component {
     }
 
     let bannerDetails = this.state.productsDetails;
+    // console.log(bannerDetails[0].store);
     let bannerNew = []
-    console.log(bannerDetails[0]);
+    // console.log(bannerDetails[0]);
     
     var getNewproductsArray = (bannerDetails,countperrow) =>{
       let count =bannerDetails.length
@@ -188,7 +189,7 @@ class ProductsDisplay extends Component {
                 <div class='panel'>
                   <br></br>
                   <Link to='/addproduct'><button type="submit" className='btn btn-success' style={{ float: 'right', marginRight: "10px" }} >Add a new Product</button></Link>
-                  <h2 style={{ marginLeft: '20px' }}>List of products</h2>
+                  <h2 style={{ marginLeft: '20px' }}>List of products for store </h2>
                   <hr></hr>
                   {/* <br></br> */}
                 </div>

@@ -48,7 +48,7 @@ class AdminHome extends Component {
         console.log("Inside Product Creation" + JSON.stringify(response.data));
         sessionStorage.setItem("Allstores", JSON.stringify(response.data));
         this.setState({ storeDetails: response.data })
-
+        sessionStorage.setItem('storedetails',JSON.stringify(response.data))
         let data1 = (response.data).map(store => {
           return store.name;
         })
