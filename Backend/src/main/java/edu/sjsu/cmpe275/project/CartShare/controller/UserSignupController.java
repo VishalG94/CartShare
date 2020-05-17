@@ -60,6 +60,18 @@ public class UserSignupController {
             return new ResponseEntity<>("{\"status\" : \"User with same email is already registered .!!\"}",
                     HttpStatus.FOUND);
         }
+        User existingScreenName = userRepository.findByscreenName(user.getScreenName());
+        if (existingScreenName != null) {
+            System.out.println("Screenname exists");
+            return new ResponseEntity<>("{\"status\" : \"User with same screenname is already registered .!!\"}",
+                    HttpStatus.METHOD_NOT_ALLOWED);
+        }
+        User existingNickName = userRepository.findBynickName(user.getNickName());
+        if (existingNickName != null) {
+            System.out.println("NickName exists");
+            return new ResponseEntity<>("{\"status\" : \"User with same NickName is already registered .!!\"}",
+                    HttpStatus.NOT_ACCEPTABLE);
+        }
         userService.register(user);
         String message = EmailUtility.createVerificationMsg(user.getID());
         emailService.sendEmail(user.getEmail(), message, " User Profile Verification");
@@ -168,7 +180,6 @@ public class UserSignupController {
     public ResponseEntity<?> getPlayersById(@PathVariable(value = "id") String id)
             throws InvalidConfigurationPropertyValueException {
         User user = userRepository.findByEmail(id);
-        // System.out.println("jijojoklonojnkmk");
         // Pool pol = user.getPool();
         return ResponseEntity.ok().body(user);
     }

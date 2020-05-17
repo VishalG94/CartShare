@@ -201,8 +201,8 @@ const validate = formValues => {
     if (!formValues.poolid) {
         error.poolid = 'Enter a valid pool id'
     }
-    if (!(/^([a-zA-Z]+[0-9]+)$/.test(formValues.poolid))) {
-        error.poolid = "Enter Alphanumeric value"
+    if (!(/^([a-zA-Z0-9]+)$/.test(formValues.poolid))) {
+        error.poolid = "Only Alphanumeric values allowed"
     }
     if (!formValues.name) {
         error.name = 'Enter a valid pool name'
