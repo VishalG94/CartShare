@@ -23,39 +23,28 @@ class PoolHome extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            name: '',
-            street: '',
-            city: '',
-            state: '',
-            zip: '',
-            store: [],
-            storeDetails: [],
+            role: "",
+            poolname: "",
             authFlag: false,
             failed: false,
             success: false
         }
     }
 
-    // componentWillMount() {
+    componentWillMount() {
 
-    //     axios.defaults.withCredentials = true
-    //     axios
-    //         .get(`${ROOT_URL}/getstores`, { params: '' })
-    //         .then(response => {
-    //             // console.log(response)
-    //             console.log("Inside Product Creation" + JSON.stringify(response.data));
-    //             sessionStorage.setItem("Allstores", JSON.stringify(response.data));
-    //             this.setState({ storeDetails: response.data })
-
-    //             let data1 = (response.data).map(store => {
-    //                 return store.name;
-    //             })
-    //             console.log(data1);
-    //             this.setState({
-    //                 store: data1
-    //             })
-    //         })
-    // }
+        axios.defaults.withCredentials = true
+        axios
+            .get(`${ROOT_URL}/api/getpool/` + UTIL.getUserDetails())
+            .then(response => {
+                // console.log(response)
+                console.log("Inside Fetch user role" + JSON.stringify(response.data));
+                this.setState({
+                    role: response.data[0],
+                    poolname: response.data[1]
+                })
+            })
+    }
 
     inputChangeHandler = e => {
         this.setState({
@@ -125,11 +114,9 @@ class PoolHome extends Component {
         let invalidtag = null
 
 
-        let bannerDetails = this.state.storeDetails;
-        let bannerNew = []
-
         let noPoolMember = null;
-        var userRole = UTIL.getUserRole();
+        var userRole = this.state.role;
+        var poolName = this.state.poolname
         if (userRole === "User") {
             noPoolMember = (
                 <div style={{ position: "relative", marginTop: "25%", marginLeft: "32%" }}>
@@ -145,7 +132,7 @@ class PoolHome extends Component {
             noPoolMember = (
                 <div style={{ position: "relative", marginTop: "25%", marginLeft: "23%" }}>
                     <h3 style={{ fontWeight: "bold", color: "A9A9A9" }}>
-                        Currently you're a {userRole} in PoolX!!
+                        Currently you're a Pool Leader in {poolName}!!
                     </h3>
 
                     <h4 style={{ color: "grey" }}>
@@ -157,7 +144,7 @@ class PoolHome extends Component {
             noPoolMember = (
                 <div style={{ position: "relative", marginTop: "25%", marginLeft: "27%" }}>
                     <h3 style={{ fontWeight: "bold", color: "A9A9A9" }}>
-                        Currently you're a {userRole} in PoolX!!
+                        Currently you're a Pooler in {poolName}!!
                     </h3>
 
                     <h4 style={{ color: "grey" }}>
@@ -166,34 +153,6 @@ class PoolHome extends Component {
                 </div>)
         }
 
-        var getNewproductsArray = (bannerDetails, countperrow) => {
-            let count = bannerDetails.length
-            let bannerNew = []
-            // let countperrow=2;
-            while (count > 0) {
-                let bannerrow = [];
-                if (count - countperrow >= 0) {
-                    for (let i = 0; i < countperrow; i++) {
-                        bannerrow.push(bannerDetails[count - 1])
-                        count--;
-                    }
-
-                } else {
-                    console.log(count);
-                    for (let j = count; j > 0; j--) {
-                        console.log(j);
-                        bannerrow.push(bannerDetails[j - 1])
-                        count--;
-                    }
-                }
-                bannerNew.push(bannerrow)
-            }
-            return bannerNew;
-        }
-        bannerNew = getNewproductsArray(bannerDetails, 4);
-        let bannerFinal = bannerNew.map((data) => {
-            return <StoreBanner bannerDetails={data}></StoreBanner>
-        })
 
         if (this.state.failed) {
             invalidtag = (
@@ -259,9 +218,6 @@ class PoolHome extends Component {
 
                                 </div>
 
-
-
-                                {bannerFinal}
                                 <br />
                                 <br />
                                 <br />

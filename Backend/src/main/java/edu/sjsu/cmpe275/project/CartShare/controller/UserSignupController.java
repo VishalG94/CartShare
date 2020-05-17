@@ -1,6 +1,7 @@
 package edu.sjsu.cmpe275.project.CartShare.controller;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -164,12 +165,25 @@ public class UserSignupController {
     // }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<Pool> getPlayersById(@PathVariable(value = "id") String id)
+    public ResponseEntity<?> getPlayersById(@PathVariable(value = "id") String id)
             throws InvalidConfigurationPropertyValueException {
         User user = userRepository.findByEmail(id);
-        System.out.println("jijojoklonojnkmk");
-        Pool pol = user.getPool();
-        return ResponseEntity.ok().body(pol);
+        // System.out.println("jijojoklonojnkmk");
+        // Pool pol = user.getPool();
+        return ResponseEntity.ok().body(user);
+    }
+
+    @GetMapping("/getpool/{id}")
+    public List<String> getPoolOfUser(@PathVariable(value = "id") String id)
+            throws InvalidConfigurationPropertyValueException {
+        User user = userRepository.findByEmail(id);
+        String userRole = user.getRole();
+        Pool pool = user.getPool();
+        String poolName = pool.getName();
+        List<String> ret = new ArrayList<>();
+        ret.add(userRole);
+        ret.add(poolName);
+        return ret;
     }
 
 }
