@@ -13,6 +13,7 @@ class Navbar extends Component {
   // handle logout to destroy the cookie
   handleLogout = () => {
     localStorage.clear()
+    sessionStorage.clear()
   }
   render() {
     // if Cookie is set render Logout Button
@@ -36,13 +37,22 @@ class Navbar extends Component {
           <li style={{float:"right"}}>
           <Link to='/' onClick={this.handleLogout}>
             {/* <i class="fas fa-sign-in-alt">Login</i> */}
+            
             <i style={{ color: "rgb(29, 161, 242)"}} class='fas fa-sign-in-alt' />
               &nbsp;&nbsp;
+              
               <span style={{ color: "rgb(29, 161, 242)"}} className='tab'>Logout</span>
+              
               &nbsp;&nbsp;&nbsp;&nbsp;
               {/* <span class='glyphicon glyphicon-log-in' style={{ color: "rgb(29, 161, 242)" }} /> &nbsp; <span style={{ color: 'rgb(29, 161, 242)' }}>Login</span> */}
             </Link>
           </li>
+
+          <div style={{marginRight:"1%",float:"right"}}>
+            <Link to='#'>
+            <span>Hi, {localStorage.getItem("screenname").replace(/['"]+/g, '')}</span>
+            </Link>
+          </div>
         </ul>
       )
     } else {

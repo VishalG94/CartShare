@@ -1,5 +1,6 @@
 package edu.sjsu.cmpe275.project.CartShare.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;

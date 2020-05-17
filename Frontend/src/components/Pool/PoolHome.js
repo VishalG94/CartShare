@@ -126,7 +126,7 @@ class PoolHome extends Component {
         let redirectVar = null
         let invalidtag = null
 
-
+        
         let bannerDetails = this.state.storeDetails;
         let bannerNew = []
 
