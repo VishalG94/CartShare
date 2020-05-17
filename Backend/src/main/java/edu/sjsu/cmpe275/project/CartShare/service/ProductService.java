@@ -28,27 +28,27 @@ public class ProductService {
     @Autowired
     private EntityManager entityManager;
 
-//    public ResponseEntity<?> addProduct(Product product){
-//        ProductId id = product.getId();
-//
-//        Optional<Store> store = storeRepository.findById(id.getStoreId());
-//        product.setStore(store.get());
-//        System.out.println(productRepository.getMaxSku());
-////        id.setSku(productRepository.getMaxSku()); Not needed
-//        productRepository.saveAndFlush(product);
-//        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(product);
-//    }
+    public ResponseEntity<?> addProduct(Product product){
+        ProductId id = product.getId();
 
-    public Product addProduct(Product prop) {
-        System.out.println("product: "+ prop.toString());
-        ProductId id = prop.getId();
-        System.out.println(id.getStoreId());
         Optional<Store> store = storeRepository.findById(id.getStoreId());
-        prop.setStore(store.get());
+        product.setStore(store.get());
         System.out.println(productRepository.getMaxSku());
-//        id.setSku(productRepository.getMaxSku());
-        return productRepository.saveAndFlush(prop);
+//        id.setSku(productRepository.getMaxSku()); Not needed
+        productRepository.saveAndFlush(product);
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(product);
     }
+
+//    public Product addProduct(Product prop) {
+//        System.out.println("product: "+ prop.toString());
+//        ProductId id = prop.getId();
+//        System.out.println(id.getStoreId());
+//        Optional<Store> store = storeRepository.findById(id.getStoreId());
+//        prop.setStore(store.get());
+//        System.out.println(productRepository.getMaxSku());
+////        id.setSku(productRepository.getMaxSku());
+//        return productRepository.saveAndFlush(prop);
+//    }
 
     public ResponseEntity<?> getproducts(Long id) {
         System.out.printf("inside getProduct : ", id);

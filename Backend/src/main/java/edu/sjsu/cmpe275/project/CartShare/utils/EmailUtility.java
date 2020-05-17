@@ -20,4 +20,11 @@ public class EmailUtility {
         System.out.println("notifyMessage : " + notifyMessage);
         return notifyMessage;
     }
+
+    public static String messageNotification(String sender, String receiver, String msg) {
+        String notifyMessage = "Hi " + receiver + ",\n\nYou have received below message from your fellow pooler "
+                + sender + ":\n\n" + msg + "\n\nRegards,\nTeam Cartshare";
+        System.out.println("notifyMessage : " + notifyMessage);
+        return notifyMessage;
+    }
 }

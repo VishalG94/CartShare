@@ -9,6 +9,8 @@ import { Field, reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
 import GoogleLogin from 'react-google-login'
 import { GOOGLE_CLIENT_ID } from '../../config/config'
+import ROOT_URL from '../../constants'
+import * as UTIL from '../utils/Utils';
 
 
 // Define a SignUp Component
@@ -66,8 +68,46 @@ class SignUp extends Component {
   }
 
   signupHandler(data) {
+    // axios.defaults.withCredentials = true
+    // this.props.signupPooler(data, res => {
+    //   if (res.status === 200) {
+    //     console.log('Response signup pooler: ', res.data)
+    //     this.setState({
+    //       authFlag: true
+    //     })
+    //     alert("Verification mail has been sent. Please verify before login.!!")
+    //     window.location.replace('/login')
+    //   } else if (res.status == 302) {
+    //     alert("User is already registered with same email id");
+    //     window.location.reload();
+    //     this.setState({
+    //       authFlag: false
+    //     })
+    //   } else if (res.status == 405) {
+    //     alert("User is already registered with same screenname");
+    //     window.location.reload();
+    //     this.setState({
+    //       authFlag: false
+    //     })
+    //   } else if (res.status == 406) {
+    //     alert("User is already registered with same nickname");
+    //     window.location.reload();
+    //     this.setState({
+    //       authFlag: false
+    //     })
+    //   } else {
+    //     console.log('Failed')
+    //     this.setState({ authFailed: true })
+    //     alert("User registeration failed because of sever error")
+    //   }
+    // })
     axios.defaults.withCredentials = true
-    this.props.signupPooler(data, res => {
+    fetch(`${ROOT_URL}/api/signup`, {
+      method: 'POST',
+      mode: 'cors',
+      headers: { ...UTIL.getUserHTTPHeader(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(res => {
       if (res.status === 200) {
         console.log('Response signup pooler: ', res.data)
         this.setState({
@@ -77,6 +117,18 @@ class SignUp extends Component {
         window.location.replace('/login')
       } else if (res.status == 302) {
         alert("User is already registered with same email id");
+        window.location.reload();
+        this.setState({
+          authFlag: false
+        })
+      } else if (res.status == 405) {
+        alert("User is already registered with same screenname");
+        window.location.reload();
+        this.setState({
+          authFlag: false
+        })
+      } else if (res.status == 406) {
+        alert("User is already registered with same nickname");
         window.location.reload();
         this.setState({
           authFlag: false
@@ -184,6 +236,7 @@ class SignUp extends Component {
                   <Field
                     name='nickname'
                     type='text'
+                    required pattern="[a-zA-Z0-9]"
                     component={this.renderInput}
                     label='Nick name'
                   />
@@ -270,20 +323,24 @@ const validate = formValues => {
   if (!formValues.screenname) {
     error.screenname = 'Enter a valid Screen name'
   }
+  if (!(/^([a-zA-Z0-9]+)$/.test(formValues.screenname))) {
+    error.screenname = "Only Alphanumeric values allowed"
+  }
   if (!formValues.nickname) {
     error.nickname = 'Enter a valid Nick name'
   }
   return error
 }
-const mapStoreToProps = state => {
-  return { user: state.user }
-}
-export default connect(
-  mapStoreToProps,
-  { signupPooler: signupPooler }
-)(
+// const mapStoreToProps = state => {
+//   return { user: state.user }
+// }
+// export default connect(
+//   mapStoreToProps,
+//   { signupPooler: signupPooler }
+// )(
+export default
   reduxForm({
     form: 'streamSignup',
     validate: validate
   })(SignUp)
-)
+// )

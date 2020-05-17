@@ -3,6 +3,7 @@ import './Navbar.css'
 import { Link } from 'react-router-dom'
 import cookie from 'react-cookies'
 import { Redirect } from 'react-router'
+import * as UTIL from '../utils/Utils'
 
 // create the Navbar Component
 class Navbar extends Component {
@@ -14,6 +15,7 @@ class Navbar extends Component {
   handleLogout = () => {
     localStorage.clear()
     sessionStorage.clear()
+    localStorage.clear()
   }
   render() {
     // if Cookie is set render Logout Button
@@ -32,6 +34,15 @@ class Navbar extends Component {
       //   </ul>
 
       navLogin = (
+        // <ul class='nav navbar-nav navbar-right'>
+        //   {/* <li><Link to="/buyerprofile"><span class="glyphicon glyphicon-log-in"></span> Profile</Link></li> */}
+        //   <li>
+        //     <Link to='/' onClick={this.handleLogout}>
+        //       <span class='glyphicon glyphicon-user' />Logout
+        //     </Link>
+        //   </li>
+        // </ul>
+
         <ul class='nav navbar-nav navbar-right'>
           
           <li style={{float:"right"}}>
@@ -60,17 +71,17 @@ class Navbar extends Component {
       console.log('Not Able to read cookie')
       navLogin = (
         <ul class='nav navbar-nav navbar-right'>
-          <li style={{float:"right"}}>
+          <li style={{ float: "right" }}>
             <Link to='/signup' >
               <span class='glyphicon glyphicon-log-in' style={{ color: "rgb(29, 161, 242)" }} />  &nbsp;<span style={{ color: 'rgb(29, 161, 242)' }}>Sign up</span>
             </Link>
           </li>
-          <li style={{float:"right"}}>
+          <li style={{ float: "right" }}>
             <Link to='/login'>
-            {/* <i class="fas fa-sign-in-alt">Login</i> */}
-            <i style={{ color: "rgb(29, 161, 242)"}} class='fas fa-sign-in-alt' />
+              {/* <i class="fas fa-sign-in-alt">Login</i> */}
+              <i style={{ color: "rgb(29, 161, 242)" }} class='fas fa-sign-in-alt' />
               &nbsp;&nbsp;
-              <span style={{ color: "rgb(29, 161, 242)"}} className='tab'>Login</span>
+              <span style={{ color: "rgb(29, 161, 242)" }} className='tab'>Login</span>
               &nbsp;&nbsp;&nbsp;&nbsp;
               {/* <span class='glyphicon glyphicon-log-in' style={{ color: "rgb(29, 161, 242)" }} /> &nbsp; <span style={{ color: 'rgb(29, 161, 242)' }}>Login</span> */}
             </Link>
@@ -86,14 +97,14 @@ class Navbar extends Component {
 
     return (
       <div>
-        {redirectVar}
+        {/* {redirectVar} */}
         <nav
           class='navbar navbar-default'
           style={{ backgroundColor: '#fafafa' }}
         >
           <div class='container-fluid'>
             <div class='navbar-header'>
-            {navLogin}
+              {navLogin}
               <a href='/home'>
                 <img
                   src={require('../img/favicon.ico')}
@@ -103,11 +114,11 @@ class Navbar extends Component {
                   height='40'
                 />
               </a>
-              
+
             </div>
           </div>
         </nav>
-              </div>
+      </div>
     )
   }
 }

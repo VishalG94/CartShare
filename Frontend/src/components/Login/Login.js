@@ -113,6 +113,12 @@ class Login extends Component {
       }
     }).then(result => {
       console.log("Login details Results:", result);
+      if (result.email.includes("sjsu.edu")) {
+        history.push('/stores')
+      } else {
+        history.push('/home')
+      }
+      window.location.reload();
       UTIL.saveUserDetails(result);
     }).catch(error => {
       console.log("Error : " + error);
@@ -157,7 +163,13 @@ class Login extends Component {
           alert("First register with google to login into it");
         }
       }).then(result => {
-        console.log("Login response " + result)
+        console.log("Login response " + result.email)
+        if (result.email.includes("sjsu.edu")) {
+          history.push('/stores')
+        } else {
+          history.push('/home')
+        }
+        window.location.reload();
         UTIL.saveUserDetails(result);
       }).catch(e => {
         console.log(e)
