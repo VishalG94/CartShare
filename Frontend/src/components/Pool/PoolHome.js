@@ -117,17 +117,18 @@ class PoolHome extends Component {
         let noPoolMember = null;
         var userRole = this.state.role;
         var poolName = this.state.poolname
-        if (userRole === "User") {
+        if (userRole === "POOLER") {
             noPoolMember = (
-                <div style={{ position: "relative", marginTop: "25%", marginLeft: "32%" }}>
+                <div style={{ position: "relative", marginTop: "25%", marginLeft: "27%" }}>
                     <h3 style={{ fontWeight: "bold", color: "A9A9A9" }}>
-                        Currently you are not in any pool!!
+                        Currently you're a Pooler in {poolName}!!
                     </h3>
 
                     <h4 style={{ color: "grey" }}>
-                        Options : <a href='/createpool'>Create Pool</a>     |     <a href='/searchpool'>Browse Pools</a>
+                        <a href='/messagepooler'>Click here</a> to send a message to other pool members
                     </h4>
                 </div>)
+
         } else if (userRole === "POOL_LEADER") {
             noPoolMember = (
                 <div style={{ position: "relative", marginTop: "25%", marginLeft: "23%" }}>
@@ -142,13 +143,13 @@ class PoolHome extends Component {
                 </div>)
         } else {
             noPoolMember = (
-                <div style={{ position: "relative", marginTop: "25%", marginLeft: "27%" }}>
+                <div style={{ position: "relative", marginTop: "25%", marginLeft: "32%" }}>
                     <h3 style={{ fontWeight: "bold", color: "A9A9A9" }}>
-                        Currently you're a Pooler in {poolName}!!
+                        Currently you are not in any pool!!
                     </h3>
 
                     <h4 style={{ color: "grey" }}>
-                        <a href='/messagepooler'>Click here</a> to send a message to other pool members
+                        Options : <a href='/createpool'>Create Pool</a>     |     <a href='/searchpool'>Browse Pools</a>
                     </h4>
                 </div>)
         }

@@ -139,13 +139,13 @@ class Login extends Component {
         if (response.status == 200) {
           alert(" User logged in successfully");
           console.log("Response from server : " + response);
-          if(localStorage.getItem('role')=='User'){
-          history.push('/poolhome');
-          }
-          else{
-            history.push('/stores');
-          }
-          window.location.reload();
+          // if(localStorage.getItem('role')=='Admin'){
+          // history.push('/stores');
+          // }
+          // else{
+          //   history.push('/poolhome');
+          // }
+          // window.location.reload();
           return response.json()
           // history.push('/home');
           // window.location.reload();
@@ -158,6 +158,12 @@ class Login extends Component {
         }
       }).then(result => {
         console.log("Login response " + result)
+        if (result.email.includes("sjsu.edu")) {
+          history.push('/stores')
+        } else {
+          history.push('/poolhome')
+        }
+        window.location.reload();
         UTIL.saveUserDetails(result);
       }).catch(e => {
         console.log(e)
