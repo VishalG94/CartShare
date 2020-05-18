@@ -9,57 +9,54 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table (name = "orders")
+@Table(name = "orders")
 @EntityListeners(AuditingEntityListener.class)
 public class Order {
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name = "orderid", nullable = false, unique = true)    
-	private long orderid;	 		
-	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "orderid", nullable = false, unique = true)
+	private long orderid;
+
 	@ManyToOne
-	@JoinColumn(name="buyer_id",nullable = true)
-	private User buyerId;	
-	
+	@JoinColumn(name = "buyer_id", nullable = true)
+	private User buyerId;
+
 	@Column(name = "price", nullable = true)
-    private float price;
-	
+	private float price;
+
 	@Column(name = "pickup_option", nullable = true)
-    private String pickupOption;	
+	private String pickupOption;
 
 	@Column(name = "status", nullable = true)
-    private String status;
-	
-	@OneToMany(cascade = CascadeType.ALL ,fetch = FetchType.LAZY, mappedBy = "order")	
-	@JsonIgnoreProperties({"order"})
+	private String status;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
+	@JsonIgnoreProperties({ "order" })
 	private List<Order_Items> order_items;
-	
+
 	@ManyToOne
-	@JsonIgnoreProperties({"orders"})
-	@JoinColumn(name="store_id",nullable = true)
+	@JsonIgnoreProperties({ "orders" })
+	@JoinColumn(name = "store_id", nullable = true)
 	private Store store;
-	
+
 	@ManyToOne
-	@JsonIgnoreProperties({"orders"})
-	@JoinColumn(name="pool_id",nullable = true)
+	@JsonIgnoreProperties({ "orders" })
+	@JoinColumn(name = "pool_id", nullable = true)
 	private Pool pool;
-	
-	
+
 	@Column(name = "delivery_address", nullable = true)
-    private String deliveryAddress;
-	
-//	@ManyToOne(mappedBy = pickup_orders)
-//	private User pickupperson_Id;
-	
+	private String deliveryAddress;
+
+	// @ManyToOne(mappedBy = pickup_orders)
+	// private User pickupperson_Id;
 
 	@Column(name = "ORDER_TIME")
 	@Temporal(TemporalType.TIMESTAMP)
-    private java.util.Date orderTime;
-	
-	public Order()
-	{		
-	}		
+	private java.util.Date orderTime;
+
+	public Order() {
+	}
 
 	public Order(long orderid, User buyerId, float price, String pickupOption, String status,
 			List<Order_Items> order_items, Store store, Pool pool, String deliveryAddress, Date orderTime) {
@@ -99,25 +96,23 @@ public class Order {
 	public void setPool(Pool pool) {
 		this.pool = pool;
 	}
-	
-	
+
 	public long getOrderid() {
 		return orderid;
 	}
-	
+
 	public void setOrderid(long orderid) {
 		this.orderid = orderid;
-	}	
+	}
 
 	public Store getStore() {
 		return store;
 	}
 
-
 	public void setStore(Store store) {
 		this.store = store;
 	}
-	
+
 	public User getBuyerId() {
 		return buyerId;
 	}
@@ -140,7 +135,7 @@ public class Order {
 
 	public void setStatus(String status) {
 		this.status = status;
-	}	
+	}
 
 	public String getDeliveryAddress() {
 		return deliveryAddress;
@@ -156,19 +151,19 @@ public class Order {
 
 	public void setOrderTime(java.util.Date orderTime) {
 		this.orderTime = orderTime;
-	}	
-	
-//	public void addOrderItem(Order_Items item)
-//	{
-//		order_items.add(item);
-//		item.setOrder(this);
-//	}
-//	
-//	public void removeOrderItem(Order_Items item)
-//	{
-//		order_items.remove(item);
-//		item.setOrder(null);
-//	}
-//	
-	
+	}
+
+	// public void addOrderItem(Order_Items item)
+	// {
+	// order_items.add(item);
+	// item.setOrder(this);
+	// }
+	//
+	// public void removeOrderItem(Order_Items item)
+	// {
+	// order_items.remove(item);
+	// item.setOrder(null);
+	// }
+	//
+
 }

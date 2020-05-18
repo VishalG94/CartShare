@@ -7,6 +7,7 @@ import Navbar from './LandingPage/Navbar'
 import Pool from './Pool/Pool'
 
 import AddStore from './AddStore/AddStore'
+import Checkout from './Orders/Checkout'
 //import PrivateRoute from '../lib/PrivateRoute'
 import VerifyAccount from './SignUp/VerifyAccount';
 import SignupDetails from './SignUp/SignupDetails'
@@ -46,6 +47,7 @@ class Main extends Component {
         <Route path='/searchpooldata/:unit/:value' component={SearchPoolData} />
         <Route path='/requesthome' component={RequestHome} />
         <Route path='/orders' component={Orders} />
+        <Route path='/checkout' component={Checkout} />
         
       </div>
     )
