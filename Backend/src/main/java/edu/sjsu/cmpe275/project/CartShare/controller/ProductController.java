@@ -21,9 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 //import edu.sjsu.cmpe275.project.CartShare.service.AmazonClient;
 
@@ -83,6 +81,36 @@ public class ProductController {
         return ResponseEntity.ok(prop);
     }
 
+    @PutMapping(value="/addproduct", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<?> editProduct(@RequestPart(value = "data") String data,@RequestPart(value = "files") MultipartFile[] files) throws JsonMappingException, JsonProcessingException{
+        String response = "";
+        ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        Product prop;
+
+        try {
+            prop = mapper.readValue(data, Product.class);
+            for(MultipartFile file : files)
+            {
+                System.out.println("started upload");
+                response += this.amazonClient.uploadFile(file);
+                System.out.println("ended upload : " + response );
+            }
+
+            prop.setImageurl(response);
+
+            System.out.println("Images sting: " + prop.getImageurl());
+        }
+        catch (JsonMappingException e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        productService.editProduct(prop);
+        return ResponseEntity.ok(prop);
+    }
+
     @GetMapping("/getproducts/{id}")
         public ResponseEntity<?> getProducts(@PathVariable Long id) {
         return productService.getproducts(id);
@@ -132,21 +160,21 @@ public class ProductController {
 //        return productService.searchproduct(text);
     }
 
-    @PutMapping("/editproductbyid/{storeId}/{sku}")
-    public ResponseEntity<?> editProductbyid(@PathVariable Long storeId, @PathVariable Long sku, HttpServletRequest request) throws JSONException {
-        ProductId id = new ProductId(storeId, sku);
-        System.out.println("Inside deleteproduct: ");
-        Optional<Product> existingProduct = productRepository.findById(id);
-        System.out.println(existingProduct.get().toString());
-        System.out.println(id.getSku()+"sku, storeId"+id.getStoreId());
-        ObjectMapper mapper = new ObjectMapper();
-        Product updatedproduct = null;
-        try {
-             updatedproduct = mapper.readerForUpdating(existingProduct).readValue(request.getReader());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return productService.editProduct(updatedproduct);
-    }
+//    @PutMapping("/editproductbyid/{storeId}/{sku}")
+//    public ResponseEntity<?> editProductbyid(@PathVariable Long storeId, @PathVariable Long sku, HttpServletRequest request) throws JSONException {
+//        ProductId id = new ProductId(storeId, sku);
+//        System.out.println("Inside deleteproduct: ");
+//        Optional<Product> existingProduct = productRepository.findById(id);
+//        System.out.println(existingProduct.get().toString());
+//        System.out.println(id.getSku()+"sku, storeId"+id.getStoreId());
+//        ObjectMapper mapper = new ObjectMapper();
+//        Product updatedproduct = null;
+//        try {
+//             updatedproduct = mapper.readerForUpdating(existingProduct).readValue(request.getReader());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return productService.editProduct(updatedproduct);
+//    }
 }

@@ -283,7 +283,7 @@ class Cart extends React.Component {
             style={{ marginLeft: '35%' }}
             className='btn btn-primary'
             type='submit'
-            price={total}
+            price={grossTotal}
             onClick={this.onSubmit}
           >
             Checkout

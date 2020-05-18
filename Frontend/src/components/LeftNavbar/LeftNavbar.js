@@ -17,13 +17,13 @@ class LeftNavbar extends React.Component {
           </span>
         </h2>
         <ul style={{ listStyleType: 'none', marginLeft: "-2px" }}>
-          <li className='li-profile'>
+          {/* <li className='li-profile'>
             <a href='/home' className='navLink active'>
               <i class='fas fa-home' />
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <span className='tab'>Home</span>
             </a>
-          </li>
+          </li> */}
           <li className='li-profile'>
             <a href='/search' className='navLink'>
               <i class='fas fa-hashtag' />

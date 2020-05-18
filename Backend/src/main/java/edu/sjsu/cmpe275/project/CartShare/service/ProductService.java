@@ -50,6 +50,17 @@ public class ProductService {
         return productRepository.saveAndFlush(prop);
     }
 
+    public Product editProduct(Product product) {
+        System.out.println("product: "+ product.toString());
+        ProductId id = product.getId();
+        System.out.println(id.getStoreId());
+        Optional<Store> store = storeRepository.findById(id.getStoreId());
+        product.setStore(store.get());
+        System.out.println(productRepository.getMaxSku());
+//        id.setSku(productRepository.getMaxSku());
+        return productRepository.saveAndFlush(product);
+    }
+
     public ResponseEntity<?> getproducts(Long id) {
         System.out.printf("inside getProduct : ", id);
         Optional<Store> store = storeRepository.findById(id);
@@ -99,28 +110,7 @@ public class ProductService {
         }
     }
 
-    public ResponseEntity<?> editProduct(Product product) {
-        System.out.println("inside delete Product service");
 
-//        Optional<Product> existingProduct = productRepository.findById(product);
-//        System.out.println(existingProduct.get().toString());
-//        System.out.println(product.getSku()+"sku, storeId"+product.getStoreId());
-//        Optional<Store> store = storeRepository.findById(product.getStoreId());
-
-//        if(store.isPresent()&&existingProduct.isPresent()){
-//            System.out.println("store.get().toString()"+store.get().getName());
-//            store.get().getProducts().;
-//            storeRepository.saveAndFlush(store.get());
-//            return ResponseEntity.status(HttpStatus.OK).body("Successfully Deleted");
-//        }else{
-//            return ResponseEntity.status(HttpStatus.OK).body("Not Deleted");
-//        }
-//        ObjectMapper mapper = new ObjectMapper();
-//        Product updatedproduct = mapper.readerForUpdating(existingProduct).readValue(request.getReader());
-        productRepository.saveAndFlush(product);
-        return new ResponseEntity<>(product, HttpStatus.ACCEPTED);
-
-    }
 
     public ResponseEntity<?> searchproduct(String text) {
 //        System.out.println(text.substring(1,text.length()-1));
