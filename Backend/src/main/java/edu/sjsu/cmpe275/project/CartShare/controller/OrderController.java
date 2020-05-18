@@ -9,6 +9,8 @@ import edu.sjsu.cmpe275.project.CartShare.model.Store;
 import edu.sjsu.cmpe275.project.CartShare.service.OrderService;
 import edu.sjsu.cmpe275.project.CartShare.service.ProductService;
 import edu.sjsu.cmpe275.project.CartShare.service.StoreService;
+
+import org.apache.http.HttpEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -33,6 +35,7 @@ public class OrderController {
     public ResponseEntity<?> addOrder(    								   
     									@RequestBody Order order,
     									@RequestParam Long userId,
+    									@RequestParam(required = false) String pickupOrder,
                                       HttpServletRequest request) throws JSONException {
     	
     	System.out.println("Buyer ID is "+userId);
@@ -44,6 +47,14 @@ public class OrderController {
     public ResponseEntity<?> getOrders(@RequestParam Long id) {
     	System.out.println("Inside GetOrders "+id);
     return orderService.getorders(id);
+}
+    
+    @GetMapping("/getpoolorders")
+    public ResponseEntity<?> getPoolOrders(@RequestParam(value = "storeid") Long storeId, @RequestParam(value = "userid") Long userId) 
+    {
+    	System.out.println("Inside Get Pool Orders");
+    	
+    return orderService.getPoolOrders(storeId,userId);
 }
 
 

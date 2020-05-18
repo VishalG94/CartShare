@@ -24,7 +24,8 @@ class Cart extends React.Component {
       success: '',
       count: 0,
       pickupOption: false,
-      selectedOption: "self"
+      selectedOption: "self",
+      redirect: false
     }
     this.handleOptionChange = this.handleOptionChange.bind(this)
     this.removeFromCart = this.removeFromCart.bind(this)
@@ -58,7 +59,7 @@ class Cart extends React.Component {
 
         let data = {
           price: e.target.getAttribute('price'),
-          status: "NEW_ORDER",
+          status: "PENDING",
           store: {
             id: sessionStorage.getItem("store")
           },
@@ -68,14 +69,24 @@ class Cart extends React.Component {
 
         sessionStorage.setItem("order", JSON.stringify(data))
 
-
-        axios.defaults.withCredentials = true
-        let userId = localStorage.getItem("ID")
-        axios.post(`${ROOT_URL}/addorder`, data, { params: { userId } }).then(response => {
+        if(this.state.selectedOption == "self")
+        {
+          this.setState({
+            redirect:true
+          }) 
+        }
+        else
+        {
+          axios.post(`${ROOT_URL}/addorder`, data, { 
+            params: 
+            {
+                userId : localStorage.getItem("ID")                
+            } 
+        }).then(response => {
           // update the state with the response data
           this.setState({
             failed: false,
-            success: true
+            success: true            
           })
           alert("Order succesfully placed")
           sessionStorage.removeItem("order_items")
@@ -88,7 +99,32 @@ class Cart extends React.Component {
             failed: true,
             success: false
           })
-        });
+        });         
+       
+        }
+        
+
+        // axios.defaults.withCredentials = true
+        // let userId = localStorage.getItem("ID")
+        // axios.post(`${ROOT_URL}/addorder`, data, { params: { userId } }).then(response => {
+        //   // update the state with the response data
+        //   this.setState({
+        //     failed: false,
+        //     success: true,
+        //     redirect:true
+        //   })
+        //   alert("Order succesfully placed")
+        //   sessionStorage.removeItem("order_items")
+        //   sessionStorage.removeItem("order")
+        //   window.location.reload()
+        //   console.log('Axios post:', response.data);
+        // }).catch(error => {
+        //   console.log(error);
+        //   this.setState({
+        //     failed: true,
+        //     success: false
+        //   })
+        // });
       }
     }
     else {
@@ -128,6 +164,16 @@ class Cart extends React.Component {
   render() {
     let itemslist = null
     let pickupField = null
+    let redirectVar = null
+
+    if(this.state.redirect)
+    {
+      redirectVar = <Redirect to='/checkout' />
+    }
+    else{
+      redirectVar=null
+    }
+
     if (this.state.pickupOption) {
       pickupField =
         <div>
@@ -185,11 +231,36 @@ class Cart extends React.Component {
         </div>
       )
     })
+
+    let grossTotal = total + total*0.0975
   
     return (
       <div>
+        {redirectVar}
         <div className='row'>{itemslist}</div>
         <br />
+        <div className="row">
+          <div style={{ textAlign: "center" }} className='col-sm-4'>
+            <label>Tax</label>
+          </div>
+          <div style={{ textAlign: "center" }} className='col-sm-4'>
+            {/* <div>*{items[item][0]}</div> */}
+          </div>
+          <div style={{ textAlign: "center" }} className='col-sm-4'>
+            <label>$ {0.0925 * total}</label>
+          </div>
+        </div>
+        <div className="row">
+          <div style={{ textAlign: "center" }} className='col-sm-4'>
+            <label>Convenience fee</label>
+          </div>
+          <div style={{ textAlign: "center" }} className='col-sm-4'>
+            {/* <div>*{items[item][0]}</div> */}
+          </div>
+          <div style={{ textAlign: "center" }} className='col-sm-4'>
+            <label>$ {0.005 * total}</label>
+          </div>
+        </div>
         <div className="row">
           <div style={{ textAlign: "center" }} className='col-sm-4'>
             <label>Total</label>
@@ -198,7 +269,7 @@ class Cart extends React.Component {
             {/* <div>*{items[item][0]}</div> */}
           </div>
           <div style={{ textAlign: "center" }} className='col-sm-4'>
-            <label>$ {total}</label>
+            <label>$ {grossTotal}</label>
           </div>
         </div>
         <br />

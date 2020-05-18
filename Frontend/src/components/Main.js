@@ -7,7 +7,8 @@ import Navbar from './LandingPage/Navbar'
 import Pool from './Pool/Pool'
 
 import AddStore from './AddStore/AddStore'
-// import PrivateRoute from '../lib/PrivateRoute'
+import Checkout from './Orders/Checkout'
+//import PrivateRoute from '../lib/PrivateRoute'
 import VerifyAccount from './SignUp/VerifyAccount';
 import SignupDetails from './SignUp/SignupDetails'
 import AddProduct from './AddProduct/AddProduct'
@@ -45,6 +46,7 @@ class Main extends Component {
         <Route path='/stores' component={AdminHome} />
         <Route path='/products/:id' component={ProductsDisplay} />
         <Route path='/searchproducts/:id' component={SearchProducts} />
+        <Route path='/search' component={Search} />
         <Route path='/poolhome' component={PoolHome} />
         <Route path='/createpool' component={CreatePool} />
         <Route path='/joinpool/:poolId' component={JoinPool} />
@@ -52,12 +54,11 @@ class Main extends Component {
         <Route path='/searchpooldata/:unit/:value' component={SearchPoolData} />
         <Route path='/requesthome' component={RequestHome} />
         <Route path='/orders' component={Orders} />
-        <Route path='/search' component={Search} />
-        <Route path='/editproduct' component={EditProduct} />
+        <Route path='/checkout' component={Checkout} />
         <Route path='/profile' component={UserProfile} />
         <Route path='/messagepooler' component={MessagePooler} />
         <Route path='/editpool' component={EditPool} />
-
+        <Route path='/editproduct' component={EditProduct} />
       </div>
     )
   }
