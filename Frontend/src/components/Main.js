@@ -55,7 +55,10 @@ class Main extends Component {
         <Route path='/requesthome' component={RequestHome} />
         <Route path='/orders' component={Orders} />
         <Route path='/checkout' component={Checkout} />
-        
+        <Route path='/profile' component={UserProfile} />
+        <Route path='/messagepooler' component={MessagePooler} />
+        <Route path='/editpool' component={EditPool} />
+        <Route path='/editproduct' component={EditProduct} />
       </div>
     )
   }
