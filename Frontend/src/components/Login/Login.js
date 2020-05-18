@@ -85,8 +85,9 @@ class Login extends Component {
           authFlag: true
         })
         // alert("User logged in successfully");
-        history.push('/poolhome');
-        window.location.reload();
+        // history.push('/poolhome');
+        // window.location.reload();
+
         return response.json();
       }
       else if (response.status == 404) {
@@ -112,8 +113,15 @@ class Login extends Component {
         })
       }
     }).then(result => {
-      console.log("Login details Results:", result);
+      console.log("Login response " + result)
+      if (result.email.includes("sjsu.edu")) {
+        history.push('/stores')
+      } else {
+        history.push('/poolhome')
+      }
+      window.location.reload();
       UTIL.saveUserDetails(result);
+      
     }).catch(error => {
       console.log("Error : " + error);
       window.location.reload();

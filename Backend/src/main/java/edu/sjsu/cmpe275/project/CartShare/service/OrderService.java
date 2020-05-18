@@ -3,8 +3,10 @@ package edu.sjsu.cmpe275.project.CartShare.service;
 import edu.sjsu.cmpe275.project.CartShare.model.Product;
 import edu.sjsu.cmpe275.project.CartShare.model.ProductId;
 import edu.sjsu.cmpe275.project.CartShare.model.Order_Items;
+import edu.sjsu.cmpe275.project.CartShare.model.Pool;
 import edu.sjsu.cmpe275.project.CartShare.repository.OrderItemsRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.OrderRepository;
+import edu.sjsu.cmpe275.project.CartShare.repository.PoolRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.ProductRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.StoreRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.UserRepository;
@@ -28,7 +30,10 @@ public class OrderService {
 
     @Autowired
     private ProductRepository productRepository;
-
+    
+    @Autowired
+    private PoolRepository poolRepository;    
+    
     @Autowired
     private StoreRepository storeRepository;
     
@@ -59,7 +64,7 @@ public class OrderService {
     	{
     		System.out.println("Inside for loop in addOrder Service");
     		item.setOrderTime(new Date());
-    		item.setStatus("NOT_AVAILABLE_PICKUP");
+    		item.setStatus("PENDING");
     		item.setOrder(order); 
     	}    	
     	
@@ -83,5 +88,28 @@ public ResponseEntity<?> getorders(Long id) {
       	
 }
 
+public ResponseEntity<?> getPoolOrders(Long storeId, Long userId) {
+	
+	 System.out.println("inside get Pool Orders : "+userId);
+     Optional<User> user = userRepository.findById(userId);
+    
+     if(user.isPresent())
+     {
+    	 Pool pool = user.get().getPool();
+    	 Optional<List<Order>> poolOrders = orderRepository.findPoolOrdersById( pool.getPoolId(), storeId, userId);
+    	 
+    	 if(poolOrders.isPresent())
+    	 {
+    		 for (Order poolOrder : poolOrders.get()) {
+    			    System.out.println(poolOrder.getBuyerId().getScreenName()); 
+    			}   		 
+    		 List<Order> poolorders = poolOrders.get();
+    		 return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(poolorders); 	
+    	 }
+    	 
+     }
+     
+      return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body("");
+     }
     
 }
