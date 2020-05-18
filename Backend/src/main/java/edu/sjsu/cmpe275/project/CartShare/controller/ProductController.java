@@ -3,20 +3,15 @@ package edu.sjsu.cmpe275.project.CartShare.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.sjsu.cmpe275.project.CartShare.model.Address;
 import edu.sjsu.cmpe275.project.CartShare.model.Product;
 import edu.sjsu.cmpe275.project.CartShare.model.ProductId;
-import edu.sjsu.cmpe275.project.CartShare.model.Store;
 import edu.sjsu.cmpe275.project.CartShare.repository.ProductRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.StoreRepository;
 import edu.sjsu.cmpe275.project.CartShare.service.AmazonClient;
-//import edu.sjsu.cmpe275.project.CartShare.service.AmazonClient;
 import edu.sjsu.cmpe275.project.CartShare.service.ProductService;
-import edu.sjsu.cmpe275.project.CartShare.service.StoreService;
 import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,10 +21,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.DataInput;
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+
+//import edu.sjsu.cmpe275.project.CartShare.service.AmazonClient;
 
 @Transactional
 @CrossOrigin(origins = "*", allowCredentials = "true")
@@ -92,6 +88,11 @@ public class ProductController {
         return productService.getproducts(id);
     }
 
+    @GetMapping("/getproducts")
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
     @GetMapping("/getmaxsku")
     public ResponseEntity<?> getMaxSku() {
         return productService.getMaxSku();
@@ -108,5 +109,44 @@ public class ProductController {
         ProductId id = new ProductId(storeId, sku);
         System.out.println("Inside deleteproduct: ");
         return productService.deleteProductById(id);
+    }
+
+
+    @PostMapping(value="/searchproduct",
+            produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<?> searchproduct(@RequestBody String text,
+                                    HttpServletRequest request) throws JSONException {
+        System.out.println("inside create product controller: "+text);
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode actualObj =null;
+
+        try {
+            actualObj= mapper.readTree(text);
+            System.out.println(actualObj.get("text"));
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return productService.searchproduct(actualObj.get("text").textValue());
+
+//        return productService.searchproduct(text);
+    }
+
+    @PutMapping("/editproductbyid/{storeId}/{sku}")
+    public ResponseEntity<?> editProductbyid(@PathVariable Long storeId, @PathVariable Long sku, HttpServletRequest request) throws JSONException {
+        ProductId id = new ProductId(storeId, sku);
+        System.out.println("Inside deleteproduct: ");
+        Optional<Product> existingProduct = productRepository.findById(id);
+        System.out.println(existingProduct.get().toString());
+        System.out.println(id.getSku()+"sku, storeId"+id.getStoreId());
+        ObjectMapper mapper = new ObjectMapper();
+        Product updatedproduct = null;
+        try {
+             updatedproduct = mapper.readerForUpdating(existingProduct).readValue(request.getReader());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return productService.editProduct(updatedproduct);
     }
 }

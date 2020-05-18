@@ -15,11 +15,14 @@ import org.springframework.boot.context.properties.source.InvalidConfigurationPr
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -193,6 +196,68 @@ public class PoolController {
         String message = EmailUtility.createPoolRequestReceived(initiater, approver);
         emailService.sendEmail(requestApprover.getEmail(), message, "Pool Request");
         return new ResponseEntity<>("{\"status\" : \"Pool request has been sent Successfully.!!\"}", HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/pool/{id}/{user}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deletePool(@PathVariable String id, @PathVariable String user) {
+        System.out.println("Inside delete pool controller");
+
+        return poolService.deletePool(id, user);
+    }
+
+    @GetMapping("/poolerslist/{currentUser}")
+    public List<String> listOfPoolers(@PathVariable(value = "currentUser") String currentUser) {
+        System.out.println("Insise listOfPoolers " + currentUser);
+        User user = userRepository.findByscreenName(currentUser);
+        Pool pool = user.getPool();
+        List<User> poolersList = pool.getPoolers();
+        poolersList.remove(user);
+        List<String> userList = new ArrayList<>();
+        for (User u : poolersList) {
+            userList.add(u.getScreenName());
+        }
+        return userList;
+    }
+
+    @PostMapping("/sendmessage")
+    @ResponseBody
+    public ResponseEntity<String> sendMessage(@Valid @RequestBody ObjectNode objectNode) {
+        String sender = objectNode.get("sender").asText();
+        String receiver = objectNode.get("receiver").asText();
+        String msg = objectNode.get("msg").asText();
+
+        User messageReceiver = userRepository.findByscreenName(receiver);
+
+        String message = EmailUtility.messageNotification(sender, receiver, msg);
+        emailService.sendEmail(messageReceiver.getEmail(), message, "Message from fellow Pooler");
+        return new ResponseEntity<>("{\"status\" : \"Message has been sent Successfully.!!\"}", HttpStatus.OK);
+    }
+
+    @GetMapping("/getpooldetails/{currentUser}")
+    public ResponseEntity<?> PoolDetails(@PathVariable(value = "currentUser") String currentUser) {
+        System.out.println("Inside getpooldetails " + currentUser);
+        User user = userRepository.findByscreenName(currentUser);
+        Pool pool = user.getPool();
+        return ResponseEntity.ok().body(pool);
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.PUT, value = "/updatepool")
+    public ResponseEntity<?> updatePool(@Valid @RequestBody Pool pool) throws URISyntaxException {
+        System.out.println("inside update pool api");
+        Pool namePool = poolRepository.findByName(pool.getName());
+        if (namePool != null) {
+            if (!namePool.getPoolId().equals(pool.getPoolId())) {
+                return new ResponseEntity<>("{\"status\" : \"Pool name already exists..!!\"}",
+                        HttpStatus.METHOD_NOT_ALLOWED);
+            }
+        }
+        Pool poo = poolRepository.findBypoolId(pool.getPoolId());
+        poo.setName(pool.getName());
+        poo.setNeighbourhood(pool.getNeighbourhood());
+        poo.setDescription(pool.getDescription());
+        poolRepository.save(poo);
+        return ResponseEntity.ok(poo);
     }
 
 }

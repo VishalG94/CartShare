@@ -18,6 +18,7 @@ import UserBanner from '../Banner/UserBanner'
 // } from 'reactstrap';
 import Card from 'react-bootstrap/Card'
 import Banner from '../Banner/Banner'
+import LeftNavbar from '../LeftNavbar/LeftNavbar'
 // import { Button, Card, Image } from 'semantic-ui-react'
 
 // Define a Login Component
@@ -202,7 +203,7 @@ class SearchProducts extends Component {
         <div>
           <div className='row'>
             <div className='col-sm-2'>
-              <AdminNavbar />
+              <LeftNavbar />
             </div>
             <div class='split-center_cart '>
               <div class='login-form'>

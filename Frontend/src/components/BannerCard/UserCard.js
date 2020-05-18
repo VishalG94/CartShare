@@ -82,10 +82,13 @@ class UserCard extends Component {
     console.log("Inside User Card ", bannerDetails)
 
     return (
+      
       <div class="col-sm-4" >
         <div class="card" style={{ width: "13rem", backgroundColor: "#F8F8F8" }}>
-          <img class="card-img-top" style={{ width: "12rem", height: '9rem' }} src={bannerDetails.imageurl} alt="Card image cap" />
-          <hr />
+          <img class="card-img-top" style={{ width: "13rem", height: '13rem' }} src={bannerDetails.imageurl} alt="Card image cap" />
+          {/* <br></br>
+        <br/> */}
+        <hr/>
           <div class="card-body">
             <h5 class="card-title">&nbsp;&nbsp;&nbsp;&nbsp;{bannerDetails.name}<span class="card-text" style={{ fontSize: "15px", float: "right" }}>${bannerDetails.price}&nbsp;&nbsp;&nbsp;&nbsp;</span></h5>
             <p class="card-text" style={{ fontSize: "15px", margin: "20px" }}>
@@ -126,6 +129,7 @@ class UserCard extends Component {
           </div>
         </div>
       </div>
+      
 
     );
   }
