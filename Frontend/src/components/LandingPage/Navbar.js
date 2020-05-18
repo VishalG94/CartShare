@@ -80,9 +80,9 @@ class Navbar extends Component {
     }
     let redirectVar = null
     // let disableFeatures=null;
-    if (sessionStorage.getItem('email')) {
-      redirectVar = <Redirect to='/home' />
-    }
+    // if (sessionStorage.getItem('email')) {
+    //   redirectVar = <Redirect to='/home' />
+    // }
 
     return (
       <div>

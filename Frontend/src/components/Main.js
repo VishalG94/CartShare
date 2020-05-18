@@ -23,6 +23,10 @@ import RequestHome from './Request/RequestHome'
 import Orders from './Orders/Orders'
 import Search from './Search/Search'
 import EditProduct from './AddProduct/EditProduct'
+import UserProfile from './Profile/UserProfile'
+import MessagePooler from './Pool/MessagePooler'
+import EditPool from './Pool/EditPool'
+
 // Create a Main Component
 
 class Main extends Component {
@@ -50,6 +54,10 @@ class Main extends Component {
         <Route path='/orders' component={Orders} />
         <Route path='/search' component={Search} />
         <Route path='/editproduct' component={EditProduct} />
+        <Route path='/profile' component={UserProfile} />
+        <Route path='/messagepooler' component={MessagePooler} />
+        <Route path='/editpool' component={EditPool} />
+
       </div>
     )
   }
