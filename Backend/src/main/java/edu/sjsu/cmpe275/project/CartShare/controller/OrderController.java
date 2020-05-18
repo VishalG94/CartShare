@@ -1,4 +1,6 @@
 package edu.sjsu.cmpe275.project.CartShare.controller;
+
+
 import edu.sjsu.cmpe275.project.CartShare.model.Order;
 import edu.sjsu.cmpe275.project.CartShare.service.OrderService;
 import org.json.JSONException;
@@ -9,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
+
 @Transactional
 @CrossOrigin(origins = "*", allowCredentials = "true")
 @RestController
@@ -20,13 +24,13 @@ public class OrderController {
     public ResponseEntity<?> addOrder(
             @RequestBody Order order,
             @RequestParam Long userId,
-            @RequestParam(required = false) String pickupOrder,
+            @RequestParam(required = false) Long numbOfOrdersToPcik,
             HttpServletRequest request) throws JSONException {
 
         System.out.println("Buyer ID is "+userId);
-        System.out.println("Order Count is "+pickupOrder);
-
-        return orderService.addOrder(order,userId);
+        System.out.println("Order Count is "+numbOfOrdersToPcik);
+        numbOfOrdersToPcik = Long.valueOf(1);
+        return orderService.addOrder(order,userId, Optional.ofNullable(numbOfOrdersToPcik));
 
     }
 

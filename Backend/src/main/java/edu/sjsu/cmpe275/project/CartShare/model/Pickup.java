@@ -1,9 +1,8 @@
 package edu.sjsu.cmpe275.project.CartShare.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -14,13 +13,20 @@ public class Pickup {
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private long id;	 
-	
-	@Column(name = "pickupperson_id", nullable = false)
-	private String pickupPerson;
-	
-	@OneToMany
-	@JoinColumn(name="order_id",nullable=true)
+    private long id;
+
+
+	@ManyToOne(fetch = FetchType.EAGER, optional=true)
+//	@JsonIgnoreProperties({"products", "orders"})
+	@JoinColumn(name="buyer_id")
+	private User pickupPerson;
+
+//	@OneToMany
+//	@JoinColumn(name="pickup_id",nullable=true)
+//	private List<Order> orders;
+
+//	@OneToMany(fetch = FetchType.EAGER, mappedBy = "pickup", orphanRemoval = true, cascade = CascadeType.PERSIST)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "pickup")
 	private List<Order> orders;
 	
 	@Column(name = "status", nullable = false)
@@ -30,7 +36,7 @@ public class Pickup {
 	{		
 	}
 
-	public Pickup(long id, String pickupPerson, List<Order> orders, String status) {
+	public Pickup(long id, User pickupPerson, List<Order> orders, String status) {
 		super();
 		this.id = id;
 		this.pickupPerson = pickupPerson;
@@ -46,11 +52,11 @@ public class Pickup {
 		this.id = id;
 	}
 
-	public String getPickupPerson() {
+	public User getPickupPerson() {
 		return pickupPerson;
 	}
 
-	public void setPickupPerson(String pickupPerson) {
+	public void setPickupPerson(User pickupPerson) {
 		this.pickupPerson = pickupPerson;
 	}
 

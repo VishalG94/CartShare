@@ -2,11 +2,10 @@ package edu.sjsu.cmpe275.project.CartShare.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "orders")
@@ -47,9 +46,13 @@ public class Order {
 
 	@Column(name = "delivery_address", nullable = true)
 	private String deliveryAddress;
-
-	// @ManyToOne(mappedBy = pickup_orders)
-	// private User pickupperson_Id;
+//
+//	 @ManyToOne(mappedBy = "pickup_orders")
+//	 private User pickupperson_Id;
+	@ManyToOne
+	@JsonIgnoreProperties({ "orders" })
+	@JoinColumn(name = "pickup_id", nullable = true)
+	private Pickup pickup;
 
 	@Column(name = "ORDER_TIME")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -151,6 +154,14 @@ public class Order {
 
 	public void setOrderTime(java.util.Date orderTime) {
 		this.orderTime = orderTime;
+	}
+
+	public Pickup getPickup() {
+		return pickup;
+	}
+
+	public void setPickup(Pickup pickup) {
+		this.pickup = pickup;
 	}
 
 	// public void addOrderItem(Order_Items item)

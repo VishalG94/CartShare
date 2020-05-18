@@ -27,10 +27,20 @@ class Cart extends React.Component {
       selectedOption: "self",
       redirect: false
     }
+
+    
     this.handleOptionChange = this.handleOptionChange.bind(this)
     this.removeFromCart = this.removeFromCart.bind(this)
   }
-
+  componentWillMount(){
+    
+    if(JSON.parse(localStorage.getItem("role")) == "User"){
+      this.setState({disableCheckout:true})
+      
+    }else{
+      this.setState({disableCheckout:false})
+    }
+  }
   onSubmit = (e) => {
     e.preventDefault();
 
@@ -165,7 +175,12 @@ class Cart extends React.Component {
     let itemslist = null
     let pickupField = null
     let redirectVar = null
-
+    let notAPooler = null
+    if(this.state.disableCheckout){
+      notAPooler=(
+        <label style={{color:'red',textAlign:'center'}}>Join a pool to place an order</label>
+      )
+    }
     if(this.state.redirect)
     {
       redirectVar = <Redirect to='/checkout' />
@@ -276,19 +291,22 @@ class Cart extends React.Component {
         <div style={{textAlign:"center"}} className="row">
           {pickupField}
         </div>
-
+        
         <div className='row'>
-          <a
-            href='/userorder'
+          <button
             style={{ marginLeft: '35%' }}
+            id="Button"
             className='btn btn-primary'
             type='submit'
             price={grossTotal}
             onClick={this.onSubmit}
+            disabled={this.state.disableCheckout}
           >
             Checkout
-          </a>
+          </button>
         </div>
+
+        {notAPooler}
       </div>
     )
   }
