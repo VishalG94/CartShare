@@ -67,7 +67,7 @@ class LeftNavbar extends React.Component {
             </a>
           </li>
           <li className='li-profile'>
-            <a href='/poolerProfile' className='navLink'>
+            <a href='/profile' className='navLink'>
               <i class='far fa-user' />
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <span className='tab'>Profile</span>

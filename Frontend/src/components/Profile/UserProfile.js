@@ -10,26 +10,29 @@ import cookie from 'react-cookies'
 import { Redirect } from 'react-router'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import * as UTIL from '../utils/Utils'
 
-// Define a Login Component
-class CreatePool extends Component {
-    // call the constructor method
+
+class UserProfile extends Component {
     constructor(props) {
-        // Call the constrictor of Super class i.e The Component
-        super(props) // maintain the state required for this component
+        super(props)
         this.state = {
-            poolid: '',
-            name: '',
-            neighbourhood: '',
-            description: '',
-            zip: '',
-            authFlag: false,
-            failed: false,
-            success: false
-        } // Bind the handlers to this class // this.usernameChangeHandler = this.usernameChangeHandler.bind(this) // this.passwordChangeHandler = this.passwordChangeHandler.bind(this) // this.submitLogin = this.submitLogin.bind(this)
-    } // Call the Will Mount to set the auth Flag to false
+            screenname: "",
+            nickname: "",
+            email: ""
+        }
+    }
 
-
+    componentWillMount() {
+        this.setState({
+            screenname: UTIL.getUserScreenName(),
+            nickname: UTIL.getUserNickName(),
+            email: UTIL.getUserDetails()
+        })
+    }
+    componentDidMount() {
+        this.props.initialize({ screenname: this.state.screenname, nickname: this.state.nickname, email: this.state.email })
+    }
 
     inputChangeHandler = e => {
         this.setState({
@@ -41,25 +44,19 @@ class CreatePool extends Component {
     onSubmit = formValues => {
         console.log("Inside Pool Creation" + formValues);
         let data = {
-            poolId: formValues.poolid,
-            name: formValues.name,
-            neighbourhood: formValues.neighbourhood,
-            description: formValues.description,
-            zipcode: Number(formValues.zip)
-
+            screenName: this.state.screenname,
+            nickName: formValues.nickname,
+            email: this.state.email
         }
-        let email = localStorage.getItem("currentUser")
-        email = email.replace(/['"]+/g, '')
-        console.log(email)
-        console.log(data)
         axios.defaults.withCredentials = true;
-        axios.post(`${ROOT_URL}/api/createpool/${email}`, data).then(response => {
-            // update the state with the response data
+        axios.put(`${ROOT_URL}/api/updateuser`, data).then(response => {
             this.setState({
                 failed: false,
                 success: true
             })
             console.log('Axios post:', response.data);
+            UTIL.saveUserDetails(response.data);
+            window.location.reload();
         }).catch(error => {
             console.log(error);
             this.setState({
@@ -95,6 +92,23 @@ class CreatePool extends Component {
         )
     }
 
+    renderDisabledInput = ({ input, label, meta, className = { className } }) => {
+        return (
+            <div>
+                <div htmlFor='email' style={{ color: '#6b6b83' }}>
+                    {label}
+                </div>
+                <input
+                    className='form-control'
+                    style={{ marginRight: '10px' }}
+                    {...input}
+                    disabled={true}
+                />
+                {this.renderError(meta)}
+            </div>
+        )
+    }
+
     render() {
         // redirect based on successful login
         let redirectVar = null
@@ -105,13 +119,13 @@ class CreatePool extends Component {
 
         if (this.state.failed) {
             invalidtag = (
-                <label style={{ color: 'red' }}>Given Pool already exists!</label>
+                <label style={{ color: 'red' }}>Error Occured, please try with other Nickname!</label>
             )
         }
 
         if (this.state.success) {
             invalidtag = (
-                <label style={{ color: 'green' }}>Successfully created new Pool</label>
+                <label style={{ color: 'green' }}>Successfully updated details</label>
             )
         }
 
@@ -128,7 +142,7 @@ class CreatePool extends Component {
                             <div class='login-form'>
                                 <div class='panel'>
                                     <br></br>
-                                    <h2 style={{ marginLeft: '20px' }}>Create a new pool</h2>
+                                    <h2 style={{ marginLeft: '20px' }}>Your Profile</h2>
                                     <br></br>
                                 </div>
                                 <div className='row'>
@@ -140,44 +154,31 @@ class CreatePool extends Component {
                                             <div style={{ marginLeft: '10%' }}>
                                                 <br />
                                                 <Field
-                                                    name='poolid'
+                                                    name='screenname'
                                                     type='text'
-                                                    component={this.renderInput}
-                                                    label='Pool ID'
+                                                    component={this.renderDisabledInput}
+                                                    label='Screen Name'
                                                 />
                                                 <br />
                                                 <Field
-                                                    name='name'
+                                                    name='nickname'
                                                     type='text'
+                                                    value="nvm"
                                                     component={this.renderInput}
-                                                    label='Pool Name'
+                                                    label='Nick Name'
                                                 />
                                                 <br />
                                                 <Field
-                                                    name='neighbourhood'
+                                                    name='email'
                                                     type='text'
-                                                    component={this.renderInput}
-                                                    label='Neighbourhood'
+                                                    component={this.renderDisabledInput}
+                                                    label='Email'
                                                 />
-                                                <br />
-                                                <Field
-                                                    name='description'
-                                                    type='text'
-                                                    component={this.renderInput}
-                                                    label='Description'
-                                                />
-                                                <br />
-                                                <Field
-                                                    name='zip'
-                                                    type='text'
-                                                    component={this.renderInput}
-                                                    label='Zip code'
-                                                />
-                                                <br />
+
                                                 {invalidtag}
                                                 <br />
                                                 <button type='submit' class='btn btn-info'>
-                                                    Create Pool
+                                                    Update Details
                         </button>
                                                 <br />
 
@@ -193,29 +194,11 @@ class CreatePool extends Component {
         )
     }
 }
-// export Login Component
-// export default BuyerProfile
 
 const validate = formValues => {
     const error = {}
-    if (!formValues.poolid) {
-        error.poolid = 'Enter a valid pool id'
-    }
-    if (!(/^([a-zA-Z0-9]+)$/.test(formValues.poolid))) {
-        error.poolid = "Only Alphanumeric values allowed"
-    }
-    if (!formValues.name) {
-        error.name = 'Enter a valid pool name'
-    }
-    if (!formValues.neighbourhood) {
-        error.neighbourhood = 'Enter a valid city'
-    }
-    if (!formValues.description) {
-        error.description = 'Enter a valid description'
-    }
-
-    if (!formValues.zip) {
-        error.zip = 'Enter a valid zip'
+    if (!formValues.nickname) {
+        error.poolid = 'Enter a valid Nickname'
     }
     return error
 }
@@ -228,7 +211,7 @@ export default connect(
     mapStateToProps
 )(
     reduxForm({
-        form: 'streamMenu',
+        form: 'UserProfile',
         validate: validate
-    })(CreatePool)
+    })(UserProfile)
 )

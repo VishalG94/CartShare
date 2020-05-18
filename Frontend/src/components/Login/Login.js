@@ -84,8 +84,8 @@ class Login extends Component {
         this.setState({
           authFlag: true
         })
-        alert("User logged in successfully");
-        history.push('/home');
+        // alert("User logged in successfully");
+        history.push('/poolhome');
         window.location.reload();
         return response.json();
       }
@@ -125,7 +125,7 @@ class Login extends Component {
 
   checkVerification(data) {
     var email = data.email;
-    console.log("checkVerification email : " + email);
+    console.log("checkVerification email : " + email);  
     // axios.get(ROOT_URL + '/api/oauthverified/' + email)
     fetch(`${ROOT_URL}/api/oauthverified/` + email, {
       method: 'GET',
@@ -135,11 +135,17 @@ class Login extends Component {
     })
       .then((response) => {
         console.log("response", response)
+        
         if (response.status == 200) {
-          alert("user logged in successfully");
+          alert(" User logged in successfully");
           console.log("Response from server : " + response);
-          history.push('/home');
-          window.location.reload();
+          // if(localStorage.getItem('role')=='Admin'){
+          // history.push('/stores');
+          // }
+          // else{
+          //   history.push('/poolhome');
+          // }
+          // window.location.reload();
           return response.json()
           // history.push('/home');
           // window.location.reload();
@@ -152,6 +158,12 @@ class Login extends Component {
         }
       }).then(result => {
         console.log("Login response " + result)
+        if (result.email.includes("sjsu.edu")) {
+          history.push('/stores')
+        } else {
+          history.push('/poolhome')
+        }
+        window.location.reload();
         UTIL.saveUserDetails(result);
       }).catch(e => {
         console.log(e)

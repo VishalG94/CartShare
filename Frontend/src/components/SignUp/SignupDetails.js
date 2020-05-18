@@ -109,6 +109,18 @@ class SignupDetails extends Component {
                 this.setState({
                     authFlag: false
                 })
+            } else if (res.status == 405) {
+                alert("User is already registered with same screenname");
+                window.location.reload();
+                this.setState({
+                    authFlag: false
+                })
+            } else if (res.status == 406) {
+                alert("User is already registered with same nickname");
+                window.location.reload();
+                this.setState({
+                    authFlag: false
+                })
             } else {
                 console.log('Failed')
                 this.setState({ authFailed: true })
@@ -178,11 +190,14 @@ class SignupDetails extends Component {
 
 const validate = formValues => {
     const error = {}
-    if (!formValues.email) {
-        error.email = 'Enter a valid ScreenName'
+    if (!formValues.screenname) {
+        error.screenname = 'Enter a valid ScreenName'
     }
-    if (!formValues.password) {
-        error.password = 'Enter a valid NickName'
+    if (!(/^([a-zA-Z0-9]+)$/.test(formValues.screenname))) {
+        error.screenname = "Only Alphanumeric values allowed"
+    }
+    if (!formValues.nickname) {
+        error.nickname = 'Enter a valid NickName'
     }
     return error
 }

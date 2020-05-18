@@ -22,6 +22,12 @@ import SearchPool from './Pool/SearchPool'
 import SearchPoolData from './Pool/SearchPoolData'
 import RequestHome from './Request/RequestHome'
 import Orders from './Orders/Orders'
+import Search from './Search/Search'
+import EditProduct from './AddProduct/EditProduct'
+import UserProfile from './Profile/UserProfile'
+import MessagePooler from './Pool/MessagePooler'
+import EditPool from './Pool/EditPool'
+
 // Create a Main Component
 
 class Main extends Component {
@@ -39,7 +45,7 @@ class Main extends Component {
         <Route path='/addproduct' component={AddProduct} />
         <Route path='/stores' component={AdminHome} />
         <Route path='/products/:id' component={ProductsDisplay} />
-        <Route path='/search/:id' component={SearchProducts} />
+        <Route path='/searchproducts/:id' component={SearchProducts} />
         <Route path='/poolhome' component={PoolHome} />
         <Route path='/createpool' component={CreatePool} />
         <Route path='/joinpool/:poolId' component={JoinPool} />
