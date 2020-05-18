@@ -39,6 +39,8 @@ public class OrderController {
                                       HttpServletRequest request) throws JSONException {
     	
     	System.out.println("Buyer ID is "+userId);
+    	System.out.println("Order Count is "+pickupOrder);
+    	
     	return orderService.addOrder(order,userId);
         
     }
