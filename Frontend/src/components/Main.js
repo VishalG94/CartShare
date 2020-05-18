@@ -46,6 +46,7 @@ class Main extends Component {
         <Route path='/stores' component={AdminHome} />
         <Route path='/products/:id' component={ProductsDisplay} />
         <Route path='/searchproducts/:id' component={SearchProducts} />
+        <Route path='/search' component={Search} />
         <Route path='/poolhome' component={PoolHome} />
         <Route path='/createpool' component={CreatePool} />
         <Route path='/joinpool/:poolId' component={JoinPool} />
