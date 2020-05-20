@@ -140,4 +140,11 @@ public class ProductService {
             return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(store);
 
     }
+
+
+    public ResponseEntity<?> searchproductBySku (ProductId product) {
+        System.out.println("inside delete Product service");
+            Optional<Product> existingProduct = productRepository.findById(product);
+                return ResponseEntity.status(HttpStatus.OK).body(existingProduct);
+            }
 }

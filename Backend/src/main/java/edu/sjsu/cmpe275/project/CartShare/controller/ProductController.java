@@ -180,4 +180,12 @@ public class ProductController {
         productService.editProduct(prop);
         return ResponseEntity.ok(prop);
     }
+
+
+    @GetMapping("/searchproductbysku/{storeId}/{sku}")
+    public ResponseEntity<?> searchProductBySku(@PathVariable Long storeId, @PathVariable Long sku) {
+        ProductId id = new ProductId(storeId, sku);
+        System.out.println("Inside Search Product: ");
+        return productService.searchproductBySku(id);
+    }
 }
