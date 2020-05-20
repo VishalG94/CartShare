@@ -96,6 +96,10 @@ public class OrderService {
 			String message = EmailUtility.ordernotification(orders.get());
 			emailService.sendEmail(order.getBuyerId().getEmail(), message, " Order Placed with order id :"+order.getOrderid());
 
+//			int credit  = user.get().getContributionCredit();
+//			credit = credit+orders.get().size()-1;
+//			user.get().setContributionCredit(credit);
+//			userRepository.saveAndFlush(user.get());
 //			order.setPickup(newPickup);
 //			List<Order_Items>  ord_items = order.getOrder_items();
 //
@@ -205,6 +209,22 @@ public class OrderService {
 		Optional<Order> order = orderRepository.findById(orderId);
 
 		if(order.isPresent()){
+
+			//Reduce the CC for buyerid
+			Optional<User> deliveryUser  = userRepository.findById(order.get().getBuyerId().getID());
+			int credit  = deliveryUser.get().getContributionCredit();
+			credit = credit-1;
+			deliveryUser.get().setContributionCredit(credit);
+			userRepository.saveAndFlush(deliveryUser.get());
+
+			//
+			Optional<User> pooler  = userRepository.findById(order.get().getPickup().getPickupPerson().getID());
+			int creditAdd  = pooler.get().getContributionCredit();
+			creditAdd = creditAdd+1;
+			pooler.get().setContributionCredit(creditAdd);
+			userRepository.saveAndFlush(pooler.get());
+
+
 			List<Order_Items>  order_items = order.get().getOrder_items();
 			for(Order_Items oi : order_items){
 				oi.setStatus("DELIVERED");

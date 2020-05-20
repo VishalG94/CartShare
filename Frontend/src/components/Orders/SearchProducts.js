@@ -70,6 +70,9 @@ class SearchProducts extends Component {
         .get(`${ROOT_URL}/api/users/${useremail}`, { params: '' })
         .then(response => {
             localStorage.setItem("role",JSON.stringify(response.data.role))
+            // alert(JSON.stringify(response.data.contributionCredit));
+            this.setState({contributionCredit: response.data.contributionCredit})
+            
         }).catch(e=>{ 
           console.log("error occured");
         })

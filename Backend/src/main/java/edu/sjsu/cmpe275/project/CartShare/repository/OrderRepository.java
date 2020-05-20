@@ -27,5 +27,4 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	@Query(value = "SELECT p FROM Order p WHERE p.pool.poolId = :poolId and p.store.id = :storeId and p.buyerId.id != :userId and p.pickupOption = 'OTHERS' and p.status = 'PENDING'  ORDER BY p.orderTime ASC ")
 	public Optional<List<Order>> findPoolOrdersById(  String poolId, Long storeId, Long userId);
 
-
 }

@@ -25,7 +25,8 @@ class Cart extends React.Component {
       count: 0,
       pickupOption: false,
       selectedOption: "self",
-      redirect: false
+      redirect: false,
+      contributioncredit:''
     }
 
     
@@ -40,6 +41,21 @@ class Cart extends React.Component {
     }else{
       this.setState({disableCheckout:false})
     }
+
+    let useremail = JSON.parse(sessionStorage.getItem('email'))
+        // axios.defaults.withCredentials = true
+        axios
+        .get(`${ROOT_URL}/api/users/${useremail}`, { params: '' })
+        .then(response => {
+            localStorage.setItem("role",JSON.stringify(response.data.role))
+            // alert(JSON.stringify(response.data.contributionCredit));
+            this.setState({contributionCredit: response.data.contributionCredit})
+            sessionStorage.setItem("cc",response.data.contributionCredit)
+            
+        }).catch(e=>{ 
+          console.log("error occured");
+        })
+
   }
   onSubmit = (e) => {
     e.preventDefault();
@@ -188,16 +204,26 @@ class Cart extends React.Component {
     else{
       redirectVar=null
     }
+    let finalcc = null;
+    let cc = sessionStorage.getItem("cc");
+    // alert(this.state.contributioncredit)
+    if(cc<=-4 && cc>=-5){
+      finalcc = (<button disabled className="btn btn-warning" ><span>contributionCredit:{this.state.contributionCredit}<span></span><br></br>Your contribution credit is low.<br/> Just a reminder.</span></button>)
+    }else if(cc<=-6){
+      finalcc = (<button disabled className="btn btn-danger" >contributionCredit:   {this.state.contributionCredit} <span><br></br>Your contribution credit is very low.<br/> still want to continue?</span></button>)
+    }else{
+      finalcc = (<button disabled className="btn btn-success" >contributionCredit:   {this.state.contributionCredit}</button>)
+    }
 
     if (this.state.pickupOption) {
       pickupField =
         <div>
-          <div className="row">
+          <div className="row" style={{textAlign: "center"}}>
             <label>
               How do you want to pick up your order?
           </label>
           </div>
-          <div className="row">
+          <div className="row" style={{textAlign: "center"}}>
             <div className="radio">
               <label>
                 <input type="radio" value="self" onChange={this.handleOptionChange} checked={this.state.selectedOption === 'self'} />
@@ -205,13 +231,19 @@ class Cart extends React.Component {
               </label>
             </div>
           </div>
-          <div className="row">
+          <div className="row" style={{textAlign: "center"}}>
             <div className="radio">
               <label>
                 <input type="radio" onChange={this.handleOptionChange} value="others" checked={this.state.selectedOption === 'others'} />
                   Other Pool Members
               </label>
+              
+              
             </div>
+            
+            {finalcc}
+            <br></br>
+            <br></br>
           </div>
         </div>
     }

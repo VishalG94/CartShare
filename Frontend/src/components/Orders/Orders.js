@@ -213,7 +213,7 @@ class Orders extends Component {
                         </div>
                         <div class='split-center_home'>
                             <div style={{ textAlign: "center" }}>
-                                <h2>Orders</h2>
+                                <h2>Upcoming Orders</h2>
                             </div>
                             <hr>
                             </hr>
