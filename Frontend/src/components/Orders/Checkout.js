@@ -12,6 +12,7 @@ import LeftNavbar from '../LeftNavbar/LeftNavbar'
 import ROOT_URL from '../../constants'
 import UserBanner from '../Banner/UserBanner'
 import { interpolateMagma } from 'd3-scale-chromatic';
+import { history } from "../utils/Utils"
 
 // Define a Login Component
 class Checkout extends Component {
@@ -115,9 +116,11 @@ class Checkout extends Component {
                 alert("Order succesfully placed")
                 sessionStorage.removeItem("order_items")
                 sessionStorage.removeItem("order")
+                // window.location.reload()
+                history.push('/orders')
+
                 window.location.reload()
                 console.log('Axios post:', response.data);
-                
 
             }).catch(error => {
                 console.log(error);

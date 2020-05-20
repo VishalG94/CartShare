@@ -70,18 +70,26 @@ private OrderRepository orderRepository;
 
                 String message = EmailUtility.pickupnotification(o.getOrderid());
                 emailService.sendEmail(o.getBuyerId().getEmail(), message, " Your Order has been Picked up");
+                o.setStatus("PICKEDUP");
+                List<Order_Items>  order_items = o.getOrder_items();
+                for(Order_Items oi : order_items){
+                    oi.setStatus("PICKEDUP");
+                    orderItemsRepository.saveAndFlush(oi);
+                }
+                orderRepository.saveAndFlush(o);
             }else{
+                o.setStatus("DELIVERED");
+                List<Order_Items>  order_items = o.getOrder_items();
+                for(Order_Items oi : order_items){
+                    oi.setStatus("DELIVERED");
+                    orderItemsRepository.saveAndFlush(oi);
+                }
+                orderRepository.saveAndFlush(o);
                 String message = EmailUtility.pickupself(pick.get());
                 emailService.sendEmail(o.getBuyerId().getEmail(), message, " Pickup Instructions for pickup id: "+pick.get().getId());
             }
 
-            o.setStatus("PICKEDUP");
-            List<Order_Items>  order_items = o.getOrder_items();
-            for(Order_Items oi : order_items){
-                oi.setStatus("PICKEDUP");
-                orderItemsRepository.saveAndFlush(oi);
-            }
-            orderRepository.saveAndFlush(o);
+
 
         }
         pick.get().setStatus("PICKEDUP");
