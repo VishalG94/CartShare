@@ -64,6 +64,15 @@ class SearchProducts extends Component {
           products: data1
         })
       })
+      let useremail = JSON.parse(sessionStorage.getItem('email'))
+        // axios.defaults.withCredentials = true
+        axios
+        .get(`${ROOT_URL}/api/users/${useremail}`, { params: '' })
+        .then(response => {
+            localStorage.setItem("role",JSON.stringify(response.data.role))
+        }).catch(e=>{ 
+          console.log("error occured");
+        })
   }
 
   inputChangeHandler = e => {
@@ -83,22 +92,7 @@ class SearchProducts extends Component {
         zip: formValues.zip
       }
     }
-    // console.log(data)
     axios.defaults.withCredentials = true;
-    // axios.post(`${ROOT_URL}/adminhome`, data).then(response => {
-    //   // update the state with the response data
-    //   this.setState({
-    //     failed: false,
-    //     success: true
-    //   })
-    //   console.log('Axios post:', response.data);
-    // }).catch(error => {
-    //   console.log(error);
-    //   this.setState({
-    //     failed: true,
-    //     success: false
-    //   })
-    // });
   }
 
   renderError = ({ error, touched }) => {
@@ -243,13 +237,13 @@ class SearchProducts extends Component {
             <div class='cart'>
               <div class='panel-cart'>
                 <div className='row'>
-                  <div style={{textAlign:"center"}} className='col-sm-4'>
+                  <div style={{textAlign:"left"}} className='col-sm-3'>
                     <h2>Item</h2>
                   </div>
-                  <div style={{textAlign:"center"}} className='col-sm-4'>
+                  <div style={{textAlign:"center"}} className='col-sm-3'>
                     <h2>Quantity</h2>
                   </div>
-                  <div style={{textAlign:"center"}} className='col-sm-4'>
+                  <div style={{textAlign:"center"}} className='col-sm-3'>
                     <h2>Price</h2>
                   </div>
                 </div>

@@ -32,6 +32,13 @@ class LeftNavbar extends React.Component {
             </a>
           </li>
           <li className='li-profile'>
+            <a href='/orders' className='navLink'>
+              <i class="fas fa-calendar-week"></i>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <span className='tab'>Upcoming orders</span>
+            </a>
+          </li>
+          <li className='li-profile'>
             <a href='/pickupmenu' className='navLink'>
               <i class="fas fa-truck-pickup"></i>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -39,17 +46,17 @@ class LeftNavbar extends React.Component {
             </a>
           </li>
           <li className='li-profile'>
-            <a href='/poolerPastOrders' className='navLink'>
-              <i class="fas fa-history"></i>
+            <a href='/delivery' className='navLink'>
+              <i class="fas fa-truck-pickup"></i>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <span className='tab'>Past orders</span>
+              <span className='tab'>Delivery</span>
             </a>
           </li>
           <li className='li-profile'>
-            <a href='/poolerUpcomingOrders' className='navLink'>
-              <i class="fas fa-calendar-week"></i>
+            <a href='/pastorders' className='navLink'>
+              <i class="fas fa-history"></i>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <span className='tab'>Upcoming orders</span>
+              <span className='tab'>Past orders</span>
             </a>
           </li>
           <li className='li-profile'>

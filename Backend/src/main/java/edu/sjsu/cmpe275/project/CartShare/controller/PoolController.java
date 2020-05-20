@@ -1,31 +1,6 @@
 package edu.sjsu.cmpe275.project.CartShare.controller;
 
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
-
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.autoconfigure.metrics.export.newrelic.NewRelicProperties;
-import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyValueException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import edu.sjsu.cmpe275.project.CartShare.model.Pool;
 import edu.sjsu.cmpe275.project.CartShare.model.Request;
 import edu.sjsu.cmpe275.project.CartShare.model.User;
@@ -35,6 +10,16 @@ import edu.sjsu.cmpe275.project.CartShare.repository.UserRepository;
 import edu.sjsu.cmpe275.project.CartShare.service.EmailService;
 import edu.sjsu.cmpe275.project.CartShare.service.PoolService;
 import edu.sjsu.cmpe275.project.CartShare.utils.EmailUtility;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyValueException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -101,6 +86,29 @@ public class PoolController {
         return ResponseEntity.ok().body(pool);
     }
 
+//    @GetMapping("/searchpools/{type}/{given}")
+//    public List<Pool> searchPool(@PathVariable(value = "type") String type, @PathVariable(value = "given") String val)
+//            throws InvalidConfigurationPropertyValueException {
+//        System.out.println("Passed value " + type + val);
+//        List<Pool> poolList = new ArrayList<>();
+//        switch (type) {
+//            case "Name":
+//                System.out.println("inside name");
+//                Pool pool = poolRepository.findByName(val);
+//                poolList.add(pool);
+//                return poolList;
+//            case "Neighbourhood":
+//                System.out.println("inside nighbo");
+//                return poolRepository.findByneighbourhood(val);
+//            case "Zipcode":
+//                System.out.println("inside zip");
+//                return poolRepository.findByzipcode(Integer.parseInt(val));
+//            default:
+//                System.out.println("inside default");
+//                return poolList;
+//        }
+//    }
+
     @GetMapping("/searchpools/{type}/{given}")
     public List<Pool> searchPool(@PathVariable(value = "type") String type, @PathVariable(value = "given") String val)
             throws InvalidConfigurationPropertyValueException {
@@ -110,7 +118,9 @@ public class PoolController {
             case "Name":
                 System.out.println("inside name");
                 Pool pool = poolRepository.findByName(val);
-                poolList.add(pool);
+                if (pool != null) {
+                    poolList.add(pool);
+                }
                 return poolList;
             case "Neighbourhood":
                 System.out.println("inside nighbo");

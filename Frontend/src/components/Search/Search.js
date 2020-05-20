@@ -30,6 +30,9 @@ class Search extends Component {
             authFlag: false,
             authFailed: false
         })
+        sessionStorage.removeItem("order_items")
+        sessionStorage.removeItem("order")
+
     }
     renderError = ({ error, touched }) => {
         if (touched && error) {
@@ -55,39 +58,7 @@ class Search extends Component {
         )
     }
 
-    onSubmit = formValues => {
-        console.log('OnSubmit' + formValues)
-        let data = {
-            email: formValues.email,
-            password: formValues.password
-        }
-        axios.defaults.withCredentials = true
-
-        this.props.loginuser(data, res => {
-            if (res.status === 200) {
-                console.log('Inside response', res.data)
-                this.setState({
-                    authFlag: true
-                })
-
-                const user = jwtDecode(res.data.token)
-                console.log(user)
-                sessionStorage.setItem('email', user.email)
-
-                const cookies = new Cookies()
-                cookies.set('cookie', res.data.token, {
-                    maxAge: 900000,
-                    httpOnly: false,
-                    path: '/'
-                })
-                console.log(cookies.get('myCat'))
-
-                this.props.history.push('/home')
-            } else {
-                alert('Please enter valid credentials')
-            }
-        })
-    }
+    
 
     inputChangeHandler = e => {
         this.setState({

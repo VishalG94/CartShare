@@ -15,13 +15,14 @@ let deleteProduct = e => {
   // alert("Inside Delete")
   // prevent page from refresh
   let data =  JSON.parse(e.target.id)
-  alert(JSON.stringify(data.id));
   axios.defaults.withCredentials = true
   axios.delete(`${ROOT_URL}/deleteproductbyid/${data.id.storeId}/${data.id.sku}`,  {params: ''}).then(response => {
     console.log('Axios post:', response.data);
     window.location.reload(true)
   }).catch(error => {
-    console.log(error);
+    console.log(JSON.stringify(error.response.data));
+    alert(JSON.stringify(error.response.data))
+    //  errorTest=  JSON.stringify(error.response.data)
   });
   
   
@@ -54,7 +55,6 @@ const BannerCard = ( bannerDetails ) => {
       <i id={JSON.stringify(bannerDetails)} style={{ color: 'green',position:"absolute",top:"10px",right:"10px" }} class="far fa-edit fa-lg"></i>
     </button>
     )
-
   return (
     <a href = '/editproduct' style={{color:"black"}}>
       
@@ -77,6 +77,7 @@ const BannerCard = ( bannerDetails ) => {
           </p>
         </div>
       </div>
+      
     </div>
    </a>
       

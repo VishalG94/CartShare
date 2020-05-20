@@ -36,9 +36,9 @@ public class Pickup {
 	{		
 	}
 
-	public Pickup(long id, User pickupPerson, List<Order> orders, String status) {
+	public Pickup(User pickupPerson, List<Order> orders, String status) {
 		super();
-		this.id = id;
+//		this.id = id;
 		this.pickupPerson = pickupPerson;
 		this.orders = orders;
 		this.status = status;

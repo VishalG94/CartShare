@@ -27,6 +27,11 @@ import EditProduct from './AddProduct/EditProduct'
 import UserProfile from './Profile/UserProfile'
 import MessagePooler from './Pool/MessagePooler'
 import EditPool from './Pool/EditPool'
+import PastOrders from './PastOrders/PastOrders'
+import Pickup from './Pickup/Pickup'
+import Delivery from './Delivery/Delivery'
+
+
 
 // Create a Main Component
 
@@ -59,6 +64,9 @@ class Main extends Component {
         <Route path='/messagepooler' component={MessagePooler} />
         <Route path='/editpool' component={EditPool} />
         <Route path='/editproduct' component={EditProduct} />
+        <Route path='/pastorders' component={PastOrders} />
+        <Route path='/pickupmenu' component={Pickup} />
+        <Route path='/delivery' component={Delivery} />
       </div>
     )
   }

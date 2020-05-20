@@ -76,7 +76,12 @@ class SignupDetails extends Component {
         // });
         this.state.nickName = formValues.nickname
         this.state.screenName = formValues.screenname
+        this.state.street = formValues.street
+        this.state.city = formValues.city
+        this.state.state = formValues.state
+        this.state.zip = formValues.zip
         this.state.email = this.props.match.params.email
+        
         if (this.state.email.includes("sjsu")) {
             this.state.role = "Admin";
         }
@@ -84,8 +89,22 @@ class SignupDetails extends Component {
             this.state.role = "User";
         }
         this.state.oauthFlag = true;
+        let data = {
+            nickName:formValues.nickname,
+            screenName:formValues.screenname,
+            role:this.state.role,
+            oauthFlag:this.state.oauthFlag,
+            email: this.state.email,
+            password: this.state.password,
+            address:{
+                street:formValues.street,
+                city:formValues.city,
+                state:formValues.state,
+                zip:formValues.zip
+            }
+        }
         console.log("val" + this.state.email)
-        this.signupHandler(this.state);
+        this.signupHandler(data);
     }
 
     signupHandler(data) {
@@ -171,6 +190,35 @@ class SignupDetails extends Component {
                                         label='Nickname'
                                     />
                                     <br />
+                                    <Field
+                                        name='street'
+                                        type='text'
+                                        component={this.renderInput}
+                                        label='Street'
+                                    />
+                                    <br />
+                                    <Field
+                                        name='city'
+                                        type='text'
+                                        component={this.renderInput}
+                                        label='City'
+                                    />
+                                    <br />
+                                    <Field
+                                        name='state'
+                                        type='text'
+                                        component={this.renderInput}
+                                        label='State'
+                                    />
+                                    <br />
+                                    <Field
+                                        name='zip'
+                                        type='number' 
+                                        min="1"
+                                        component={this.renderInput}
+                                        label='Zip'
+                                    />
+                                    <br />
                                     <br />
                                     <button type='submit' class='btn btn-info'>
                                         Signup!
@@ -199,6 +247,21 @@ const validate = formValues => {
     if (!formValues.nickname) {
         error.nickname = 'Enter a valid NickName'
     }
+    if (!formValues.street) {
+        error.street = 'Enter a valid Street'
+      }
+      if (!formValues.city) {
+        error.city = 'Enter a valid City'
+      }
+      if (!formValues.state) {
+        error.state = 'Enter a valid State'
+      }
+      if (!formValues.zip) {
+        error.zip = 'Enter a valid Zip Code'
+      }
+      // if (!(/^([0-9])$/.test(formValues.zip))) {
+      //   error.zip = "Only numeric values of 5 digits is allowed"
+      // }
     return error
 }
 

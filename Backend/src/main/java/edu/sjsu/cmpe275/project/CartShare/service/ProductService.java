@@ -1,8 +1,10 @@
 package edu.sjsu.cmpe275.project.CartShare.service;
 
+import edu.sjsu.cmpe275.project.CartShare.model.Order_Items;
 import edu.sjsu.cmpe275.project.CartShare.model.Product;
 import edu.sjsu.cmpe275.project.CartShare.model.ProductId;
 import edu.sjsu.cmpe275.project.CartShare.model.Store;
+import edu.sjsu.cmpe275.project.CartShare.repository.OrderItemsRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.ProductRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class ProductService {
     private static final String FETCH_PROPERTY_DETAILS_EXCEPTION_MESSAGE = "No product details found for the store";
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private OrderItemsRepository orderItemsRepository;
 
     @Autowired
     private StoreRepository storeRepository;
@@ -54,8 +59,8 @@ public class ProductService {
         System.out.println("product: "+ product.toString());
         ProductId id = product.getId();
         System.out.println(id.getStoreId());
-        Optional<Store> store = storeRepository.findById(id.getStoreId());
-        product.setStore(store.get());
+//        Optional<Store> store = storeRepository.findById(id.getStoreId());
+//        product.setStore(store.get());
         System.out.println(productRepository.getMaxSku());
 //        id.setSku(productRepository.getMaxSku());
         return productRepository.saveAndFlush(product);
@@ -94,20 +99,26 @@ public class ProductService {
 
     public ResponseEntity<?> deleteProductById(ProductId product) {
         System.out.println("inside delete Product service");
+        Optional<List<Order_Items>> orderitems = orderItemsRepository.findByProductId(product.getStoreId(),product.getSku());
+        if(!orderitems.isPresent()){
+            Optional<Product> existingProduct = productRepository.findById(product);
+            System.out.println(existingProduct.get().toString());
+            System.out.println(product.getSku()+"sku, storeId"+product.getStoreId());
+            Optional<Store> store = storeRepository.findById(product.getStoreId());
 
-        Optional<Product> existingProduct = productRepository.findById(product);
-        System.out.println(existingProduct.get().toString());
-        System.out.println(product.getSku()+"sku, storeId"+product.getStoreId());
-        Optional<Store> store = storeRepository.findById(product.getStoreId());
-
-        if(store.isPresent()&&existingProduct.isPresent()){
-            System.out.println("store.get().toString()"+store.get().getName());
-            store.get().getProducts().remove(existingProduct.get());
-            storeRepository.saveAndFlush(store.get());
-            return ResponseEntity.status(HttpStatus.OK).body("Successfully Deleted");
+            if(store.isPresent()&&existingProduct.isPresent()){
+                System.out.println("store.get().toString()"+store.get().getName());
+                store.get().getProducts().remove(existingProduct.get());
+                storeRepository.saveAndFlush(store.get());
+                return ResponseEntity.status(HttpStatus.OK).body("Successfully Deleted");
+            }else{
+                return ResponseEntity.status(HttpStatus.OK).body("Not Deleted");
+            }
         }else{
-            return ResponseEntity.status(HttpStatus.OK).body("Not Deleted");
+            System.out.println("There are some unfulfilled orders");
+           return ResponseEntity.status(HttpStatus.CONFLICT).body("There are some unfulfilled orders ");
         }
+
     }
 
 

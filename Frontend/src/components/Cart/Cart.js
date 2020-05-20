@@ -227,23 +227,34 @@ class Cart extends React.Component {
       // console.log('List',list)
       total = total + (item.price * item.quantity)
       return (
-        <div>
-          <div style={{ textAlign: "center" }} className='col-sm-4'>
+        <div className="row">
+          <div style={{ textAlign: "left" }} className='col-sm-3'>
             <div>{item.name}</div>
           </div>
-          <div style={{ textAlign: "center" }} className='col-sm-4'>
+          <div style={{ textAlign: "center" }} className='col-sm-3'>
             {/* <div>*{items[item][0]}</div> */}
             <div>{item.quantity}</div>
           </div>
-          <div style={{ textAlign: "center" }} className='col-sm-4'>
+          <div style={{ textAlign: "center" }} className='col-sm-3'>
             <div>
-              {item.price * item.quantity}
-              {/* <button type="submit" class="btn btn-link" id={JSON.stringify(item)}   >
-                <i onClick={(e) => { this.removeFromCart(e, item) }} style={{ color: 'red' }} class="fas fa-minus-circle fa-lg"></i>
-              </button> */}
+              ${(item.price * item.quantity).toFixed(2)}
             </div>
-          </div>          
+          </div>  
+          <div style={{ textAlign: "left" }} className='col-sm-3'>
+            <div>
+              {/* <button type="submit" class="btn btn-link" id={JSON.stringify(item)}   > */}
+                <i style={{color:"red"}} onClick={(e) => { this.removeFromCart(e, item) }} id={JSON.stringify(item)} class="far fa-trash-alt fa-sm"></i>
+              {/* </button> */}
+              &nbsp;&nbsp;
+              {/* <button type="submit" class="btn btn-link" id={JSON.stringify(item)}   > */}
+              {/* <i onClick={(e) => { this.addToCart(e, item) }} class="fas fa-plus-circle fa-sm"></i> */}
+              {/* </button> */}
+              
+            </div>
+          </div>  
+          <br></br>   
         </div>
+        
       )
     })
 
@@ -252,43 +263,38 @@ class Cart extends React.Component {
     return (
       <div>
         {redirectVar}
-        <div className='row'>{itemslist}</div>
-        <br />
+        <br></br>
+        <div >{itemslist}</div>
+
+        {/* <br />   */}
+        <hr></hr>
         <div className="row">
-          <div style={{ textAlign: "center" }} className='col-sm-4'>
+          <div style={{ textAlign: "left" }} className='col-sm-7'>
             <label>Tax</label>
           </div>
-          <div style={{ textAlign: "center" }} className='col-sm-4'>
-            {/* <div>*{items[item][0]}</div> */}
-          </div>
-          <div style={{ textAlign: "center" }} className='col-sm-4'>
-            <label>$ {0.0925 * total}</label>
+          <div style={{ textAlign: "left" }} className='col-sm-5'>
+            <label>$ {(0.0925 * total).toFixed(2)}</label>
           </div>
         </div>
         <div className="row">
-          <div style={{ textAlign: "center" }} className='col-sm-4'>
+          <div style={{ textAlign: "left" }} className='col-sm-7'>
             <label>Convenience fee</label>
           </div>
-          <div style={{ textAlign: "center" }} className='col-sm-4'>
-            {/* <div>*{items[item][0]}</div> */}
-          </div>
-          <div style={{ textAlign: "center" }} className='col-sm-4'>
-            <label>$ {0.005 * total}</label>
+          
+          <div style={{ textAlign: "left" }} className='col-sm-5'>
+            <label>$ {(0.005 * total).toFixed(2)}</label>
           </div>
         </div>
         <div className="row">
-          <div style={{ textAlign: "center" }} className='col-sm-4'>
+          <div style={{ textAlign: "left" }} className='col-sm-7'>
             <label>Total</label>
           </div>
-          <div style={{ textAlign: "center" }} className='col-sm-4'>
-            {/* <div>*{items[item][0]}</div> */}
-          </div>
-          <div style={{ textAlign: "center" }} className='col-sm-4'>
-            <label>$ {grossTotal}</label>
+          <div style={{ textAlign: "left" }} className='col-sm-5'>
+            <label>$ {grossTotal.toFixed(2)}</label>
           </div>
         </div>
         <br />
-        <div style={{textAlign:"center"}} className="row">
+        <div style={{textAlign:"left"}} className="row">
           {pickupField}
         </div>
         

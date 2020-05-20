@@ -65,6 +65,8 @@ class EditProduct extends Component {
         })
       })
 
+      
+
   }
 
   inputChangeHandler = e => {
@@ -203,7 +205,7 @@ class EditProduct extends Component {
               <div class='login-form'>
                 <div class='panel'>
                   <br></br>
-                  <h2 style={{ marginLeft: '20px' }}>Add new Product</h2>
+                  <h2 style={{ marginLeft: '20px' }}>Edit Product</h2>
                   <hr></hr>
                 </div>
                 <div className='row'>
@@ -271,7 +273,7 @@ class EditProduct extends Component {
                         <br />
                         <button type='submit' class='btn btn-info'
                         >
-                          Create Product
+                          Edit Product
                         </button>
 
                         <br />

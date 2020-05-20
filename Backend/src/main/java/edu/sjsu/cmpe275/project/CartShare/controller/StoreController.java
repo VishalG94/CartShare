@@ -1,12 +1,9 @@
 package edu.sjsu.cmpe275.project.CartShare.controller;
 
-import edu.sjsu.cmpe275.project.CartShare.model.Address;
 import edu.sjsu.cmpe275.project.CartShare.model.Store;
 import edu.sjsu.cmpe275.project.CartShare.repository.StoreRepository;
 import edu.sjsu.cmpe275.project.CartShare.service.StoreService;
 import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @CrossOrigin(origins = "*", allowCredentials = "true")
@@ -49,6 +45,6 @@ public class StoreController {
     public ResponseEntity<?> deletStore(@PathVariable Long id){
         System.out.println("Inside delete store controller");
 
-        return storeService.deletStore(id);
+        return storeService.deleteStore(id);
     }
 }

@@ -28,7 +28,13 @@ class SignUp extends Component {
       authFlag: false,
       authFailed: false,
       user_role: '',
-      oauth_flag: false
+      oauth_flag: false,
+      address: {
+        city: '',
+        street: '',
+        state: '',
+        zip: ''
+      }
     }
   }
 
@@ -170,7 +176,13 @@ class SignUp extends Component {
       nickName: formValues.nickname,
       email: formValues.email,
       password: formValues.password,
-      varified: false
+      varified: false,
+      address: {
+        street: formValues.street,
+        city: formValues.city,
+        state: formValues.state,
+        zip: formValues.zip
+      }
     }
     if (formValues.email.includes("sjsu")) {
       data.role = "Admin";
@@ -257,6 +269,43 @@ class SignUp extends Component {
                     label='Password (8 character minimum)'
                   />
                 </div>
+                <div class='form-group'>
+                  <Field
+                    name='street'
+                    type='text'
+                    component={this.renderInput}
+                    label='Street'
+                  />
+
+                </div>
+                <div class='form-group'>
+                  <Field
+                    name='city'
+                    type='text'
+                    component={this.renderInput}
+                    label='City'
+                  />
+                </div>
+
+                <div class='form-group'>
+                  <Field
+                    name='state'
+                    type='text'
+                    component={this.renderInput}
+                    label='State'
+                  />
+                </div>
+
+                <div class='form-group'>
+                  <Field
+                    name='zip'
+                    type='number'
+                    min="1"
+                    component={this.renderInput}
+                    label='Zip'
+                  />
+                </div>
+
                 <br />
                 <div class='form-group'>
                   <button type='submit' class='btn btn-warning'>
@@ -329,6 +378,21 @@ const validate = formValues => {
   if (!formValues.nickname) {
     error.nickname = 'Enter a valid Nick name'
   }
+  if (!formValues.street) {
+    error.street = 'Enter a valid Street'
+  }
+  if (!formValues.city) {
+    error.city = 'Enter a valid City'
+  }
+  if (!formValues.state) {
+    error.state = 'Enter a valid State'
+  }
+  if (!formValues.zip) {
+    error.zip = 'Enter a valid Zip Code'
+  }
+  // if (!(/^([0-9])$/.test(formValues.zip))) {
+  //   error.zip = "Only numeric values of 5 digits is allowed"
+  // }
   return error
 }
 // const mapStoreToProps = state => {

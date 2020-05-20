@@ -24,20 +24,24 @@ public class OrderController {
     public ResponseEntity<?> addOrder(
             @RequestBody Order order,
             @RequestParam Long userId,
-            @RequestParam(required = false) Long numbOfOrdersToPcik,
+            @RequestParam(required = false) Long pickupOrder,
             HttpServletRequest request) throws JSONException {
 
         System.out.println("Buyer ID is "+userId);
-        System.out.println("Order Count is "+numbOfOrdersToPcik);
-        numbOfOrdersToPcik = Long.valueOf(1);
-        return orderService.addOrder(order,userId, Optional.ofNullable(numbOfOrdersToPcik));
-
+        System.out.println("Order Count is "+pickupOrder);
+        return orderService.addOrder(order,userId, Optional.ofNullable(pickupOrder));
     }
 
     @GetMapping("/getorders")
     public ResponseEntity<?> getOrders(@RequestParam Long id) {
         System.out.println("Inside GetOrders "+id);
         return orderService.getorders(id);
+    }
+
+    @GetMapping("/getpastorders")
+    public ResponseEntity<?> getPastOrders(@RequestParam Long id) {
+        System.out.println("Inside GetOrders "+id);
+        return orderService.getPastOrders(id);
     }
 
     @GetMapping("/getpoolorders")
@@ -48,5 +52,23 @@ public class OrderController {
         return orderService.getPoolOrders(storeId,userId);
     }
 
+//    @GetMapping("/pickupmenu")
+//    public ResponseEntity<?> getPickup(@RequestParam Long id) {
+//        System.out.println("Inside GetOrders "+id);
+//        return orderService.getPickup(id);
+//    }
+    @RequestMapping(value="/delivered/{id}", method=RequestMethod.GET)
+    public ResponseEntity<?> deliverOrder(@PathVariable Long id){
+        System.out.println("Inside delete store controller");
+
+        return orderService.orderDelivered(id);
+    }
+
+    @RequestMapping(value="/deliveryissue/{id}", method=RequestMethod.GET)
+    public ResponseEntity<?> deliveryIssue(@PathVariable Long id){
+        System.out.println("Inside delete store controller");
+
+        return orderService.deliveryIssue(id);
+    }
 
 }

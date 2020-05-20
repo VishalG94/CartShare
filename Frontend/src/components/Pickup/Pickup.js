@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import '../../App.css'
-import './Order.css'
+// import './Order.css'
 import axios from 'axios'
 import { Route, withRouter } from 'react-router-dom';
 import { Redirect } from 'react-router'
@@ -12,9 +12,10 @@ import LeftNavbar from '../LeftNavbar/LeftNavbar'
 import ROOT_URL from '../../constants'
 import UserBanner from '../Banner/UserBanner'
 import { interpolateMagma } from 'd3-scale-chromatic';
+import QRCode from 'qrcode';
 
 // Define a Login Component
-class Checkout extends Component {
+class Pickup extends Component {
     // call the constructor method
     constructor(props) {
         super(props)
@@ -28,10 +29,10 @@ class Checkout extends Component {
             index: "",
             tweets: [],
             orderDetails: [],
-            value: ''
+            qrcode: [],
+
         }
         this.itemslist = this.itemslist.bind(this)
-        this.onSubmit = this.onSubmit.bind(this)
     }
 
     componentWillMount() {
@@ -39,21 +40,21 @@ class Checkout extends Component {
             authFlag: false,
             authFailed: false
         })
+        // let useremail = sessionStorage.getItem('email')
+        // axios.defaults.withCredentials = true
+        // axios
+        // .get(`${ROOT_URL}/users/${useremail}`, { params: '' })
+        // .then(response => {
+        //     alert(JSON.stringify(response.data))
+        //     localStorage.setItem("role",JSON.stringify(response.data.role))
+        // })
     }
 
     componentDidMount() {
-        let data = {
-            store: {
-                id: sessionStorage.getItem("store")
-            },
-            userid: localStorage.getItem("ID")
-        }
-
-
-        axios.get(ROOT_URL + '/getpoolorders', {
+        var userId = localStorage.getItem("ID")
+        axios.get(ROOT_URL + '/pickupmenu', {
             params: {
-                storeid: sessionStorage.getItem("store"),
-                userid: localStorage.getItem("ID")
+                id: userId
             }
         })
             .then((response) => {
@@ -64,13 +65,6 @@ class Checkout extends Component {
             });
 
 
-    }
-
-    inputHandler = (e) => {
-        e.preventDefault
-        this.setState({
-            value: e.target.value
-        })
     }
 
 
@@ -89,95 +83,42 @@ class Checkout extends Component {
         })
     }
 
-    onSubmit = (e) => {
+
+    onCheckout = (e) => {
         e.preventDefault();
-
-        // if (document.getElementById('selectNumber').value != "Choose a number") {
-
-            axios.defaults.withCredentials = true
-            console.log("Number of Orders to pickup ", document.getElementById('selectNumber').value)
-            let data = JSON.parse(sessionStorage.getItem("order"))
-            let userId = localStorage.getItem("ID")
-            
-            axios.post(`${ROOT_URL}/addorder`, data, {
-                params:
-                {
-                    userId: userId,
-                    pickupOrder: document.getElementById('selectNumber').value
-                }
-            }).then(response => {
-                // update the state with the response data
+        var id = [e.target.id]
+        // id = JSON.stringify(id)
+        console.log(id);
+        
+        axios.get(`${ROOT_URL}/qrcode/${id}`, {
+            // params: {
+            //     id: this.state.orderDetails.id
+            // }
+        })
+            .then((response) => {
                 this.setState({
-                    failed: false,
-                    success: true,
-
-                })
-                alert("Order succesfully placed")
-                sessionStorage.removeItem("order_items")
-                sessionStorage.removeItem("order")
-                window.location.reload()
-                console.log('Axios post:', response.data);
-            }).catch(error => {
-                console.log(error);
-                this.setState({
-                    failed: true,
-                    success: false
-                })
+                    qrcode: 'data:image/png;base64,'+response.data,
+                    qrSuccess: true
+                    // base64Image: 
+                });
+                 
+                console.log("QR code ", response.data)
+                alert("Order successfully  placed")
             });
 
 
-        // }
-        // else {
-        //     alert('Add atleast one product to the cart before checkouts!')
-        // }
     }
-    
+
 
     render() {
         let singleOrder = null
         let redirectVar = null
-        let index = 0
+        // var QRCode;
         if (sessionStorage.getItem('email')) {
             redirectVar = <Redirect to='/home' />
         } else {
             redirectVar = <Redirect to='/login' />
         }
-
-        // var select = [];
-        // //var rows = [];
-        // for (var i = 1; i <= this.state.orderDetails.length; i++) {
-        //     select.push(i);
-
-        // }
-
-        
-        var select = document.getElementById("selectNumber");
-
-        // while (select.hasChildNodes()) {
-        //     select.removeChild()
-        // }
-
-        //       var select = document.getElementById("DropList");
-        if (select != null) {
-            var length = select.options.length;
-            for (i = length - 1; i > 0; i--) {
-                select.options[i] = null;
-            }
-         }
-
-        //  var el = document.createElement("option");
-        //  el.textContent = "Choose any number";
-        //  el.value = "Choose any number";
-        //  select.appendChild(el);
-
-        for (var i = 1; i <= this.state.orderDetails.length; i++) {
-
-            var el = document.createElement("option");
-            el.textContent = i;
-            el.value = i;
-            select.appendChild(el);
-        }
-
 
 
         // let invalidtag = null
@@ -190,17 +131,29 @@ class Checkout extends Component {
 
 
         let orderRecords = null
-
+//         let qrcodesuccess = null
+//         if(this.state.qrSuccess){
+//             qrcodesuccess=(
+//                 <div>
+// <label style={{float:'right', color:'green'}}>Order successfully  picked</label>
+//             <br></br>
+            
+//                 </div>
+//             )
+//         }else{
+//             qrcodesuccess=null
+//         }
 
 
         let list = this.state.orderDetails
-        console.log(list[0])
+        // console.log(list)
         if (list !== null) {
             orderRecords = Object.keys(list).map(row => {
+                console.log(list[row].pickup.id);
                 if (this.state.toggle && list.indexOf(list[row]) === this.state.index) {
                     singleOrder = list[row].order_items.map(item => {
                         return (
-                            <div className="row card" style={{ marginRight: "2%" }}>
+                            <div className="row card" style={{ marginRight: "2%",padding:'1%' }}>
                                 <div className="card-body">
                                     <div className="col-sm-3">
                                         <img src={item.product.imageurl} width="80" height="80"></img>
@@ -225,7 +178,6 @@ class Checkout extends Component {
                                             </div>
 
                                         </div>
-                                       
                                     </div>
                                 </div>
 
@@ -243,7 +195,7 @@ class Checkout extends Component {
                         <div>
                             <div>
                                 <div className='row'>
-                                    <div className='col-sm-4'>
+                                    <div className='col-sm-3'>
                                         <label
                                             style={{
                                                 marginLeft: '10px',
@@ -254,7 +206,7 @@ class Checkout extends Component {
                                             {list[row].store.name}
                                         </label>
                                     </div>
-                                    <div className='col-sm-4'>
+                                    <div className='col-sm-3'>
                                         <label
                                             style={{
                                                 fontSize: '13px',
@@ -264,46 +216,37 @@ class Checkout extends Component {
                                             {list[row].status}
                                         </label>
                                     </div>
-                                    <div className='col-sm-4'>
-                                        <label
-                                            style={{
-                                                fontSize: '13px',
-                                                color: 'black',
-                                                marginLeft: "25px"
-                                            }}
 
-                                        >
-                                            $ {list[row].price}
-                                        </label>
-                                        <label
-                                            style={{
-                                                fontSize: '13px',
-                                                color: 'black',
-                                                marginLeft: "25px"
-                                            }}
+                                    <label
+                                        style={{
+                                            fontSize: '13px',
+                                            color: 'black'
+                                        }}
+                                        className='col-sm-3'
+                                    >
+                                        $ {list[row].price}
+                                    </label>
 
-                                        >
-                                            {list[row].orderTime}
-                                        </label>
+                                    <div className='col-sm-3'>
+                                        {/* <button className='btn btn-success' >Checkout</button> */}
+
+                                        <button  id={list[row].pickup.id} type="button" onClick={this.onCheckout} class="btn btn-success" data-toggle="modal" data-target="#myModal">Checkout</button>
+
+
+                                       
                                     </div>
+
+
 
                                 </div>
                                 {/* <br /> */}
-
                                 <div style={{ marginLeft: '10px' }} className='row'>
-                                    
                                     {singleOrder}
-                                    
-                                    {/* {itemslist( */}
-                                    {/* {list[row].order_items.map(item => {
-                                       
-                                    })}, */}
-                                    {/* list[row].status
-                                    )} */}
+
                                 </div>
-                                
                             </div>
                         </div>
+
                     </a>
                 )
             })
@@ -319,40 +262,20 @@ class Checkout extends Component {
                         <div className='col-sm-2'>
                             <LeftNavbar />
                         </div>
-                        <div class='split-center_home'>
-                            <div style={{ textAlign: "center", marginTop: "30px" }}>
-                                {/* <h2>Checkout</h2> */}
-                                <h5>Would you like to pick up other Pool member's orders at the store.</h5>
-                                <h5>If yes, Please select number of orders you would like to pick </h5>
-                                <form id="myForm" onSubmit={this.onSubmit} >
-                                    <div style={{ marginBottom: "10px" }}>
-                                        <label>Choose number of orders to pick</label>
-                                        <select id="selectNumber" >
-
-                                            <option>0</option>
-
-                                        </select>
-                                    </div>
-                                    <div >
-                                        <button type='submit' class='btn btn-info'>
-                                            Place Order
-                                        </button>
-                                    </div>
-                                </form>
-
+                        <div class='split-center_cart'>
+                            <div style={{ textAlign: "center" }}>
+                                <h2>Pickup Menu</h2>
                             </div>
                             <hr>
                             </hr>
-
                             <div style={{ paddingLeft: "20px" }} className="row">
-
-                                <div className="col-sm-4">
+                                <div className="col-sm-3">
                                     <b>Store Name</b>
                                 </div>
-                                <div className="col-sm-4">
+                                <div className="col-sm-3">
                                     <b>Order Status</b>
                                 </div>
-                                <div className="col-sm-4" style={{ textAlign: "left" }}>
+                                <div className="col-sm-3">
                                     <b>Total Price</b>
                                 </div>
                             </div>
@@ -361,18 +284,24 @@ class Checkout extends Component {
                                 <ul class='list-group'>
                                     {orderRecords}
                                 </ul>
-                                <br></br>
-                                    <br></br>
-                                    <br></br>
-                                    <br></br>
-                                    <br></br>
                             </div>
-
                         </div>
-                        <div className='col-sm-1' />
+                        {/* <div class='row'> */}
+                            <img src={this.state.qrcode} style={{float:'right', marginRight:'8%'}}></img>
+                        {/* </div>
+
+                        <br></br>
+                        
+                        <div class='row'>
+                            {qrcodesuccess}
+                        </div> */}
+                        
+
                     </div>
+                 
                 </div>
             </div >
+
         )
     }
 }
@@ -381,4 +310,4 @@ const mapStateToProps = state => {
     return { user: state.user }
 }
 
-export default connect(mapStateToProps)(withRouter(Checkout));
+export default connect(mapStateToProps)(withRouter(Pickup));

@@ -41,6 +41,7 @@ class PoolHome extends Component {
                 console.log("Inside Fetch user role" + JSON.stringify(response.data));
                 this.setState({
                     role: response.data[0],
+                    
                     poolname: response.data[1]
                 })
             })

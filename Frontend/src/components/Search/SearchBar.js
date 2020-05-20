@@ -32,6 +32,38 @@ class SearchBar extends Component {
     })
   }
 
+//   keyPress(e){
+//     // alert(e.keyCode)
+//     if(e.keyCode == 13){
+//        console.log('value', e.target.value);
+//        // put the login here
+//        e.submitInput()
+//     }
+//  }
+
+ keyPress = (e) => {
+  // e.preventDefault();
+  if(e.keyCode == 13){
+  const data = { text:this.state.text}
+  axios.defaults.withCredentials = true;
+  console.log(data);
+  axios.post(`${ROOT_URL}/searchproduct`, data)
+    .then(response => {
+      this.setState({
+        result: response.data
+      })
+      sessionStorage.setItem('searchproducts', JSON.stringify(response.data))
+      // window.location.reload();
+      console.log(response.data)
+      // window.location.reload()
+    }).catch((error) => {
+
+    });
+  }
+}
+
+
+
   submitSearch = (e) => {
     e.preventDefault();
     const data = { text:this.state.text}
@@ -39,14 +71,6 @@ class SearchBar extends Component {
     console.log(data);
     axios.post(`${ROOT_URL}/searchproduct`, data)
       .then(response => {
-        // alert(JSON.stringify(response.data[0]))
-        // sessionStorage.removeItem('Result')
-        // sessionStorage.removeItem('UserResult')
-        // if (response.data[0].text) {
-        //   sessionStorage.setItem("Result", JSON.stringify(response.data))
-        // } else {
-        //   sessionStorage.setItem("UserResult", JSON.stringify(response.data))
-        // }
         this.setState({
           result: response.data
         })
@@ -55,9 +79,11 @@ class SearchBar extends Component {
         console.log(response.data)
         // window.location.reload()
       }).catch((error) => {
-        console.log("Gandu kuch hua jol yaha!")
+
       });
   }
+
+
 
 clearsearchlist = (e) => {
   e.preventDefault();
@@ -101,15 +127,15 @@ render() {
   })
 
   let Searchbutton = null;
-  if (sessionStorage.getItem('searchproducts') != null) {
-    Searchbutton = <button id='searchbarbutton' style={{ outline: 'none' }} type='submit' class='searchButton' onClick={this.clearsearchlist} >
-      <i class="fas fa-times-circle"></i>
-    </button>
-  } else {
+  // if (sessionStorage.getItem('searchproducts') != null) {
+  //   Searchbutton = <button id='searchbarbutton' style={{ outline: 'none' }} type='submit' class='searchButton' onClick={this.clearsearchlist} >
+  //     <i class="fas fa-times-circle"></i>
+  //   </button>
+  // } else {
     Searchbutton = <button id='searchbarbutton' style={{ outline: 'none' }} type='submit' class='searchButton' onClick={this.submitSearch} >
       <i class='fa fa-search' />
     </button>
-  }
+  // }
   return (
     <div>
       <div class='form-group'>
@@ -121,6 +147,7 @@ render() {
               class='searchTerm'
               placeholder='Search for a product'
               onChange={this.textChangeHandler}
+              onKeyDown = {this.keyPress}
             />
             {Searchbutton}
             {/* <button id='searchbarbutton' type='submit' class='searchButton' onClick={this.submitSearch} >
