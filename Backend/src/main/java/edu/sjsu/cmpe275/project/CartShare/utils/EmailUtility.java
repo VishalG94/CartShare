@@ -45,14 +45,15 @@ public class EmailUtility {
     }
 
     public static String selfOrdernotification(Order ord) {
-        StringBuilder notifyMessage = new StringBuilder("Hi " + ",\n\nYour order with order id:" + ord.getOrderid() + "has been placed \n\nRegards,\nTeam Cartshare");
+        StringBuilder notifyMessage = new StringBuilder("Hi " + ",\n\nYour order with order id:" + ord.getOrderid() + "has been placed!\n\n");
         System.out.println("notifyMessage : " + notifyMessage);
         List<Order_Items> items = ord.getOrder_items();
         for (Order_Items item : items) {
-            notifyMessage.append("    Items name: " + item.getProduct().getName() + "\n");
+            notifyMessage.append("    Item id: " + item.getId() + "\n");
             notifyMessage.append("    Quantity: " + item.getQuantity() + "\n");
-            notifyMessage.append("    Price: " + item.getPrice() + "\n");
+            notifyMessage.append("    Price: " + item.getPrice() + "\n\n");
         }
+        notifyMessage.append("\n\nRegards,\nTeam Cartshare");
         return notifyMessage.toString();
     }
 
@@ -84,7 +85,7 @@ public class EmailUtility {
                 notifyMessage.append("        State: " + order.getBuyerId().getAddress().getState() + "\n");
                 notifyMessage.append("        Zip code: " + order.getBuyerId().getAddress().getZip() + "\n\n");
                 for (Order_Items item : items) {
-                    notifyMessage.append("    Items name: " + item.getProduct().getName() + "\n");
+                    notifyMessage.append("    Item id: " + item.getProduct().getName() + "\n");
                     notifyMessage.append("    Quantity: " + item.getQuantity() + "\n");
                     notifyMessage.append("    Price: " + item.getPrice() + "\n");
                 }
@@ -102,15 +103,11 @@ public class EmailUtility {
         notifyMessage.append("Hi " + ",\n\nThank you for Placing the order! Please find below the order " + "\n\n");
 //        Optional<List<Order>> orders = Optional.ofNullable(pickup.getOrders());
         for(Order order: orders) {
-            if (!order.getPickupOption().equals("self")) {
+            System.out.println("pcikup option"+order.getPickupOption());
+            if(!order.getPickupOption().equals("self")) {
                 List<Order_Items> items = order.getOrder_items();
-
-                notifyMessage.append("    \n\n    Pooler Name: " + order.getBuyerId().getScreenName() + "\n\n");
-                notifyMessage.append("    Address: \n");
-                notifyMessage.append("        Street: " + order.getBuyerId().getAddress().getStreet() + "\n");
-                notifyMessage.append("        City: " + order.getBuyerId().getAddress().getCity() + "\n");
-                notifyMessage.append("        State: " + order.getBuyerId().getAddress().getState() + "\n");
-                notifyMessage.append("        Zip code: " + order.getBuyerId().getAddress().getZip() + "\n\n");
+                notifyMessage.append("    \n\n    Pooler Order details: "+ "\n\n");
+                notifyMessage.append("        Order ID: " + order.getOrderid() + "\n");
                 for (Order_Items item : items) {
                     notifyMessage.append("    Items name: " + item.getProduct().getName() + "\n");
                     notifyMessage.append("    Quantity: " + item.getQuantity() + "\n");

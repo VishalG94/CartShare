@@ -62,12 +62,13 @@ public class OrderService {
 			item.setOrderTime(new Date());
 			item.setStatus("PENDING");
 			item.setOrder(order);
+			orderItemsRepository.saveAndFlush(item);
 		}
-
+		orderRepository.saveAndFlush(order);
+		orders.get().add(order);
 		if(order.getPickupOption().equals("self")){
 
 			System.out.println("Total number of pickup: "+ numbOfOrdersToPcik.get());
-			orders.get().add(order);
 			Optional<List<Order>> ordersToPick= orderRepository.findPoolOrdersById(user.get().getPool().getPoolId(), order.getStore().getId(), userId);
 			if(ordersToPick.isPresent()){
 				for(int i=0;i<numbOfOrdersToPcik.get();i++){
@@ -92,6 +93,9 @@ public class OrderService {
 				}
 				orderRepository.saveAndFlush(ord);
 			}
+			String message = EmailUtility.ordernotification(orders.get());
+			emailService.sendEmail(order.getBuyerId().getEmail(), message, " Order Placed with order id :"+order.getOrderid());
+
 //			order.setPickup(newPickup);
 //			List<Order_Items>  ord_items = order.getOrder_items();
 //
@@ -108,12 +112,10 @@ public class OrderService {
 
 		}else{
 //			System.out.println("No other orders to pickup");
-//			String message = EmailUtility.selfOrdernotification(order);
-//			emailService.sendEmail(order.getBuyerId().getEmail(), message, " Order Placed with order id :"+order.getOrderid());
+			String message = EmailUtility.selfOrdernotification(order);
+			emailService.sendEmail(order.getBuyerId().getEmail(), message, " Order Placed with order id :"+order.getOrderid());
 
 		}
-		String message = EmailUtility.ordernotification(orders.get());
-		emailService.sendEmail(order.getBuyerId().getEmail(), message, " Order Placed with order id :"+order.getOrderid());
 
 
 

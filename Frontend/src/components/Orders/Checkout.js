@@ -117,6 +117,8 @@ class Checkout extends Component {
                 sessionStorage.removeItem("order")
                 window.location.reload()
                 console.log('Axios post:', response.data);
+                
+
             }).catch(error => {
                 console.log(error);
                 this.setState({
