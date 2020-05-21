@@ -27,7 +27,7 @@ public class Store implements Serializable{
 	 @OneToMany(fetch = FetchType.EAGER, mappedBy = "store", orphanRemoval = true, cascade = CascadeType.PERSIST)
 	 private List<Product> products;
 
-	 @OneToMany(fetch = FetchType.LAZY, mappedBy = "store",orphanRemoval = true, cascade = CascadeType.PERSIST)
+	 @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
 	 private List<Order> orders;
 	 
 	public long getId() {

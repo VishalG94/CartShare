@@ -96,26 +96,8 @@ public class OrderService {
 			String message = EmailUtility.ordernotification(orders.get());
 			emailService.sendEmail(order.getBuyerId().getEmail(), message, " Order Placed with order id :"+order.getOrderid());
 
-//			int credit  = user.get().getContributionCredit();
-//			credit = credit+orders.get().size()-1;
-//			user.get().setContributionCredit(credit);
-//			userRepository.saveAndFlush(user.get());
-//			order.setPickup(newPickup);
-//			List<Order_Items>  ord_items = order.getOrder_items();
-//
-//			for(Order_Items oi : ord_items){
-//				oi.setStatus("SELECTED_FOR_PICKUP");
-//				orderItemsRepository.saveAndFlush(oi);
-//			}
-//			order.setStatus("SELECTED_FOR_PICKUP");
-
-//			orderRepository.saveAndFlush(order);
-//			Optional<Pickup> pick = pickupRepository.findById(newPickup.getId());
-//			orders.get().add(order);
-//			System.out.println("new Pickup order size: "+ order.getPickup().getOrders().size());
-
 		}else{
-//			System.out.println("No other orders to pickup");
+
 			String message = EmailUtility.selfOrdernotification(order);
 			emailService.sendEmail(order.getBuyerId().getEmail(), message, " Order Placed with order id :"+order.getOrderid());
 
@@ -130,7 +112,6 @@ public class OrderService {
 		System.out.println("inside getOrder : "+id);
 		Optional<List<Order>> orders = orderRepository.findOrdersById(id);
 
-		System.out.println(orders.get());
 		if(orders.isPresent())
 		{
 			System.out.println("Orders are present");

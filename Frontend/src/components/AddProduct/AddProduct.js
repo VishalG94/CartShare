@@ -42,9 +42,10 @@ class AddProduct extends Component {
     } // Bind the handlers to this class // this.usernameChangeHandler = this.usernameChangeHandler.bind(this) // this.passwordChangeHandler = this.passwordChangeHandler.bind(this) // this.submitLogin = this.submitLogin.bind(this)
   } // Call the Will Mount to set the auth Flag to false
 
-  async componentWillMount() {
+  componentWillMount() {
     if (this.state.profilepic == '') {
       this.setState({ profilepic: image });
+
     }
 
     axios
@@ -98,10 +99,14 @@ class AddProduct extends Component {
 
 
   imageChangeHandler = e => {
+    if(e.target.files){
     this.setState({
       file: e.target.files[0],
       profilepic: URL.createObjectURL(e.target.files[0])
     })
+  }else{
+    this.setState({file:image})
+  }
     console.log(e.target.files[0])
   }
 
@@ -129,7 +134,7 @@ class AddProduct extends Component {
       const config = {
         headers: { 'content-type': 'multipart/form-data' }
       }
-
+      
       let data = {
         id: {
           storeId: store_id[i],
@@ -150,7 +155,7 @@ class AddProduct extends Component {
           this.setState({
             failed: false,
             success: true,
-            profilepic: response.data.imageurl
+            // profilepic: response.data.imageurl
           })
           console.log(response.data);
           window.location.reload(true)
@@ -213,6 +218,8 @@ class AddProduct extends Component {
     }
 
     const units = ['Piece', 'Pound', 'Oz']
+
+    
 
 
 

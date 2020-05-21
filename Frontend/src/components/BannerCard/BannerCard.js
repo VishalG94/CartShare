@@ -9,6 +9,8 @@ import axios from 'axios'
 import ROOT_URL from '../../constants.js'
 import EditProduct from "../AddProduct/EditProduct";
 import Modal from 'react-awesome-modal';
+import { Redirect } from "react-router";
+import { Link } from "react-router-dom";
 
 let deleteProduct = e => {
   e.preventDefault()
@@ -46,17 +48,25 @@ let deleteProduct = e => {
   
 // }
 
+let editProduct = e=>{
+  let data =  JSON.parse(e.target.id)
+  alert(JSON.stringify(data.id))
+  localStorage.setItem("ProductBanner",JSON.stringify(data))
+  // history.replace("/editproduct")
+}
+
 
 
 const BannerCard = ( bannerDetails ) => {
-  console.log(bannerDetails);
+  // console.log(bannerDetails);
   var editbutton =  null;
-  editbutton = (<button type="submit" class="btn btn-link" id={JSON.stringify(bannerDetails)} onClick={EditProduct} style={{ float: "right" }} >
+  editbutton = (<a href='/editproduct'><button type="submit" class="btn btn-link" id={JSON.stringify(bannerDetails)} onClick={editProduct} style={{ float: "right" }} >
       <i id={JSON.stringify(bannerDetails)} style={{ color: 'green',position:"absolute",top:"10px",right:"10px" }} class="far fa-edit fa-lg"></i>
     </button>
+    </a>
     )
   return (
-    <a href = '/editproduct' style={{color:"black"}}>
+    // <a href = '/editproduct' style={{color:"black"}}>
       
     <div class="col-sm-3" >
       
@@ -73,13 +83,19 @@ const BannerCard = ( bannerDetails ) => {
               <i id={JSON.stringify(bannerDetails)} style={{ color: 'red' }} class="far fa-trash-alt"></i>
                  </button>
               {bannerDetails.description}
+              <br></br>
+              storeId : {bannerDetails.id.storeId}
+              <br></br>
+              store : {bannerDetails.store.name}
+              <br></br>
+              Sku: {bannerDetails.id.sku}
               <br></br>  
           </p>
         </div>
       </div>
       
     </div>
-   </a>
+  //  </a>
       
   );
 };

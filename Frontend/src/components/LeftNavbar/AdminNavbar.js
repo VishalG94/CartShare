@@ -25,7 +25,7 @@ class AdminNavbar extends React.Component {
             </a>
           </li>
           <li className='li-profile'>
-            <a href='#' className='navLink'>
+            <a href='/productsearch' className='navLink'>
               <i class='fas fa-hashtag' />
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <span className='tab'>Search</span>

@@ -58,9 +58,9 @@ public class ProductService {
     public Product editProduct(Product product) {
         System.out.println("product: "+ product.toString());
         ProductId id = product.getId();
-        System.out.println(id.getStoreId());
-//        Optional<Store> store = storeRepository.findById(id.getStoreId());
-//        product.setStore(store.get());
+//        System.out.println(id.getStoreId());
+        Optional<Store> store = storeRepository.findById(id.getStoreId());
+        product.setStore(store.get());
         System.out.println(productRepository.getMaxSku());
 //        id.setSku(productRepository.getMaxSku());
         return productRepository.saveAndFlush(product);
@@ -123,28 +123,76 @@ public class ProductService {
 
 
 
-    public ResponseEntity<?> searchproduct(String text) {
-//        System.out.println(text.substring(1,text.length()-1));
-        Optional<List<Product>> products = Optional.ofNullable(productRepository.findByName(text));
-        System.out.println(products.toString());
+//    public ResponseEntity<?> searchproduct(String text) {
+////        System.out.println(text.substring(1,text.length()-1));
+//        Optional<List<Product>> products = Optional.ofNullable(productRepository.findByName(text));
+//        System.out.println(products.toString());
+//        List<Store> store = new ArrayList<>();
+//        if (products.get().size() == 0) {
+//            return ResponseEntity.status(HttpStatus.CONFLICT).contentType(MediaType.APPLICATION_JSON).body("Product Not Found");
+//            }
+//            for (Product p : products.get()) {
+//
+//                store.add(p.getStore());
+//            }
+//            System.out.println(store.toString());
+//
+//            return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(store);
+//
+//    }
+
+    public ResponseEntity<?> searchproductBySku (Long sku) {
+        System.out.println("inside delete Product service");
+        System.out.println("sku"+sku);
+        Optional<List<Product>> products = Optional.ofNullable(productRepository.findProductBySku(sku));
+//        Optional<Store> id = storeRepository.findById(store.getId());
+
+//        Optional<List<Product>> products = Optional.ofNullable(id.get().getProducts());
+        if (products.isPresent()) {
+        return ResponseEntity.status(HttpStatus.OK).body(products);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Products Found for this  store");
+        }
+    }
+
+    public ResponseEntity<?> searchproduct (String name) {
+        System.out.println("inside Search Product service");
+        System.out.println("name"+name);
+        Optional<List<Product>> products = Optional.ofNullable(productRepository.findByName(name));
+//        Optional<Store> id = storeRepository.findById(store.getId());
+
+//        Optional<List<Product>> products = Optional.ofNullable(id.get().getProducts());
         List<Store> store = new ArrayList<>();
         if (products.get().size() == 0) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).contentType(MediaType.APPLICATION_JSON).body("Product Not Found");
-            }
-            for (Product p : products.get()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.APPLICATION_JSON).body("Product Not Found");
+        }
+        for (Product p : products.get()) {
 
-                store.add(p.getStore());
-            }
-            System.out.println(store.toString());
+            store.add(p.getStore());
+        }
+        System.out.println(store.toString());
 
-            return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(store);
-
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(store);
     }
 
 
-    public ResponseEntity<?> searchproductBySku (ProductId product) {
-        System.out.println("inside delete Product service");
-            Optional<Product> existingProduct = productRepository.findById(product);
-                return ResponseEntity.status(HttpStatus.OK).body(existingProduct);
-            }
+    public ResponseEntity<?> searchproductbystore(Long storeid) {
+//        System.out.println(text.substring(1,text.length()-1));
+        Optional<Store> store = storeRepository.findById(storeid);
+        System.out.println("sent:" + store.toString());
+        Optional<List<Product>> products = Optional.ofNullable(productRepository.findProductByStore(store.get().getId()));
+        System.out.println(products.get().size());
+        List<Store> storenew = new ArrayList<>();
+        if (products.get().size() == 0) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).contentType(MediaType.APPLICATION_JSON).body("Product Not Found");
+        }
+//        for (Product p : products.get()) {
+//
+//            storenew.add(p.getStore());
+//        }
+//        System.out.println(store.toString());
+
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(products);
+
+    }
 }

@@ -18,19 +18,29 @@ class SearchBar extends Component {
     super(props)
 
     this.state = {
+      storeId:"",
       text: "",
-      result: ""
+      result: "",
+      success:true
     }
 
-    this.textChangeHandler = this.textChangeHandler.bind(this)
+    // this.textChangeHandler = this.textChangeHandler.bind(this)
+    this.inputChangeHandler = this.inputChangeHandler.bind(this)
     this.submitSearch = this.submitSearch.bind(this);
   }
 
-  textChangeHandler = (e) => {
+  // textChangeHandler = (e) => {
+  //   this.setState({
+  //     name: e.target.value
+  //   })
+  // }
+
+  inputChangeHandler = e => {
     this.setState({
-      text: e.target.value
+        [e.target.name]: e.target.value,
+        text : e.target.value
     })
-  }
+}
 
 //   keyPress(e){
 //     // alert(e.keyCode)
@@ -41,27 +51,62 @@ class SearchBar extends Component {
 //     }
 //  }
 
+componentWillMount(){
+
+  // axios.defaults.withCredentials = true
+  // let storeId = 
+  // axios.delete(`${ROOT_URL}/searchproductbysku/${storeId}`,  {params: ''}).then(response => {
+  //   console.log('Axios post:', response.data);
+  //   window.location.reload(true)
+  // }).catch(error => {
+  //   console.log(JSON.stringify(error.response.data));
+  //   alert(JSON.stringify(error.response.data))
+  //   //  errorTest=  JSON.stringify(error.response.data)
+  // });
+}
+
  keyPress = (e) => {
   // e.preventDefault();
   if(e.keyCode == 13){
   const data = { text:this.state.text}
   axios.defaults.withCredentials = true;
   console.log(data);
-  axios.post(`${ROOT_URL}/searchproduct`, data)
-    .then(response => {
-      this.setState({
-        result: response.data
-      })
-      sessionStorage.setItem('searchproducts', JSON.stringify(response.data))
-      // window.location.reload();
-      console.log(response.data)
-      // window.location.reload()
-    }).catch((error) => {
+  // axios.post(`${ROOT_URL}/searchproduct`, data)
+  //   .then(response => {
+  //     this.setState({
+  //       result: response.data
+  //     })
+  //     sessionStorage.setItem('searchproducts', JSON.stringify(response.data))
+  //     // window.location.reload();
+  //     console.log(response.data)
+  //     // window.location.reload()
+  //   }).catch((error) => {
 
-    });
+  //   });
+
+  axios.post(`${ROOT_URL}/searchproduct`, data, {
+    params:
+    {
+      name: this.state.text
+    }
+  }).then(response => {
+    // update the state with the response data
+    this.setState({
+      result: response.data,
+      toggle:true,
+      success:true,
+      // storesuccess:false
+    })
+    console.log('Axios post:', response.data);
+  }).catch(error => {
+    console.log(error);
+    this.setState({
+      failed: true,
+      success:false
+    })
+  });
   }
 }
-
 
 
   submitSearch = (e) => {
@@ -69,18 +114,27 @@ class SearchBar extends Component {
     const data = { text:this.state.text}
     axios.defaults.withCredentials = true;
     console.log(data);
-    axios.post(`${ROOT_URL}/searchproduct`, data)
-      .then(response => {
-        this.setState({
-          result: response.data
-        })
-        sessionStorage.setItem('searchproducts', JSON.stringify(response.data))
-        // window.location.reload();
-        console.log(response.data)
-        // window.location.reload()
-      }).catch((error) => {
-
-      });
+    axios.post(`${ROOT_URL}/searchproduct`, data, {
+      params:
+      {
+        name: this.state.text
+      }
+    }).then(response => {
+      // update the state with the response data
+      this.setState({
+        result: response.data,
+        toggle:true,
+        success:true,
+        // storesuccess:false
+      })
+      console.log('Axios post:', response.data);
+    }).catch(error => {
+      console.log(error);
+      this.setState({
+        failed: true,
+        success:false
+      })
+    });
   }
 
 
@@ -125,7 +179,13 @@ render() {
   let bannerFinal = bannerNew.map((data) => {
     return <StoreBanner bannerDetails={data}></StoreBanner>
   })
-
+  let searchsuccess = null;
+  if(!this.state.success){
+    bannerFinal = null;
+    searchsuccess = (
+      <label style={{color:"red"}}>*Product with name Not found</label>
+    )
+  }
   let Searchbutton = null;
   // if (sessionStorage.getItem('searchproducts') != null) {
   //   Searchbutton = <button id='searchbarbutton' style={{ outline: 'none' }} type='submit' class='searchButton' onClick={this.clearsearchlist} >
@@ -141,14 +201,24 @@ render() {
       <div class='form-group'>
         <div tabIndex='0' class='wrap'>
           <div class='search'>
-            <input
+            {/* <input
               id='searchbar'
               type='text'
               class='searchTerm'
               placeholder='Search for a product'
               onChange={this.textChangeHandler}
               onKeyDown = {this.keyPress}
+            /> */}
+
+            <input
+              id='searchbar'
+              type='text'
+              class='searchTerm'
+              placeholder='Search for a product'
+              onChange={this.inputChangeHandler}
+              onKeyDown = {this.keyPress}
             />
+
             {Searchbutton}
             {/* <button id='searchbarbutton' type='submit' class='searchButton' onClick={this.submitSearch} >
               <i class='fa fa-search' />
@@ -160,6 +230,7 @@ render() {
           </div>
         </div>
         {bannerFinal}
+        {searchsuccess}
       </div>
     </div>
   )

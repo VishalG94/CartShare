@@ -30,6 +30,8 @@ import EditPool from './Pool/EditPool'
 import PastOrders from './PastOrders/PastOrders'
 import Pickup from './Pickup/Pickup'
 import Delivery from './Delivery/Delivery'
+import ProductSearch from './ProductSearch/ProductSearch'
+import ProductSearchBar from './ProductSearch/ProductSearchBar'
 
 
 
@@ -67,6 +69,7 @@ class Main extends Component {
         <Route path='/pastorders' component={PastOrders} />
         <Route path='/pickupmenu' component={Pickup} />
         <Route path='/delivery' component={Delivery} />
+        <Route path='/productsearch' component={ProductSearchBar} />
       </div>
     )
   }

@@ -1,7 +1,9 @@
 package edu.sjsu.cmpe275.project.CartShare.service;
 
-import edu.sjsu.cmpe275.project.CartShare.model.Product;
+import edu.sjsu.cmpe275.project.CartShare.model.Order;
 import edu.sjsu.cmpe275.project.CartShare.model.Store;
+import edu.sjsu.cmpe275.project.CartShare.repository.OrderItemsRepository;
+import edu.sjsu.cmpe275.project.CartShare.repository.OrderRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.ProductRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,11 @@ public class StoreService {
 
     @Autowired
     private StoreRepository storeRepository;
+    @Autowired
+    private OrderItemsRepository orderItemsRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
 
     @Autowired
     private ProductRepository productRepository;
@@ -37,17 +44,14 @@ public class StoreService {
         System.out.println("inside delete store service");
         System.out.println("id"+id);
         Optional<Store> newstore = storeRepository.findById(id);
-        if (!newstore.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error : Store Not Found");
+        System.out.println(newstore.get().getName());
+        Optional<List<Order>> orders = orderRepository.findOrdersByStore(id);
+//        System.out.println(orders.get().size());
+        if (orders.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error : Unfulfilled Orders");
         }
-
-        Optional<List<Product>> productlist = Optional.ofNullable(newstore.get().getProducts());
-//        if(productlist.isPresent()){
-//            productRepository.
-//        }
-
         storeRepository.delete(newstore.get());
 
-        return ResponseEntity.status(HttpStatus.OK).body(newstore.get());
+        return ResponseEntity.status(HttpStatus.OK).body("SuccessFully Deleted");
     }
 }

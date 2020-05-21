@@ -15,13 +15,14 @@ let deleteStore = e => {
   // alert("Inside Delete")
   // prevent page from refresh
   let data = JSON.parse(e.target.id)
-  alert(JSON.stringify(data.id));
+  // alert(JSON.stringify(data.id));
   axios.defaults.withCredentials = true
   axios.delete(`${ROOT_URL}/deletestore/${data.id}`, { params: '' }).then(response => {
     console.log('Axios post:', response.data);
     window.location.reload(true)
   }).catch(error => {
     console.log(error);
+    alert("There are Unfulfilled Orders")
   });
 
 

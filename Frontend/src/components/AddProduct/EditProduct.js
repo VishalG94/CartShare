@@ -38,7 +38,8 @@ class EditProduct extends Component {
       success: false,
       file: '',
       data: '',
-      profilepic: ''
+      profilepic: '',
+      pb:''
     } // Bind the handlers to this class // this.usernameChangeHandler = this.usernameChangeHandler.bind(this) // this.passwordChangeHandler = this.passwordChangeHandler.bind(this) // this.submitLogin = this.submitLogin.bind(this)
   } // Call the Will Mount to set the auth Flag to false
 
@@ -56,6 +57,29 @@ class EditProduct extends Component {
         // console.log("Inside Product Creation" + JSON.stringify(response.data));
         this.setState({ storeDetails: response.data });
         console.log(response.data);
+        let data1 = (response.data).map(store => {
+          return store.name;
+        })
+        console.log(data1);
+        this.setState({
+          store: data1
+        })
+      })
+
+      axios.defaults.withCredentials = true
+    axios
+      .get(`${ROOT_URL}/getproducts`, { params: '' })
+      .then(response => {
+        
+        // console.log(response)
+        // console.log("Inside Product Creation" + JSON.stringify(response.data));
+       let x = JSON.parse(localStorage.getItem('ProductBanner'))
+
+        this.setState({ storeDetails: response.data ,
+          pb: x
+          });
+        console.log(response.data);
+        
         let data1 = (response.data).map(store => {
           return store.name;
         })
@@ -99,7 +123,9 @@ class EditProduct extends Component {
 
 
   onSubmit = e => {
-    console.log(this.state.storeDetails)
+    // console.log(this.state.storeDetails)
+
+    
 
     let formData = new FormData();
     formData.append('files', this.state.file)
@@ -109,8 +135,13 @@ class EditProduct extends Component {
     const config = {
       headers: { 'content-type': 'multipart/form-data' }
     }
-
+    let y = JSON.parse(localStorage.getItem('ProductBanner'))
+    console.log(y.id.storeId)
     let data = {
+      id: {
+        storeId: y.id.storeId,
+        sku: y.id.sku
+      },
       name: e.name,
       description: e.description,
       brand: e.brand,
@@ -120,28 +151,29 @@ class EditProduct extends Component {
     }
     console.log(JSON.stringify(data));
     formData.append('data', JSON.stringify(data));
+    
+    
+   
+   
     axios.defaults.withCredentials = true;
-    axios.post(`${ROOT_URL}/editproduct`, formData, config)
-      .then(response => {
-        this.setState({
-          failed: false,
-          success: true,
-          profilepic: response.data.imageurl
-        })
-        console.log(response.data);
-        window.location.reload(true)
-      }).catch(error => {
-        console.log(error);
-        this.setState({
-          failed: true,
-          success: false
-        })
-      });
-
+    axios.put(`${ROOT_URL}/editproduct`, formData, config, { 
+    }).then(response => {
+      // update the state with the response data
+      this.setState({
+        result: response.data,
+        toggle:true,
+        success:true,
+        // storesuccess:false
+      })
+      console.log('Axios post:', response.data);
+    }).catch(error => {
+      console.log(error);
+      this.setState({
+        failed: true,
+        success:false
+      })
+    });
   }
-
-
-
 
   renderError = ({ error, touched }) => {
     if (touched && error) {
@@ -184,7 +216,7 @@ class EditProduct extends Component {
 
     if (this.state.success) {
       invalidtag = (
-        <label style={{ color: 'green' }}>Successfully created new Product</label>
+        <label style={{ color: 'green' }}>Successfully Updated the Product</label>
       )
     }
 
@@ -217,42 +249,49 @@ class EditProduct extends Component {
                     >
                       <div style={{ marginLeft: '10%' }}>
                         {/* <br /> */}
+                      <label>Name : {this.state.pb.name}</label>
                         <Field
                           name='name'
                           type='text'
                           component={this.renderInput}
                           // onChange={this.inputChangeHandler}
-                          label='Name'
+                          
                         // validate={required}
                         />
+                        
                         <br />
+                        <label>Description : {this.state.pb.description}</label>
                         <Field
                           name='description'
                           type='text'
                           component={this.renderInput}
                           // onChange={this.inputChangeHandler}
-                          label='Description'
+                          // label='Description'
                         />
                         <br />
+                        <label>Brand : {this.state.pb.brand}</label>
                         <Field
                           name='brand'
                           type='text'
                           component={this.renderInput}
                           // onChange={this.inputChangeHandler}
-                          label='Brand'
+                          // label='Brand'
                         />
                         <br />
+                        <label>price : {this.state.pb.price}</label>
                         <Field
                           name='price'
                           type='number'
                           component={this.renderInput}
                           // onChange={this.inputChangeHandler}
-                          label='price'
+                          // label='price'
                         />
                         <br />
-                        <div style={{ color: '#6b6b83' }}>
+                        
+                        {/* <div style={{ color: '#6b6b83' }}>
                           Unit
-                        </div>
+                        </div> */}
+                        <label>Unit : {this.state.pb.unit}</label>
 
                         <Field
                           name="unit"

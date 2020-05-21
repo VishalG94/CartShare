@@ -12,6 +12,9 @@ import java.util.Optional;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
+	@Query(value = "SELECT p FROM Order p WHERE p.store.id = :id and p.status !='DELIVERED'")
+	public Optional<List<Order>> findOrdersByStore(@Param("id") Long id);
+
 	 @Query(value = "SELECT p FROM Order p WHERE p.buyerId.id = :id and p.status !='DELIVERED'")
 	 public Optional<List<Order>> findOrdersById(@Param("id") Long id);
 
