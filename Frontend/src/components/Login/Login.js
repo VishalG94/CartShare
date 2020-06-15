@@ -99,7 +99,7 @@ class Login extends Component {
         })
       }
       else if (response.status == 400) {
-        alert("Please entered incorrect email and password");
+        alert("Please enter correct login credentials");
         window.location.reload();
         this.setState({
           authFlag: false
@@ -121,7 +121,7 @@ class Login extends Component {
       }
       window.location.reload();
       UTIL.saveUserDetails(result);
-      
+
     }).catch(error => {
       console.log("Error : " + error);
       window.location.reload();
@@ -133,7 +133,7 @@ class Login extends Component {
 
   checkVerification(data) {
     var email = data.email;
-    console.log("checkVerification email : " + email);  
+    console.log("checkVerification email : " + email);
     // axios.get(ROOT_URL + '/api/oauthverified/' + email)
     fetch(`${ROOT_URL}/api/oauthverified/` + email, {
       method: 'GET',
@@ -143,9 +143,9 @@ class Login extends Component {
     })
       .then((response) => {
         console.log("response", response)
-        
+
         if (response.status == 200) {
-          alert(" User logged in successfully");
+          // alert(" User logged in successfully");
           console.log("Response from server : " + response);
           // if(localStorage.getItem('role')=='Admin'){
           // history.push('/stores');

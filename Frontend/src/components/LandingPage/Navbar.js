@@ -94,7 +94,7 @@ class Navbar extends Component {
           <div class='container-fluid'>
             <div class='navbar-header'>
             {navLogin}
-              <a href='/home'>
+              <a href='/'>
                 <img
                   src={require('../img/favicon.ico')}
                   style={{ marginLeft: "30px", marginBottom: "5px", marginTop: "5px" }}

@@ -59,6 +59,7 @@ class CreatePool extends Component {
                 failed: false,
                 success: true
             })
+            localStorage.setItem('role',JSON.stringify("POOL_LEADER"))
             console.log('Axios post:', response.data);
         }).catch(error => {
             console.log(error);
@@ -99,6 +100,16 @@ class CreatePool extends Component {
         // redirect based on successful login
         let redirectVar = null
         let invalidtag = null
+        let createPool = null
+        if(JSON.parse(localStorage.getItem('role')) === "User"){
+            createPool=( <button type='submit' class='btn btn-info'>
+                                                    Create Pool
+                                                </button>)
+        }else{
+            createPool=( <button disabled type='submit' class='btn btn-info'>
+                                                    Create Pool (Already in pool)
+                                                </button>)
+        }
         // if (!cookie.load('cookie')) {
         //   redirectVar = <Redirect to='/login' />
         // }
@@ -113,6 +124,10 @@ class CreatePool extends Component {
             invalidtag = (
                 <label style={{ color: 'green' }}>Successfully created new Pool</label>
             )
+            createPool=( <button disabled type='submit' class='btn btn-info'>
+                                                    Create Pool (Already in pool)
+                                                </button>)
+            
         }
 
         return (
@@ -176,10 +191,14 @@ class CreatePool extends Component {
                                                 <br />
                                                 {invalidtag}
                                                 <br />
-                                                <button type='submit' class='btn btn-info'>
-                                                    Create Pool
-                        </button>
+                                                {createPool}
                                                 <br />
+                                                <br></br>
+                                                <br></br>
+                                                <br></br>
+
+                                                <br></br>
+
 
                                             </div>
                                         </form>
@@ -213,10 +232,13 @@ const validate = formValues => {
     if (!formValues.description) {
         error.description = 'Enter a valid description'
     }
-
     if (!formValues.zip) {
         error.zip = 'Enter a valid zip'
     }
+    if (!(/\b\d{5}\b/g.test(formValues.zip))) {
+        error.zip = "Only 5 digit values are allowed"
+    }
+    
     return error
 }
 

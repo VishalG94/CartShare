@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import '../../App.css'
-import './Order.css'
+// import './Order.css'
 import axios from 'axios'
 import { Route, withRouter } from 'react-router-dom';
 import { Redirect } from 'react-router'
@@ -12,9 +12,10 @@ import LeftNavbar from '../LeftNavbar/LeftNavbar'
 import ROOT_URL from '../../constants'
 import UserBanner from '../Banner/UserBanner'
 import { interpolateMagma } from 'd3-scale-chromatic';
+import QRCode from 'qrcode';
 
 // Define a Login Component
-class Orders extends Component {
+class Pickup extends Component {
     // call the constructor method
     constructor(props) {
         super(props)
@@ -27,7 +28,9 @@ class Orders extends Component {
             toggle: false,
             index: "",
             tweets: [],
-            orderDetails: []
+            orderDetails: [],
+            qrcode: [],
+
         }
         this.itemslist = this.itemslist.bind(this)
     }
@@ -45,11 +48,12 @@ class Orders extends Component {
         //     alert(JSON.stringify(response.data))
         //     localStorage.setItem("role",JSON.stringify(response.data.role))
         // })
-}
+    }
 
     componentDidMount() {
         var userId = localStorage.getItem("ID")
-        axios.get(ROOT_URL + '/getorders', {
+        // console.log("Order Details are ", userId)
+        axios.get(ROOT_URL + '/pickupmenu', {
             params: {
                 id: userId
             }
@@ -80,9 +84,38 @@ class Orders extends Component {
         })
     }
 
+
+    onCheckout = (e) => {
+        e.preventDefault();
+        var id = [e.target.id]
+        // id = JSON.stringify(id)
+        console.log(id);
+
+        axios.get(`${ROOT_URL}/qrcode/${id}`, {
+            // params: {
+            //     id: this.state.orderDetails.id
+            // }
+        })
+            .then((response) => {
+                this.setState({
+                    qrcode: 'data:image/png;base64,' + response.data,
+                    qrSuccess: true
+                    // base64Image: 
+                });
+
+                console.log("QR code ", response.data)
+                // alert("Order successfully  Picked up")
+            });
+
+
+    }
+
+
     render() {
         let singleOrder = null
         let redirectVar = null
+        let newOrder = null;
+        // var QRCode;
         if (sessionStorage.getItem('email')) {
             redirectVar = <Redirect to='/home' />
         } else {
@@ -90,51 +123,71 @@ class Orders extends Component {
         }
 
 
-        // let invalidtag = null
-        // if (this.state.authFailed) {
-        //     invalidtag = (
-        //         <label style={{ color: 'red' }}>*Invalid user name password!</label>
-        //     )
-        // }        
-
-
-
         let orderRecords = null
 
 
-
         let list = this.state.orderDetails
-        // console.log(list)
+        console.log(list)
         if (list !== null) {
-            orderRecords = Object.keys(list).map(row => {              
-                if (this.state.toggle && list.indexOf(list[row]) === this.state.index) {                  
-                    singleOrder = list[row].order_items.map(item => {
+            orderRecords = Object.keys(list).map(row => {
+                console.log(list[row].orders);
+                if (this.state.toggle && list.indexOf(list[row]) === this.state.index) {
+                    let xz = null;
+                    singleOrder = list[row].orders.map(order => {
+                        xz = list[row].orders
+                        console.log(xz);
+                        newOrder = order.order_items.map(item => {
+                            return (
+                            <div>
+                                <div className="row">
+                                <div className="col-sm-6">
+                                    <h6>Product Name : {item.product.name}</h6>
+                                </div>
+
+                                <div className="col-sm-3">
+                                    <h6>Price : {item.product.price}</h6>
+                                </div>
+
+                                <div className="col-sm-3">
+                                    <h6>Quantity : {item.quantity}</h6>
+                                </div>
+                                <br></br>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-3">
+                                            <img src={item.product.imageurl} width="100" height="80"></img>
+                                        </div>
+                            </div>
+                            </div>
+                            )
+                        })
                         return (
-                            <div className="row card" style={{ marginRight: "2%",padding:'1%' }}>
+                            <div  className="row card" style={{ marginRight: "2%", padding: '1%' }}>
                                 <div className="card-body">
-                                    <div className="col-sm-3">
-                                        <img src={item.product.imageurl} width="80" height="80"></img>
-                                    </div>
+                                    {/* <div className="col-sm-3">
+                                            <img src={item.product.imageurl} width="80" height="80"></img>
+                                        </div> */}
                                     <div className="col-sm-9">
                                         <div className="row">
                                             <div className="col-sm-7" style={{ float: "left" }}>
-                                                <h6>Name : {item.product.name}</h6>
+                                                <h6>Orderid : {order.orderid}</h6>
                                             </div>
                                             <div className="col-sm-5" style={{ float: "right" }}>
-                                                Sub-total : ${item.price}
+                                                Pickup : {order.pickupOption}
                                             </div>
                                         </div>
                                         <div className="row">
                                             <div className="col-sm-7">
-                                                <h6>Quantity : {item.quantity}</h6>
+                                                <h6>status : {order.status}</h6>
+                                            </div>
+                                            <div className="col-sm-5">
+                                                <h6>Price : {order.price}</h6>
                                             </div>
                                         </div>
-                                        <div className="row">
-                                            <div className="col-sm-7">
-                                                <h6>Price : {item.product.price}</h6>
-                                            </div>
+                                        <br></br>
+                                        <label style={{ color: "red" }}>Order _Items:</label>
+                                        {newOrder}
 
-                                        </div>
                                     </div>
                                 </div>
 
@@ -142,6 +195,7 @@ class Orders extends Component {
                             </div>
                         )
                     })
+
                 }
                 else {
                     singleOrder = null
@@ -152,7 +206,7 @@ class Orders extends Component {
                         <div>
                             <div>
                                 <div className='row'>
-                                    <div className='col-sm-5'>
+                                    <div className='col-sm-3'>
                                         <label
                                             style={{
                                                 marginLeft: '10px',
@@ -160,14 +214,15 @@ class Orders extends Component {
                                                 color: 'black'
                                             }}
                                         >
-                                            {list[row].store.name}
+                                            {list[row].id}
                                         </label>
                                     </div>
-                                    <div className='col-sm-4'>
+                                    <div className='col-sm-3'>
                                         <label
                                             style={{
                                                 fontSize: '13px',
-                                                color: 'black'
+                                                color: 'black',
+                                                float:"center"
                                             }}
                                         >
                                             {list[row].status}
@@ -177,25 +232,34 @@ class Orders extends Component {
                                     <label
                                         style={{
                                             fontSize: '13px',
-                                            color: 'black'
+                                            color: 'black',
+                                            textAlign:"center"
                                         }}
                                         className='col-sm-3'
                                     >
-                                        $ {list[row].price}
+                                        {list[row].orders.length}
                                     </label>
+
+                                    <div className='col-sm-3'>
+                                        {/* <button className='btn btn-success' >Checkout</button> */}
+
+                                        <button id={list[row].id} type="button" onClick={this.onCheckout} class="btn btn-success" data-toggle="modal" data-target="#myModal">Checkout</button>
+
+
+
+                                    </div>
+
+
+
                                 </div>
                                 {/* <br /> */}
                                 <div style={{ marginLeft: '10px' }} className='row'>
                                     {singleOrder}
-                                    {/* {itemslist( */}
-                                    {/* {list[row].order_items.map(item => {
-                                       
-                                    })}, */}
-                                    {/* list[row].status
-                                    )} */}
+
                                 </div>
                             </div>
                         </div>
+
                     </a>
                 )
             })
@@ -211,21 +275,21 @@ class Orders extends Component {
                         <div className='col-sm-2'>
                             <LeftNavbar />
                         </div>
-                        <div class='split-center_home'>
+                        <div class='split-center_cart'>
                             <div style={{ textAlign: "center" }}>
-                                <h2>Upcoming Orders</h2>
+                                <h2>Pickup Menu</h2>
                             </div>
                             <hr>
                             </hr>
-                            <div style={{paddingLeft:"20px"}} className="row">
-                                <div  className="col-sm-5">
-                                   <b>Store Name</b> 
+                            <div style={{ paddingLeft: "10px" }} className="row">
+                                <div style={{textAlign:"left"}} className="col-sm-3">
+                                    <b>PickUp Id</b>
                                 </div>
-                                <div className="col-sm-4">
-                                   <b>Order Status</b> 
+                                <div style={{textAlign:"left"}} className="col-sm-3">
+                                    <b>Pickup Status</b>
                                 </div>
-                                <div className="col-sm-3">
-                                   <b>Total Price</b> 
+                                <div style={{textAlign:"left"}} className="col-sm-3">
+                                    <b>Orders to Pickup</b>
                                 </div>
                             </div>
                             <hr></hr>
@@ -233,12 +297,29 @@ class Orders extends Component {
                                 <ul class='list-group'>
                                     {orderRecords}
                                 </ul>
+                                <br></br>
+                                <br></br>
+                                <br></br>
+                                <br></br>
+
                             </div>
                         </div>
-                        <div className='col-sm-1' />
+                        {/* <div class='row'> */}
+                        <img src={this.state.qrcode} style={{ float: 'right', marginRight: '8%' }}></img>
+                        {/* </div>
+
+                        <br></br>
+                        
+                        <div class='row'>
+                            {qrcodesuccess}
+                        </div> */}
+
+
                     </div>
+
                 </div>
             </div >
+
         )
     }
 }
@@ -247,4 +328,4 @@ const mapStateToProps = state => {
     return { user: state.user }
 }
 
-export default connect(mapStateToProps)(withRouter(Orders));
+export default connect(mapStateToProps)(withRouter(Pickup));

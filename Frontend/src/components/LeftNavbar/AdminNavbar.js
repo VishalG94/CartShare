@@ -18,14 +18,14 @@ class AdminNavbar extends React.Component {
         </h2>
         <ul style={{ listStyleType: 'none', marginLeft: "-2px" }}>
           <li className='li-profile'>
-            <a href='/home' className='navLink active'>
+            <a href='/stores' className='navLink active'>
               <i class='fas fa-home' />
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <span className='tab'>Home</span>
             </a>
           </li>
           <li className='li-profile'>
-            <a href='#' className='navLink'>
+            <a href='/productsearch' className='navLink'>
               <i class='fas fa-hashtag' />
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <span className='tab'>Search</span>
@@ -38,13 +38,13 @@ class AdminNavbar extends React.Component {
               <span className='tab'>Stores</span>
             </a>
           </li>
-          <li className='li-profile'>
+          {/* <li className='li-profile'>
             <a href='/poolerProfile' className='navLink'>
               <i class='far fa-user' />
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <span className='tab'>Profile</span>
             </a>
-          </li>
+          </li> */}
         </ul>
       </div>
       // </div>

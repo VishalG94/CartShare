@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 // Define a Login Component
-class AddStore extends Component {
+class EditStore extends Component {
   // call the constructor method
   constructor(props) {
     // Call the constrictor of Super class i.e The Component
@@ -29,7 +29,26 @@ class AddStore extends Component {
     } // Bind the handlers to this class // this.usernameChangeHandler = this.usernameChangeHandler.bind(this) // this.passwordChangeHandler = this.passwordChangeHandler.bind(this) // this.submitLogin = this.submitLogin.bind(this)
   } // Call the Will Mount to set the auth Flag to false
 
-
+  componentWillMount(){
+    let { id } = this.props.match.params
+    
+    axios.defaults.withCredentials = true
+    axios
+        .get(`${ROOT_URL}/getstore/${id}`)
+        .then(response => {
+            console.log(response.data.address)
+            // console.log("Received pool details " + response.data.poolId + response.data.name + response.data.neighbourhood + response.data.description + response.data.zipcode);
+            this.setState({
+                // poolid: response.data.poolId,
+                name: response.data.name,
+                street: response.data.address.street,
+                city: response.data.address.city,
+                state:response.data.address.state,
+                zip: response.data.address.zip
+            },()=>{console.log(this.state.name)})
+            this.props.initialize({ name: this.state.name, street: this.state.street, city: this.state.city, state: this.state.state, zip: this.state.zip })
+        })
+  }
 
   inputChangeHandler = e => {
     this.setState({
@@ -39,7 +58,7 @@ class AddStore extends Component {
 
 
   onSubmit = formValues => {
-    console.log("Inside Store Creation" + formValues);
+    console.log("Inside Store Edit" + formValues);
     let data = {
       name: formValues.name,
       address: {
@@ -50,8 +69,11 @@ class AddStore extends Component {
       }
     }
     console.log(data)
+    
     axios.defaults.withCredentials = true;
-    axios.post(`${ROOT_URL}/addstore`, data).then(response => {
+    let { id } = this.props.match.params
+    alert(id)
+    axios.put(`${ROOT_URL}/editstore/${id}`, data).then(response => {
       // update the state with the response data
       this.setState({
         failed: false,
@@ -103,13 +125,13 @@ class AddStore extends Component {
 
     if (this.state.failed) {
       invalidtag = (
-        <label style={{ color: 'red' }}>*Store already exists!</label>
+        <label style={{ color: 'red' }}>*Error in Updating Store!</label>
       )
     }
 
     if (this.state.success) {
       invalidtag = (
-        <label style={{ color: 'green' }}>Successfully created new Store</label>
+        <label style={{ color: 'green' }}>Successfully Updated Store</label>
       )
     }
 
@@ -126,7 +148,7 @@ class AddStore extends Component {
               <div class='login-form'>
                 <div class='panel'>
                   <br></br>
-                  <h2 style={{ marginLeft: '20px' }}>Create a new store</h2>
+                  <h2 style={{ marginLeft: '20px' }}>Edit store</h2>
                   <br></br>
                 </div>
                 <div className='row'>
@@ -175,7 +197,7 @@ class AddStore extends Component {
                         {invalidtag}
                         <br />
                         <button type='submit' class='btn btn-info'>
-                          Create Store
+                          Edit Store
                         </button>
                         <br />
                         <br></br>
@@ -232,5 +254,5 @@ export default connect(
   reduxForm({
     form: 'streamMenu',
     validate: validate
-  })(AddStore)
+  })(EditStore)
 )

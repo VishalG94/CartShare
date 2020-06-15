@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import '../../App.css'
-import './Order.css'
+// import './Order.css'
 import axios from 'axios'
 import { Route, withRouter } from 'react-router-dom';
 import { Redirect } from 'react-router'
@@ -12,9 +12,10 @@ import LeftNavbar from '../LeftNavbar/LeftNavbar'
 import ROOT_URL from '../../constants'
 import UserBanner from '../Banner/UserBanner'
 import { interpolateMagma } from 'd3-scale-chromatic';
+import QRCode from 'qrcode';
 
 // Define a Login Component
-class Orders extends Component {
+class Delivery extends Component {
     // call the constructor method
     constructor(props) {
         super(props)
@@ -27,7 +28,10 @@ class Orders extends Component {
             toggle: false,
             index: "",
             tweets: [],
-            orderDetails: []
+            orderDetails: [],
+            qrcode: [],
+            success:'false'
+
         }
         this.itemslist = this.itemslist.bind(this)
     }
@@ -35,7 +39,8 @@ class Orders extends Component {
     componentWillMount() {
         this.setState({
             authFlag: false,
-            authFailed: false
+            authFailed: false,
+            success:false
         })
         // let useremail = sessionStorage.getItem('email')
         // axios.defaults.withCredentials = true
@@ -45,11 +50,11 @@ class Orders extends Component {
         //     alert(JSON.stringify(response.data))
         //     localStorage.setItem("role",JSON.stringify(response.data.role))
         // })
-}
+    }
 
     componentDidMount() {
         var userId = localStorage.getItem("ID")
-        axios.get(ROOT_URL + '/getorders', {
+        axios.get(ROOT_URL + '/delivery', {
             params: {
                 id: userId
             }
@@ -73,16 +78,45 @@ class Orders extends Component {
 
 
     itemslist = (index) => {
-        console.log("index", index)
+        // console.log("index", index)
         this.setState({
             toggle: !this.state.toggle,
             index: index
         })
     }
 
+
+    onCheckout = (e) => {
+        e.preventDefault();
+        var id = e.target.id
+        console.log("OrderId:",id);
+        // alert(id)
+        // id = JSON.stringify(id)
+        // console.log(id);
+        
+        axios.get(`${ROOT_URL}/delivered/${id}`, {
+        })
+            .then((response) => {
+                alert("Order Succesfully Delivered");
+                this.setState({
+                    status: true,
+                    success:true
+                })
+                window.location.reload();
+                }).catch(error=>{
+                    this.setState({
+                        success:false
+                    })
+            });
+
+
+    }
+
+
     render() {
         let singleOrder = null
         let redirectVar = null
+        // var QRCode;
         if (sessionStorage.getItem('email')) {
             redirectVar = <Redirect to='/home' />
         } else {
@@ -90,24 +124,15 @@ class Orders extends Component {
         }
 
 
-        // let invalidtag = null
-        // if (this.state.authFailed) {
-        //     invalidtag = (
-        //         <label style={{ color: 'red' }}>*Invalid user name password!</label>
-        //     )
-        // }        
-
-
-
         let orderRecords = null
-
-
 
         let list = this.state.orderDetails
         // console.log(list)
         if (list !== null) {
-            orderRecords = Object.keys(list).map(row => {              
-                if (this.state.toggle && list.indexOf(list[row]) === this.state.index) {                  
+            console.log(this.state.orderDetails);
+            orderRecords = Object.keys(list).map(row => {
+                
+                if (this.state.toggle && list.indexOf(list[row]) === this.state.index) {
                     singleOrder = list[row].order_items.map(item => {
                         return (
                             <div className="row card" style={{ marginRight: "2%",padding:'1%' }}>
@@ -146,13 +171,23 @@ class Orders extends Component {
                 else {
                     singleOrder = null
                 }
+                let deliver =null;
+                if(this.state.success){
+                deliver = (
+                    <button class="btn btn-success" data-toggle="modal" data-target="#myModal">Delivered</button>
+
+                )
+                }else{
+                    deliver = ( <button type="button" id={list[row].orderid} type="button" onClick={this.onCheckout} class="btn btn-danger" data-toggle="modal" data-target="#myModal">Deliver</button>
+                    )
+                }
 
                 return (
                     <a href='#' onClick={(e) => { this.itemslist(list.indexOf(list[row])) }} style={{ marginTop: '20px' }} class='list-group-item'>
                         <div>
                             <div>
                                 <div className='row'>
-                                    <div className='col-sm-5'>
+                                    <div className='col-sm-3'>
                                         <label
                                             style={{
                                                 marginLeft: '10px',
@@ -160,17 +195,17 @@ class Orders extends Component {
                                                 color: 'black'
                                             }}
                                         >
-                                            {list[row].store.name}
+                                            {list[row].buyerId.screenName}
                                         </label>
                                     </div>
-                                    <div className='col-sm-4'>
+                                    <div className='col-sm-3'>
                                         <label
                                             style={{
                                                 fontSize: '13px',
                                                 color: 'black'
                                             }}
                                         >
-                                            {list[row].status}
+                                            {list[row].orderid}
                                         </label>
                                     </div>
 
@@ -181,21 +216,35 @@ class Orders extends Component {
                                         }}
                                         className='col-sm-3'
                                     >
-                                        $ {list[row].price}
+                                    {list[row].buyerId.address.street}
+                                    <br></br>
+                                    {list[row].buyerId.address.city}
+                                    <br></br>
+                                    {list[row].buyerId.address.state}
+                                    <br></br>
+                                    {list[row].buyerId.address.zip}
                                     </label>
+
+                                    <div className='col-sm-3'>
+                                        {/* <button className='btn btn-success' >Checkout</button> */}
+
+                                        {/* <button  id={list[row].orderid} type="button" onClick={this.onCheckout} class="btn btn-danger" data-toggle="modal" data-target="#myModal">Delivered</button> */}
+                                        {deliver}
+
+                                       
+                                    </div>
+
+
+
                                 </div>
                                 {/* <br /> */}
                                 <div style={{ marginLeft: '10px' }} className='row'>
                                     {singleOrder}
-                                    {/* {itemslist( */}
-                                    {/* {list[row].order_items.map(item => {
-                                       
-                                    })}, */}
-                                    {/* list[row].status
-                                    )} */}
+
                                 </div>
                             </div>
                         </div>
+
                     </a>
                 )
             })
@@ -213,19 +262,19 @@ class Orders extends Component {
                         </div>
                         <div class='split-center_home'>
                             <div style={{ textAlign: "center" }}>
-                                <h2>Upcoming Orders</h2>
+                                <h2>Orders to Deliver</h2>
                             </div>
                             <hr>
                             </hr>
-                            <div style={{paddingLeft:"20px"}} className="row">
-                                <div  className="col-sm-5">
-                                   <b>Store Name</b> 
-                                </div>
-                                <div className="col-sm-4">
-                                   <b>Order Status</b> 
+                            <div style={{ paddingLeft: "20px" }} className="row">
+                                <div className="col-sm-3">
+                                    <b>Name</b>
                                 </div>
                                 <div className="col-sm-3">
-                                   <b>Total Price</b> 
+                                    <b>OrderId</b>
+                                </div>
+                                <div className="col-sm-3">
+                                    <b>Address</b>
                                 </div>
                             </div>
                             <hr></hr>
@@ -233,12 +282,28 @@ class Orders extends Component {
                                 <ul class='list-group'>
                                     {orderRecords}
                                 </ul>
+                                <br></br>
+                        <br></br>
+                        <br></br>
+                        <br></br>
                             </div>
                         </div>
-                        <div className='col-sm-1' />
+                        {/* <div class='row'> */}
+                            <img src={this.state.qrcode} style={{float:'right', marginRight:'8%'}}></img>
+                        {/* </div>
+
+                        <br></br>
+                        
+                        <div class='row'>
+                            {qrcodesuccess}
+                        </div> */}
+                        
+
                     </div>
+                 
                 </div>
             </div >
+
         )
     }
 }
@@ -247,4 +312,4 @@ const mapStateToProps = state => {
     return { user: state.user }
 }
 
-export default connect(mapStateToProps)(withRouter(Orders));
+export default connect(mapStateToProps)(withRouter(Delivery));

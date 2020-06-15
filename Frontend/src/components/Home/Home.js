@@ -114,7 +114,7 @@ class Home extends Component {
               <LeftNavbar />
             </div>
             <div class='split-center_home'>
-              <div>Header</div>
+              {/* <div>Header</div> */}
               <hr></hr>
             </div>
             <div className='col-sm-1' />

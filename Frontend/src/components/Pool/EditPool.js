@@ -220,9 +220,16 @@ class EditPool extends Component {
 
 const validate = formValues => {
     const error = {}
-    if (!formValues.name) {
-        error.poolid = 'Enter a valid Name'
+    if (!formValues.name || formValues.name.trim() == "") {
+        error.name = 'Enter a valid Name'
     }
+    if (!formValues.description || formValues.description.trim() == "") {
+        error.description = 'Enter valid Description'
+    }
+    if (!formValues.neighbourhood || formValues.neighbourhood.trim() == "") {
+        error.neighbourhood = 'Enter valid Neighbourhood'
+    }
+
     return error
 }
 

@@ -9,10 +9,11 @@ import jwtDecode from 'jwt-decode'
 import Cookies from 'universal-cookie'
 import LeftNavbar from '../LeftNavbar/LeftNavbar'
 // import sampleImg from '../img/GrubhubDetails.jpg'
-import SearchBar from './SearchBar'
+import ProductSearchBar from './ProductSearchBar'
+import AdminNavbar from '../LeftNavbar/AdminNavbar'
 // import UserList from './UserList'
 // Define a Login Component
-class Search extends Component {
+class ProductSearch extends Component {
     // call the constructor method
     constructor(props) {
         super(props)
@@ -87,12 +88,12 @@ class Search extends Component {
             <div>
                 <div className='row'>
                     <div className='col-sm-2'>
-                        <LeftNavbar />
+                        <AdminNavbar />
                     </div>
                     <div class='split-center_home'>
                         <div class='login-form'>
                             <div class='panel'>
-                                <SearchBar />
+                                <ProductSearchBar />
                             </div>
                         </div>
                     </div>
@@ -123,5 +124,5 @@ export default connect(
     reduxForm({
         form: 'streamLogin',
         validate: validate
-    })(Search)
+    })(ProductSearch)
 )

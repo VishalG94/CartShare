@@ -42,9 +42,10 @@ class AddProduct extends Component {
     } // Bind the handlers to this class // this.usernameChangeHandler = this.usernameChangeHandler.bind(this) // this.passwordChangeHandler = this.passwordChangeHandler.bind(this) // this.submitLogin = this.submitLogin.bind(this)
   } // Call the Will Mount to set the auth Flag to false
 
-  async componentWillMount() {
+  componentWillMount() {
     if (this.state.profilepic == '') {
       this.setState({ profilepic: image });
+
     }
 
     axios
@@ -84,24 +85,34 @@ class AddProduct extends Component {
     })
   }
 
-  renderDropdownList = ({ input, ...rest }) =>
+  renderDropdownList = ({ input, ...rest ,meta}) =>
+  <div>
     <DropdownList {...input} {...rest} />
+    {this.renderError(meta)}
+    </div>
 
-  renderMultiselect = ({ input, ...rest }) =>
+  renderMultiselect = ({ input, ...rest,meta }) =>
+  <div>
     <Multiselect {...input}
       onBlur={() => input.onBlur()}
       value={input.value || []} // requires value to be an array
       {...rest} />
+      {this.renderError(meta)}
+      </div>
 
   // renderSelectList = ({ input, ...rest }) =>
   //   <SelectList {...input} onBlur={() => input.onBlur()} {...rest} />
 
 
   imageChangeHandler = e => {
+    if(e.target.files){
     this.setState({
       file: e.target.files[0],
       profilepic: URL.createObjectURL(e.target.files[0])
     })
+  }else{
+    this.setState({file:image})
+  }
     console.log(e.target.files[0])
   }
 
@@ -129,7 +140,7 @@ class AddProduct extends Component {
       const config = {
         headers: { 'content-type': 'multipart/form-data' }
       }
-
+      
       let data = {
         id: {
           storeId: store_id[i],
@@ -150,7 +161,7 @@ class AddProduct extends Component {
           this.setState({
             failed: false,
             success: true,
-            profilepic: response.data.imageurl
+            // profilepic: response.data.imageurl
           })
           console.log(response.data);
           window.location.reload(true)
@@ -166,7 +177,10 @@ class AddProduct extends Component {
 
 
 
+   required = value => value ? undefined : 'Required'
 
+  number = value => value && isNaN(Number(value)) ? 'Must be a number' : undefined
+   
   renderError = ({ error, touched }) => {
     if (touched && error) {
       return (
@@ -176,6 +190,16 @@ class AddProduct extends Component {
       )
     }
   }
+
+  // renderField = ({ input, label, type, meta: { touched, error, warning } }) => (
+  //   <div>
+  //     <label>{label}</label>
+  //     <div>
+  //       <input {...input} placeholder={label} type={type}/>
+  //       {touched && ((error && <span>{error}</span>) || (warning && <span>{warning}</span>))}
+  //     </div>
+  //   </div>
+  // )
 
   renderInput = ({ input, label, meta, className = { className } }) => {
     return (
@@ -202,7 +226,7 @@ class AddProduct extends Component {
     // console.log(this.state)
     if (this.state.failed) {
       invalidtag = (
-        <label style={{ color: 'red' }}>*Product already exists!</label>
+        <label style={{ color: 'red' }}>Error in creating product!</label>
       )
     }
 
@@ -213,6 +237,8 @@ class AddProduct extends Component {
     }
 
     const units = ['Piece', 'Pound', 'Oz']
+
+    
 
 
 
@@ -247,7 +273,7 @@ class AddProduct extends Component {
                           component={this.renderInput}
                           // onChange={this.inputChangeHandler}
                           label='Name'
-                        // validate={required}
+                        validate={this.required}
                         />
                         <br />
                         <Field
@@ -256,6 +282,7 @@ class AddProduct extends Component {
                           component={this.renderInput}
                           // onChange={this.inputChangeHandler}
                           label='Description'
+                          validate={this.required}
                         />
                         <br />
                         <Field
@@ -264,16 +291,35 @@ class AddProduct extends Component {
                           component={this.renderInput}
                           // onChange={this.inputChangeHandler}
                           label='Brand'
+                          validate={this.required}
                         />
                         <br />
+
                         <Field
                           name='price'
                           type='number'
+                          min="0"
                           component={this.renderInput}
                           // onChange={this.inputChangeHandler}
-                          label='price'
+                          label='Price'
+                          validate={this.required,this.number}
                         />
                         <br />
+                        {/* <label style={{color:"rgb(107, 107, 131)"}}>Price </label><br></br>
+                        <input
+                        style={{width:"100%",borderRadius: "4px",
+                        border: "1px solid #ccc",height:"40px"}}
+                          name='price'
+                          type='number'
+                          min="0"
+                          component={this.renderInput}
+                          // validate={this.required}
+                          required
+                          // onChange={this.inputChangeHandler}
+                          // label='price'
+                        />
+                        <br />
+                        <br/> */}
                         <div style={{ color: '#6b6b83' }}>
                           Unit
                         </div>
@@ -283,6 +329,7 @@ class AddProduct extends Component {
                           component={this.renderDropdownList}
                           // onChange={this.inputChangeHandler}
                           data={units}
+                          validate={this.required}
                           style={{
                             width: "100%",
                             border: "solid #ffffff",
@@ -292,6 +339,7 @@ class AddProduct extends Component {
                           }}
                           valueField="value"
                           textField="unit" />
+                          
                         <br />
                         <div style={{ color: '#6b6b83' }}>
                           Available Stores
@@ -301,6 +349,7 @@ class AddProduct extends Component {
                           component={this.renderMultiselect}
                           // onChange={this.inputChangeHandler}
                           defaultValue={[]}
+                          validate={this.required}
                           // onBlur={() => this.props.onBlur()}
                           style={{
                             // width: "100%",
@@ -315,7 +364,7 @@ class AddProduct extends Component {
                         <br />
                         {invalidtag}
                         <br />
-                        <button type='submit' class='btn btn-info'
+                        <button type='submit' disabled={pristine || submitting} class='btn btn-info'
                         >
                           Create Product
                         </button>
@@ -392,7 +441,8 @@ const validate = formValues => {
 
 
 AddProduct = reduxForm({
-  form: 'reactWidgets',  // a unique identifier for this form
+  form: 'reactWidgets',
+    // a unique identifier for this form
 })(AddProduct)
 
 export default AddProduct

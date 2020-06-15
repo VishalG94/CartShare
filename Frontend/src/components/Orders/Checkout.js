@@ -12,6 +12,7 @@ import LeftNavbar from '../LeftNavbar/LeftNavbar'
 import ROOT_URL from '../../constants'
 import UserBanner from '../Banner/UserBanner'
 import { interpolateMagma } from 'd3-scale-chromatic';
+import { history } from "../utils/Utils"
 
 // Define a Login Component
 class Checkout extends Component {
@@ -28,7 +29,8 @@ class Checkout extends Component {
             index: "",
             tweets: [],
             orderDetails: [],
-            value: ''
+            value: '',
+            contributioncredit:''
         }
         this.itemslist = this.itemslist.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
@@ -48,6 +50,16 @@ class Checkout extends Component {
             },
             userid: localStorage.getItem("ID")
         }
+        let id =  localStorage.getItem("ID")
+        axios.get(`${ROOT_URL}/users/${id}`)
+            .then((response) => {
+                this.setState({
+                    // orderDetails: response.data
+                    contributioncredit:response.data
+                });
+                console.log("Order Details are ", response.data)
+
+            });
 
 
         axios.get(ROOT_URL + '/getpoolorders', {
@@ -92,12 +104,13 @@ class Checkout extends Component {
     onSubmit = (e) => {
         e.preventDefault();
 
-        if (document.getElementById('selectNumber').value != "Choose a number") {
+        // if (document.getElementById('selectNumber').value != "Choose a number") {
 
             axios.defaults.withCredentials = true
             console.log("Number of Orders to pickup ", document.getElementById('selectNumber').value)
             let data = JSON.parse(sessionStorage.getItem("order"))
             let userId = localStorage.getItem("ID")
+            
             axios.post(`${ROOT_URL}/addorder`, data, {
                 params:
                 {
@@ -114,8 +127,12 @@ class Checkout extends Component {
                 alert("Order succesfully placed")
                 sessionStorage.removeItem("order_items")
                 sessionStorage.removeItem("order")
+                // window.location.reload()
+                history.push('/orders')
+
                 window.location.reload()
                 console.log('Axios post:', response.data);
+
             }).catch(error => {
                 console.log(error);
                 this.setState({
@@ -125,11 +142,12 @@ class Checkout extends Component {
             });
 
 
-        }
-        else {
-            alert('Add atleast one product to the cart before checkouts!')
-        }
+        // }
+        // else {
+        //     alert('Add atleast one product to the cart before checkouts!')
+        // }
     }
+    
 
     render() {
         let singleOrder = null
@@ -148,7 +166,7 @@ class Checkout extends Component {
 
         // }
 
-
+        
         var select = document.getElementById("selectNumber");
 
         // while (select.hasChildNodes()) {
@@ -192,7 +210,7 @@ class Checkout extends Component {
 
 
         let list = this.state.orderDetails
-        // console.log(list)
+        console.log(list[0])
         if (list !== null) {
             orderRecords = Object.keys(list).map(row => {
                 if (this.state.toggle && list.indexOf(list[row]) === this.state.index) {
@@ -223,6 +241,7 @@ class Checkout extends Component {
                                             </div>
 
                                         </div>
+                                       
                                     </div>
                                 </div>
 
@@ -272,12 +291,25 @@ class Checkout extends Component {
                                         >
                                             $ {list[row].price}
                                         </label>
+                                        <label
+                                            style={{
+                                                fontSize: '13px',
+                                                color: 'black',
+                                                marginLeft: "25px"
+                                            }}
+
+                                        >
+                                            {list[row].orderTime}
+                                        </label>
                                     </div>
 
                                 </div>
                                 {/* <br /> */}
+
                                 <div style={{ marginLeft: '10px' }} className='row'>
+                                    
                                     {singleOrder}
+                                    
                                     {/* {itemslist( */}
                                     {/* {list[row].order_items.map(item => {
                                        
@@ -285,6 +317,7 @@ class Checkout extends Component {
                                     {/* list[row].status
                                     )} */}
                                 </div>
+                                
                             </div>
                         </div>
                     </a>
@@ -309,8 +342,10 @@ class Checkout extends Component {
                                 <h5>If yes, Please select number of orders you would like to pick </h5>
                                 <form id="myForm" onSubmit={this.onSubmit} >
                                     <div style={{ marginBottom: "10px" }}>
+                                        <label>Choose number of orders to pick</label>
                                         <select id="selectNumber" >
-                                            <option>Choose a number</option>
+
+                                            <option>0</option>
 
                                         </select>
                                     </div>
@@ -342,7 +377,13 @@ class Checkout extends Component {
                                 <ul class='list-group'>
                                     {orderRecords}
                                 </ul>
+                                <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
                             </div>
+
                         </div>
                         <div className='col-sm-1' />
                     </div>

@@ -5,7 +5,7 @@ import Home from './Home/Home'
 import SignUp from './SignUp/SignUp'
 import Navbar from './LandingPage/Navbar'
 import Pool from './Pool/Pool'
-
+import ContributionCredit from './ContributionCredit/ContributionCredit'
 import AddStore from './AddStore/AddStore'
 import Checkout from './Orders/Checkout'
 //import PrivateRoute from '../lib/PrivateRoute'
@@ -27,6 +27,14 @@ import EditProduct from './AddProduct/EditProduct'
 import UserProfile from './Profile/UserProfile'
 import MessagePooler from './Pool/MessagePooler'
 import EditPool from './Pool/EditPool'
+import PastOrders from './PastOrders/PastOrders'
+import Pickup from './Pickup/Pickup'
+import Delivery from './Delivery/Delivery'
+import ProductSearch from './ProductSearch/ProductSearch'
+import ProductSearchBar from './ProductSearch/ProductSearchBar'
+import EditStore from './AddStore/EditStore'
+
+
 
 // Create a Main Component
 
@@ -42,6 +50,7 @@ class Main extends Component {
         <Route path="/verifyaccount/:ID" render={(match) => (<VerifyAccount {...match} />)} />
         <Route path='/signupdetails/:email' component={SignupDetails} />
         <Route path='/addstore' component={AddStore} />
+        <Route path='/editstore/:id' component={EditStore} />
         <Route path='/addproduct' component={AddProduct} />
         <Route path='/stores' component={AdminHome} />
         <Route path='/products/:id' component={ProductsDisplay} />
@@ -59,6 +68,11 @@ class Main extends Component {
         <Route path='/messagepooler' component={MessagePooler} />
         <Route path='/editpool' component={EditPool} />
         <Route path='/editproduct' component={EditProduct} />
+        <Route path='/pastorders' component={PastOrders} />
+        <Route path='/pickupmenu' component={Pickup} />
+        <Route path='/delivery' component={Delivery} />
+        <Route path='/productsearch' component={ProductSearchBar} />
+        <Route path='/contributioncredit' component={ContributionCredit} />
       </div>
     )
   }

@@ -38,26 +38,16 @@ class EditProduct extends Component {
       success: false,
       file: '',
       data: '',
-      profilepic: ''
+      profilepic: '',
+      pb:''
     } // Bind the handlers to this class // this.usernameChangeHandler = this.usernameChangeHandler.bind(this) // this.passwordChangeHandler = this.passwordChangeHandler.bind(this) // this.submitLogin = this.submitLogin.bind(this)
   } // Call the Will Mount to set the auth Flag to false
 
-  async componentWillMount() {
+  componentWillMount() {
     if (this.state.profilepic == '') {
       this.setState({ profilepic: image });
     }
 
-    axios
-      .get(`${ROOT_URL}/getmaxsku`, { params: '' })
-      .then(response => {
-        // console.log(response)
-        // console.log("Inside Product Creation" + JSON.stringify(response.data));
-        let newSku = response.data;
-        // alert("Sku: "+newSku);
-        this.setState({ sku: newSku });
-      }).catch(error => {
-        console.log(error);
-      })
 
     axios.defaults.withCredentials = true
     axios
@@ -76,6 +66,31 @@ class EditProduct extends Component {
         })
       })
 
+      axios.defaults.withCredentials = true
+    axios
+      .get(`${ROOT_URL}/getproducts`, { params: '' })
+      .then(response => {
+        
+        // console.log(response)
+        // console.log("Inside Product Creation" + JSON.stringify(response.data));
+       let x = JSON.parse(localStorage.getItem('ProductBanner'))
+
+        this.setState({ storeDetails: response.data ,
+          pb: x
+          });
+        console.log(response.data);
+        
+        let data1 = (response.data).map(store => {
+          return store.name;
+        })
+        console.log(data1);
+        this.setState({
+          store: data1
+        })
+      })
+
+      
+
   }
 
   inputChangeHandler = e => {
@@ -84,14 +99,33 @@ class EditProduct extends Component {
     })
   }
 
-  renderDropdownList = ({ input, ...rest }) =>
-    <DropdownList {...input} {...rest} />
+  // renderDropdownList = ({ input, ...rest }) =>
+  //   <DropdownList {...input} {...rest} />
 
-  renderMultiselect = ({ input, ...rest }) =>
+  // renderMultiselect = ({ input, ...rest }) =>
+  //   <Multiselect {...input}
+  //     onBlur={() => input.onBlur()}
+  //     value={input.value || []} // requires value to be an array
+  //     {...rest} />
+
+  renderDropdownList = ({ input, ...rest ,meta}) =>
+  <div>
+    <DropdownList {...input} {...rest} />
+    {this.renderError(meta)}
+    </div>
+
+  renderMultiselect = ({ input, ...rest,meta }) =>
+  <div>
     <Multiselect {...input}
       onBlur={() => input.onBlur()}
       value={input.value || []} // requires value to be an array
       {...rest} />
+      {this.renderError(meta)}
+      </div>
+
+required = value => value ? undefined : 'Required'
+
+number = value => value && isNaN(Number(value)) ? 'Must be a number' : undefined
 
   // renderSelectList = ({ input, ...rest }) =>
   //   <SelectList {...input} onBlur={() => input.onBlur()} {...rest} />
@@ -108,64 +142,57 @@ class EditProduct extends Component {
 
 
   onSubmit = e => {
-    console.log(this.state.storeDetails)
+    // console.log(this.state.storeDetails)
 
-    // console.log("Inside Product Creation" + JSON.stringify(formData));
-    let storeNameList = e.stores;
-    console.log("storeNameList: " + storeNameList);
-    let storesSelected = (this.state.storeDetails).filter(storeName => {
-      return storeNameList.includes(storeName.name);
-    })
-    console.log("storesSelected: " + JSON.stringify(storesSelected));
-    let store_id = storesSelected.map((store) => { return store.id });
-    for (let i = 0; i < store_id.length; i++) {
-      let formData = new FormData();
+    
 
-      formData.append('files', this.state.file)
-
-      for (var value of formData.values()) {
-        console.log(value);
-      }
-      const config = {
-        headers: { 'content-type': 'multipart/form-data' }
-      }
-
-      let data = {
-        id: {
-          storeId: store_id[i],
-          sku: this.state.sku
-        },
-        name: e.name,
-        description: e.description,
-        brand: e.brand,
-        file: e.file,
-        price: e.price,
-        unit: e.unit,
-      }
-      console.log(JSON.stringify(data));
-      formData.append('data', JSON.stringify(data));
-      axios.defaults.withCredentials = true;
-      axios.post(`${ROOT_URL}/EditProduct`, formData, config)
-        .then(response => {
-          this.setState({
-            failed: false,
-            success: true,
-            profilepic: response.data.imageurl
-          })
-          console.log(response.data);
-          window.location.reload(true)
-        }).catch(error => {
-          console.log(error);
-          this.setState({
-            failed: true,
-            success: false
-          })
-        });
+    let formData = new FormData();
+    formData.append('files', this.state.file)
+    for (var value of formData.values()) {
+      console.log(value);
     }
+    const config = {
+      headers: { 'content-type': 'multipart/form-data' }
+    }
+    let y = JSON.parse(localStorage.getItem('ProductBanner'))
+    console.log(y.id.storeId)
+    let data = {
+      id: {
+        storeId: y.id.storeId,
+        sku: y.id.sku
+      },
+      name: e.name,
+      description: e.description,
+      brand: e.brand,
+      file: e.file,
+      price: e.price,
+      unit: e.unit,
+    }
+    console.log(JSON.stringify(data));
+    formData.append('data', JSON.stringify(data));
+    
+    
+   
+   
+    axios.defaults.withCredentials = true;
+    axios.put(`${ROOT_URL}/editproduct`, formData, config, { 
+    }).then(response => {
+      // update the state with the response data
+      this.setState({
+        result: response.data,
+        toggle:true,
+        success:true,
+        // storesuccess:false
+      })
+      console.log('Axios post:', response.data);
+    }).catch(error => {
+      console.log(error);
+      this.setState({
+        failed: true,
+        success:false
+      })
+    });
   }
-
-
-
 
   renderError = ({ error, touched }) => {
     if (touched && error) {
@@ -202,13 +229,13 @@ class EditProduct extends Component {
     // console.log(this.state)
     if (this.state.failed) {
       invalidtag = (
-        <label style={{ color: 'red' }}>*Product already exists!</label>
+        <label style={{ color: 'red' }}>*Issue with Editing Product!</label>
       )
     }
 
     if (this.state.success) {
       invalidtag = (
-        <label style={{ color: 'green' }}>Successfully created new Product</label>
+        <label style={{ color: 'green' }}>Successfully Updated the Product</label>
       )
     }
 
@@ -229,7 +256,7 @@ class EditProduct extends Component {
               <div class='login-form'>
                 <div class='panel'>
                   <br></br>
-                  <h2 style={{ marginLeft: '20px' }}>Add new Product</h2>
+                  <h2 style={{ marginLeft: '20px' }}>Edit Product</h2>
                   <hr></hr>
                 </div>
                 <div className='row'>
@@ -241,48 +268,73 @@ class EditProduct extends Component {
                     >
                       <div style={{ marginLeft: '10%' }}>
                         {/* <br /> */}
+                      <label>Name : {this.state.pb.name}</label>
                         <Field
                           name='name'
                           type='text'
                           component={this.renderInput}
                           // onChange={this.inputChangeHandler}
-                          label='Name'
+                          validate={this.required}
                         // validate={required}
                         />
+                        
                         <br />
+                        <label>Description : {this.state.pb.description}</label>
                         <Field
                           name='description'
                           type='text'
                           component={this.renderInput}
+                          validate={this.required}
                           // onChange={this.inputChangeHandler}
-                          label='Description'
+                          // label='Description'
                         />
                         <br />
+                        <label>Brand : {this.state.pb.brand}</label>
                         <Field
                           name='brand'
                           type='text'
                           component={this.renderInput}
+                          validate={this.required}
                           // onChange={this.inputChangeHandler}
-                          label='Brand'
+                          // label='Brand'
                         />
                         <br />
+                        {/* <label>Price : {this.state.pb.price}</label><br></br>
+                        <input
+                        style={{width:"100%",borderRadius: "4px",
+                        border: "1px solid #ccc",height:"40px"}}
+                          name='price'
+                          type='number'
+                          min="0"
+                          component={this.renderInput}
+                          required
+                          // onChange={this.inputChangeHandler}
+                          // label='price'
+                        />
+                        <br />
+                        <br/> */}
                         <Field
                           name='price'
                           type='number'
+                          min="0"
                           component={this.renderInput}
                           // onChange={this.inputChangeHandler}
-                          label='price'
+                          label='Price'
+                          validate={this.required,this.number}
                         />
                         <br />
-                        <div style={{ color: '#6b6b83' }}>
+                        
+                        {/* <div style={{ color: '#6b6b83' }}>
                           Unit
-                        </div>
+                        </div> */}
+                        <label>Unit : {this.state.pb.unit}</label>
 
                         <Field
                           name="unit"
                           component={this.renderDropdownList}
                           // onChange={this.inputChangeHandler}
                           data={units}
+                          validate={this.required}
                           style={{
                             width: "100%",
                             border: "solid #ffffff",
@@ -293,31 +345,11 @@ class EditProduct extends Component {
                           valueField="value"
                           textField="unit" />
                         <br />
-                        {/* <div style={{ color: '#6b6b83' }}>
-                          Available Stores
-                        </div>
-                        <Field
-                          name="stores"
-                          component={this.renderMultiselect}
-                          // onChange={this.inputChangeHandler}
-                          defaultValue={[]}
-                          // onBlur={() => this.props.onBlur()}
-                          style={{
-                            // width: "100%",
-                            border: "solid #ffffff",
-                            borderRadius: "4px",
-                            fontSize: "14px",
-                            // height: "50px",
-                            // lineHeight: "50px",
-                            fontFamily: "graphik"
-                          }}
-                          data={this.state.store} />
-                        <br /> */}
                         {invalidtag}
                         <br />
-                        <button type='submit' class='btn btn-info'
+                        <button type='submit' disabled={pristine || submitting} class='btn btn-info'
                         >
-                          Create Product
+                          Edit Product
                         </button>
 
                         <br />
@@ -339,13 +371,13 @@ class EditProduct extends Component {
                         class='preview-img-box'
                         // src='http://simpleicon.com/wp-content/uploads/account.png'
                         src={this.state.profilepic}
-                        style={{ marginLeft: "30%", marginTop: "30%",backgroundColor:'white' }}
+                        style={{ marginLeft: "30%", marginTop: "30%", backgroundColor: 'white' }}
                         alt='Preview Image'
                         width='200'
                         height='200'
                       />
                       <div style={{ marginLeft: "42%" }}>
-                      <br></br>
+                        <br></br>
                         <input
                           type='file'
                           name='myImage'

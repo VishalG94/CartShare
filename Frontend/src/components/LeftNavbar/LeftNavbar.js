@@ -17,18 +17,25 @@ class LeftNavbar extends React.Component {
           </span>
         </h2>
         <ul style={{ listStyleType: 'none', marginLeft: "-2px" }}>
-          <li className='li-profile'>
+          {/* <li className='li-profile'>
             <a href='/home' className='navLink active'>
               <i class='fas fa-home' />
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <span className='tab'>Home</span>
             </a>
-          </li>
+          </li> */}
           <li className='li-profile'>
             <a href='/search' className='navLink'>
               <i class='fas fa-hashtag' />
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <span className='tab'>Search</span>
+            </a>
+          </li>
+          <li className='li-profile'>
+            <a href='/orders' className='navLink'>
+              <i class="fas fa-calendar-week"></i>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <span className='tab'>Upcoming orders</span>
             </a>
           </li>
           <li className='li-profile'>
@@ -39,17 +46,17 @@ class LeftNavbar extends React.Component {
             </a>
           </li>
           <li className='li-profile'>
-            <a href='/poolerPastOrders' className='navLink'>
-              <i class="fas fa-history"></i>
+            <a href='/delivery' className='navLink'>
+              <i class="fas fa-truck-pickup"></i>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <span className='tab'>Past orders</span>
+              <span className='tab'>Delivery</span>
             </a>
           </li>
           <li className='li-profile'>
-            <a href='/poolerUpcomingOrders' className='navLink'>
-              <i class="fas fa-calendar-week"></i>
+            <a href='/pastorders' className='navLink'>
+              <i class="fas fa-history"></i>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <span className='tab'>Upcoming orders</span>
+              <span className='tab'>Past orders</span>
             </a>
           </li>
           <li className='li-profile'>

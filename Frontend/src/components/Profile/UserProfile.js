@@ -166,6 +166,7 @@ class UserProfile extends Component {
                                                     value="nvm"
                                                     component={this.renderInput}
                                                     label='Nick Name'
+                                                    
                                                 />
                                                 <br />
                                                 <Field
@@ -197,8 +198,8 @@ class UserProfile extends Component {
 
 const validate = formValues => {
     const error = {}
-    if (!formValues.nickname) {
-        error.poolid = 'Enter a valid Nickname'
+    if (!formValues.nickname || formValues.nickname.trim() == "") {
+        error.nickname = 'Enter a valid Nickname'
     }
     return error
 }
