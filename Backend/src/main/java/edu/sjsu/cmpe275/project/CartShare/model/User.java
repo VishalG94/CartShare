@@ -55,9 +55,11 @@ public class User implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "approver")
 	private List<Request> requests = new ArrayList<>();
 
-	// @OneToMany
-	// @JoinColumn()
-	// private List<Order> pickup_orders;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pickupPerson")
+	private List<Pickup> pickup_orders;
+
+	@Embedded
+	private Address address;
 
 	public User() {
 	}
@@ -179,4 +181,11 @@ public class User implements Serializable {
 		this.requests = requests;
 	}
 
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
 }

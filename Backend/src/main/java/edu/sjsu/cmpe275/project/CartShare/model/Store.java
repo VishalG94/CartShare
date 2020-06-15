@@ -2,10 +2,10 @@ package edu.sjsu.cmpe275.project.CartShare.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table (name = "stores")
@@ -22,11 +22,12 @@ public class Store implements Serializable{
 
 	 @Embedded
 	 private Address address;
+
 	 @JsonIgnoreProperties({"store"})
 	 @OneToMany(fetch = FetchType.EAGER, mappedBy = "store", orphanRemoval = true, cascade = CascadeType.PERSIST)
 	 private List<Product> products;
 
-	 @OneToMany(fetch = FetchType.LAZY, mappedBy = "store",orphanRemoval = true, cascade = CascadeType.PERSIST)
+	 @OneToMany(fetch = FetchType.LAZY, mappedBy = "store")
 	 private List<Order> orders;
 	 
 	public long getId() {

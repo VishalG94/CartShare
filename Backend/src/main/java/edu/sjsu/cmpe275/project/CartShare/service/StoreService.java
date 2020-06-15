@@ -1,16 +1,16 @@
 package edu.sjsu.cmpe275.project.CartShare.service;
 
-import edu.sjsu.cmpe275.project.CartShare.model.Product;
+import edu.sjsu.cmpe275.project.CartShare.model.Order;
+import edu.sjsu.cmpe275.project.CartShare.model.Store;
+import edu.sjsu.cmpe275.project.CartShare.repository.OrderItemsRepository;
+import edu.sjsu.cmpe275.project.CartShare.repository.OrderRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.ProductRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.StoreRepository;
-import edu.sjsu.cmpe275.project.CartShare.model.Address;
-import edu.sjsu.cmpe275.project.CartShare.model.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +20,11 @@ public class StoreService {
 
     @Autowired
     private StoreRepository storeRepository;
+    @Autowired
+    private OrderItemsRepository orderItemsRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
 
     @Autowired
     private ProductRepository productRepository;
@@ -35,21 +40,52 @@ public class StoreService {
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(store);
     }
 
-    public ResponseEntity<?> deletStore(Long id) {
+
+    public ResponseEntity<?> getStoreById(Long id) {
+        System.out.printf("inside getProduct : ", id);
+        Optional<Store> store = storeRepository.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(store.get());
+    }
+
+    public ResponseEntity<?> deleteStore(Long id) {
         System.out.println("inside delete store service");
         System.out.println("id"+id);
         Optional<Store> newstore = storeRepository.findById(id);
-        if (!newstore.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error : Store Not Found");
+        System.out.println(newstore.get().getName());
+        Optional<List<Order>> orders = orderRepository.findOrdersByStore(id);
+//        System.out.println(orders.get().size());
+        if (orders.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error : Unfulfilled Orders");
         }
-
-        Optional<List<Product>> productlist = Optional.ofNullable(newstore.get().getProducts());
-//        if(productlist.isPresent()){
-//            productRepository.
-//        }
-
         storeRepository.delete(newstore.get());
 
-        return ResponseEntity.status(HttpStatus.OK).body(newstore.get());
+        return ResponseEntity.status(HttpStatus.OK).body("SuccessFully Deleted");
+    }
+    public ResponseEntity<?> editStore(Long id, Store store) {
+        System.out.println("product: "+ store.toString());
+//        ProductId id = store.getId();
+//        System.out.println(id.getStoreId());
+        Optional<Store> validStore;
+        validStore = Optional.ofNullable(storeRepository.findByName(store.getName()));
+        if (validStore.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Bad Parameter | Store with this name already exists.");
+        }
+        System.out.println(store.getId());
+        Optional<Store> newstore = storeRepository.findById(id);
+        System.out.println("city: "+store.getAddress().getCity());
+
+        if(newstore.isPresent()){
+            System.out.println("Inside new store: "+newstore.get().getId());
+//            newstore.get().setId(store.getId());
+            newstore.get().setName(store.getName());
+            newstore.get().getAddress().setStreet(store.getAddress().getStreet());
+            newstore.get().getAddress().setCity(store.getAddress().getCity());
+            newstore.get().getAddress().setState(store.getAddress().getState());
+            newstore.get().getAddress().setZip(store.getAddress().getZip());
+            storeRepository.saveAndFlush(newstore.get());
+            return ResponseEntity.status(HttpStatus.OK).body(newstore.get());
+        }
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Error in Updatng Store");
     }
 }

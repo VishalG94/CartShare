@@ -1,35 +1,23 @@
 package edu.sjsu.cmpe275.project.CartShare.controller;
 
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyValueException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import edu.sjsu.cmpe275.project.CartShare.exception.CustomException;
 import edu.sjsu.cmpe275.project.CartShare.model.Pool;
-import edu.sjsu.cmpe275.project.CartShare.model.Request;
 import edu.sjsu.cmpe275.project.CartShare.model.User;
 import edu.sjsu.cmpe275.project.CartShare.repository.PoolRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.UserRepository;
 import edu.sjsu.cmpe275.project.CartShare.service.EmailService;
 import edu.sjsu.cmpe275.project.CartShare.service.UserService;
 import edu.sjsu.cmpe275.project.CartShare.utils.EmailUtility;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyValueException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -54,6 +42,9 @@ public class UserSignupController {
     @ResponseBody
     public ResponseEntity<String> registration(@Valid @RequestBody User user) throws URISyntaxException {
         System.out.println("Body sent : " + user.getEmail());
+//        Address add = user.getAddress();
+        System.out.println("Body sent : ");
+
         User existingUser = userService.findByEmail(user.getEmail());
         if (existingUser != null) {
             System.out.println("User exists");
@@ -191,9 +182,13 @@ public class UserSignupController {
         String userRole = user.getRole();
         Pool pool = user.getPool();
         String poolName = pool.getName();
+        String poolId = pool.getPoolId();
+
         List<String> ret = new ArrayList<>();
         ret.add(userRole);
         ret.add(poolName);
+        ret.add(poolId);
+        ret.add(String.valueOf(pool.getPoolers().size()));
         return ret;
     }
 

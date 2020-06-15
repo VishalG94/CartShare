@@ -1,11 +1,9 @@
 package edu.sjsu.cmpe275.project.CartShare.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table (name = "order_items")
@@ -122,9 +120,9 @@ public class Order_Items {
 
 	@Override
 	public String toString() {
-		return "Order_Items [id=" + id + ", order=" + order + ", product=" + product + ", quantity=" + quantity
-				+ ", price=" + price + ", status=" + status + ", orderTime=" + orderTime + "]";
-	}	
+		return "Order_Items [id=" + id + " , itemName=" + product.getName() + ", itemimage=" + product.getImageurl() + ", quantity=" + quantity
+				+ ", price=" + price + "]";
+	}
 	
 	 @Override
 	    public boolean equals(Object o) {

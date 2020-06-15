@@ -1,17 +1,16 @@
 package edu.sjsu.cmpe275.project.CartShare.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import edu.sjsu.cmpe275.project.CartShare.model.Pool;
+import edu.sjsu.cmpe275.project.CartShare.model.User;
+import edu.sjsu.cmpe275.project.CartShare.repository.PoolRepository;
+import edu.sjsu.cmpe275.project.CartShare.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import edu.sjsu.cmpe275.project.CartShare.model.Pool;
-import edu.sjsu.cmpe275.project.CartShare.model.User;
-import edu.sjsu.cmpe275.project.CartShare.repository.PoolRepository;
-import edu.sjsu.cmpe275.project.CartShare.repository.UserRepository;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PoolService {
@@ -57,7 +56,8 @@ public class PoolService {
     }
 
     public ResponseEntity<?> deletePool(String id, String screenname) {
-        System.out.println("inside delete pool service");
+        System.out.println("inside delete pool service"+id + screenname);
+
         Pool pool = poolRepository.findBypoolId(id);
         if (pool.getPoolers().size() > 1) {
             return new ResponseEntity<>("{\"status\" : \" There are poolers in this pool!!\"}",
@@ -67,7 +67,18 @@ public class PoolService {
         // pool.getPoolers().remove(user);
         // user.setPool(null);
         // userRepository.save(user);
-        poolRepository.delete(pool);
+
+        Optional<User> usernew = Optional.ofNullable(userRepository.findByscreenName(screenname));
+        System.out.println("user"+usernew);
+        if(!usernew.isPresent()){
+            return new ResponseEntity<>("{\"status\" : \" Pool Doesn't exist\"}",
+                    HttpStatus.METHOD_NOT_ALLOWED);
+        }
+
+        usernew.get().setPool(null);
+        usernew.get().setRole("User");
+        userRepository.saveAndFlush(usernew.get());
+        poolRepository.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body(pool);
     }
 

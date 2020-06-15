@@ -1,8 +1,7 @@
 package edu.sjsu.cmpe275.project.CartShare.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public class Pool implements Serializable {
 	// private List<Order> orders;
 	//
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "pool")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "pool")
 	private List<Order> orders;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "pool")
