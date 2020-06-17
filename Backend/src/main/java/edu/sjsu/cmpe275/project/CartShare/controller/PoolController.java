@@ -78,10 +78,8 @@ public class PoolController {
             throws InvalidConfigurationPropertyValueException {
         Pool pool = poolRepository.findById(id).orElseThrow(
                 () -> new InvalidConfigurationPropertyValueException("", null, "User not found on :: " + id));
-        System.out.println("jijojoklonojnkmk");
         List<User> newList = pool.getPoolers();
         System.out.println(newList);
-        // newList.stream().forEach(System.out::println);
         for (User leave : newList) {
             System.out.println("In pool list " + leave.getEmail());
         }

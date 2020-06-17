@@ -26,7 +26,6 @@ public class OrderController {
             @RequestParam Long userId,
             @RequestParam(required = false) Long pickupOrder,
             HttpServletRequest request) throws JSONException {
-
         System.out.println("Buyer ID is "+userId);
         System.out.println("Order Count is "+pickupOrder);
         return orderService.addOrder(order,userId, Optional.ofNullable(pickupOrder));

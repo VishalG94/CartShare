@@ -7,6 +7,8 @@ import edu.sjsu.cmpe275.project.CartShare.repository.OrderRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.ProductRepository;
 import edu.sjsu.cmpe275.project.CartShare.repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,10 +42,13 @@ public class StoreService {
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(store);
     }
 
-
+//    @CacheEvict(value="store-cache", key="'StoreCache'+#id",beforeInvocation = true)
+//    @Cacheable(value = "fifteen-min-cache", key = "'StoreCache'+#id", condition = "#isCachable!=null && isCachable")
+    @Cacheable(value = "fifteen-min-cache", key = "'StoreCache'+#id", condition = "#id > 2")
     public ResponseEntity<?> getStoreById(Long id) {
-        System.out.printf("inside getProduct : ", id);
+        System.out.println("inside getProduct : "+ id);
         Optional<Store> store = storeRepository.findById(id);
+        System.out.println("Fetched data from DB: "+ store.get().getName());
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(store.get());
     }
 
@@ -63,8 +68,6 @@ public class StoreService {
     }
     public ResponseEntity<?> editStore(Long id, Store store) {
         System.out.println("product: "+ store.toString());
-//        ProductId id = store.getId();
-//        System.out.println(id.getStoreId());
         Optional<Store> validStore;
         validStore = Optional.ofNullable(storeRepository.findByName(store.getName()));
         if (validStore.isPresent()) {
@@ -76,7 +79,6 @@ public class StoreService {
 
         if(newstore.isPresent()){
             System.out.println("Inside new store: "+newstore.get().getId());
-//            newstore.get().setId(store.getId());
             newstore.get().setName(store.getName());
             newstore.get().getAddress().setStreet(store.getAddress().getStreet());
             newstore.get().getAddress().setCity(store.getAddress().getCity());
@@ -85,7 +87,6 @@ public class StoreService {
             storeRepository.saveAndFlush(newstore.get());
             return ResponseEntity.status(HttpStatus.OK).body(newstore.get());
         }
-
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Error in Updatng Store");
     }
 }
