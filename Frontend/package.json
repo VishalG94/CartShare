@@ -12,6 +12,7 @@
     "enzyme-adapter-react-16": "1.0.0",
     "jest-enzyme": "^7.1.2",
     "jwt-decode": "^2.2.0",
+    "qrcode": "^1.4.4",
     "raf": "3.3.2",
     "react": "^16.4.0",
     "react-awesome-modal": "^2.0.5",

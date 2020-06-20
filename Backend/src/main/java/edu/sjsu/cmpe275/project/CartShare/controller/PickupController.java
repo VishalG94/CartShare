@@ -11,6 +11,8 @@ import edu.sjsu.cmpe275.project.CartShare.service.EmailService;
 import edu.sjsu.cmpe275.project.CartShare.service.PickupService;
 import edu.sjsu.cmpe275.project.CartShare.utils.EmailUtility;
 import edu.sjsu.cmpe275.project.CartShare.utils.QRCodeGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,9 @@ import java.util.*;
 @CrossOrigin(origins = "*", allowCredentials = "true")
 @RestController
 public class PickupController {
+
+    private static final Logger log = LoggerFactory.getLogger(PickupController.class);
+
     @Autowired
     PickupService pickupService;
 //    private Object QRCodeGenerator;

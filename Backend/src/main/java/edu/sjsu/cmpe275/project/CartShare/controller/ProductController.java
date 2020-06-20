@@ -11,6 +11,8 @@ import edu.sjsu.cmpe275.project.CartShare.repository.StoreRepository;
 import edu.sjsu.cmpe275.project.CartShare.service.AmazonClient;
 import edu.sjsu.cmpe275.project.CartShare.service.ProductService;
 import org.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,6 +30,9 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowCredentials = "true")
 @RestController
 public class ProductController {
+
+    private static final Logger log = LoggerFactory.getLogger(ProductController.class);
+
     @Autowired
     ProductService productService;
     @Autowired

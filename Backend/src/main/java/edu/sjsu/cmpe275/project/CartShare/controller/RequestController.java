@@ -2,6 +2,8 @@ package edu.sjsu.cmpe275.project.CartShare.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyValueException;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,8 @@ import edu.sjsu.cmpe275.project.CartShare.repository.UserRepository;
 @RequestMapping("/api")
 @CrossOrigin(origins = "*", allowCredentials = "true")
 public class RequestController {
+
+    private static final Logger log = LoggerFactory.getLogger(RequestController.class);
 
     @Autowired
     RequestRepository requestRepository;

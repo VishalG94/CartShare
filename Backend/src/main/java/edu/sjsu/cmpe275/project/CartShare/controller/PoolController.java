@@ -10,6 +10,8 @@ import edu.sjsu.cmpe275.project.CartShare.repository.UserRepository;
 import edu.sjsu.cmpe275.project.CartShare.service.EmailService;
 import edu.sjsu.cmpe275.project.CartShare.service.PoolService;
 import edu.sjsu.cmpe275.project.CartShare.utils.EmailUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyValueException;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,8 @@ import java.util.List;
 @RequestMapping("/api")
 @CrossOrigin(origins = "*", allowCredentials = "true")
 public class PoolController {
+
+    private static final Logger log = LoggerFactory.getLogger(PoolController.class);
 
     @Autowired
     PoolRepository poolRepository;

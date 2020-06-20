@@ -4,6 +4,8 @@ package edu.sjsu.cmpe275.project.CartShare.controller;
 import edu.sjsu.cmpe275.project.CartShare.model.Order;
 import edu.sjsu.cmpe275.project.CartShare.service.OrderService;
 import org.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,9 @@ import java.util.Optional;
 @CrossOrigin(origins = "*", allowCredentials = "true")
 @RestController
 public class OrderController {
+
+    private static final Logger log = LoggerFactory.getLogger(OrderController.class);
+
     @Autowired
     OrderService orderService;
 
@@ -34,12 +39,14 @@ public class OrderController {
     @GetMapping("/getorders")
     public ResponseEntity<?> getOrders(@RequestParam Long id) {
         System.out.println("Inside GetOrders "+id);
+        log.info("Get Orders for orderId ", id);
         return orderService.getorders(id);
     }
 
     @GetMapping("/getpastorders")
     public ResponseEntity<?> getPastOrders(@RequestParam Long id) {
         System.out.println("Inside GetOrders "+id);
+        log.info("Get PastOrders for orderId ", id);
         return orderService.getPastOrders(id);
     }
 
@@ -47,7 +54,7 @@ public class OrderController {
     public ResponseEntity<?> getPoolOrders(@RequestParam(value = "storeid") Long storeId, @RequestParam(value = "userid") Long userId)
     {
         System.out.println("Inside Get Pool Orders");
-
+        log.info("Get PoolOrders for orderId ", storeId,userId );
         return orderService.getPoolOrders(storeId,userId);
     }
 
